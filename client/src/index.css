@@ -1,0 +1,22 @@
+:root {
+  --bg: #0b0f1a;
+  --bg-2: #111827;
+  --panel: #151c2c;
+  --panel-2: #1b2438;
+  --line: #263149;
+  --text: #e6ebf5;
+  --muted: #8d9ab5;
+  --accent: #5eb5ff;
+  --done: #3ddc97;
+  --doing: #ffb454;
+  --todo: #5b6a88;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: radial-gradient(1200px 600px at 10% -10%, #162244 0%, var(--bg) 60%) fixed;
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+}
