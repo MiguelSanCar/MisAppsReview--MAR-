@@ -5,6 +5,7 @@ import { useAuth } from '../auth/AuthContext';
 import { copyText } from '../clipboard';
 import { useProfileCtx } from '../profile/ProfileContext';
 import { AvatarDialog } from './AvatarDialog';
+import { Emoji } from './Emoji';
 import { useToast } from './Toast';
 import { Avatar, Icon } from './ui';
 
@@ -121,11 +122,11 @@ export default function Layout() {
             ) : (
               <>
                 <Item to={`/perfil/${encodeURIComponent(user.username)}`} end>Mi perfil</Item>
-                <Item to="/list"><span className="emo" aria-hidden="true">📝</span>Mi lista</Item>
+                <Item to="/list"><Emoji name="notas" className="nav-emoji" />Mi lista</Item>
                 <div className="nav-sub">
-                  <Item to="/lists"><span className="emo" aria-hidden="true">🗂️</span>Mis listas conjuntas</Item>
+                  <Item to="/lists"><Emoji name="carpetas" className="nav-emoji" />Mis listas conjuntas</Item>
                 </div>
-                <Item to="/friends"><span className="emo" aria-hidden="true">👥</span>Mis amigos</Item>
+                <Item to="/friends"><Emoji name="amigos" className="nav-emoji" />Mis amigos</Item>
               </>
             )}
           </div>

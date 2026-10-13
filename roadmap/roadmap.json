@@ -1062,8 +1062,91 @@
           ]
         }
       ]
+    },
+    {
+      "id": "f16",
+      "name": "Fase 16 · Ficha y botones",
+      "release": "0.17.0",
+      "summary": "Eliminar desde la ficha e iconos de línea en los botones",
+      "features": [
+        {
+          "id": "f16-ficha",
+          "title": "Eliminar desde la ficha",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "16.1",
+              "title": "Botón «Eliminar» al final de los estados de la ficha",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "16.2",
+              "title": "Activo solo si el contenido está en tu lista, en cualquier estado",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "16.3",
+              "title": "Confirmación por tipo de contenido y resta de episodios y minutos del perfil",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            }
+          ]
+        },
+        {
+          "id": "f16-botones",
+          "title": "Botones de la búsqueda",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "16.4",
+              "title": "Icono de lista sin lápiz (portapapeles con lista)",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "16.5",
+              "title": "Marca ✔ centrada en su botón (medido: desvío < 0,2 px)",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "16.6",
+              "title": "Botones semitransparentes, dejando ver la carátula",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            }
+          ]
+        },
+        {
+          "id": "f16-emojis",
+          "title": "Iconos de línea",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "16.7",
+              "title": "Iconos de línea: contorno blanco y transparentes por dentro (Lucide)",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "16.8",
+              "title": "Usarlos en los botones, el menú, el revisionado y el roadmap",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "16.9",
+              "title": "Licencia (ISC) y su documentación",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            }
+          ]
+        }
+      ]
     }
   ],
-  "release": "0.16.0",
+  "release": "0.17.0",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

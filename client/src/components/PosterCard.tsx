@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, errorText } from '../api';
 import { Content, SOURCE_TEXT, Status, STATUS_TEXT, statusLabel, TYPE_TEXT, UserState } from '../types';
+import { Emoji } from './Emoji';
 import { Icon } from './ui';
 import { useToast } from './Toast';
 
@@ -25,7 +26,7 @@ interface Props {
   /**
    * Si se indica, el botón de la flecha (abajo a la derecha) pasa el contenido a la siguiente fase
    * (Por ver → Viendo → Finalizado) o, en «Finalizado», lo vuelve a poner en «Por ver» para volver a verlo.
-   * `null` = no hay acción: sin botón. Sin indicar (búsqueda): botones 📝 Por ver, 👁️ Viendo y ✔️ Finalizado.
+   * `null` = no hay acción: sin botón. Sin indicar (búsqueda): botones 📋 Por ver, 👁️ Viendo y ✔️ Finalizado.
    */
   advance?: Advance | null;
   /** Papelera (arriba a la derecha): pide borrar el contenido de la lista. */
@@ -63,7 +64,7 @@ export function PosterCard({
     }
   }
 
-  /** Búsqueda: fija el estado con los botones 📝 / 👁️ / ✔️ (el estado activo no se repite). */
+  /** Búsqueda: fija el estado con los botones 📋 / 👁️ / ✔️ (el estado activo no se repite). */
   async function setStatus(status: Status) {
     if (busy || !onState || state?.status === status) return;
     setBusy(true);
@@ -112,7 +113,8 @@ export function PosterCard({
 
         {showStatus && state && (
           <span className={`badge st-${state.status}`}>
-            {statusLabel(state.status, state.rewatch)}{progress ? ` · ${progress}` : ''}{state.rewatch > 0 ? ' 🔁' : ''}
+            {statusLabel(state.status, state.rewatch)}{progress ? ` · ${progress}` : ''}
+            {state.rewatch > 0 && <Emoji name="repetir" size={12} className="in-text" />}
           </span>
         )}
 
@@ -127,7 +129,7 @@ export function PosterCard({
         )}
 
         {!readOnly && onState && !selectMode && advance === undefined && (
-          // Tarjetas de búsqueda: 📝 Por ver · 👁️ Viendo (verde) · ✔️ Finalizado (morado)
+          // Tarjetas de búsqueda: 📋 Por ver · 👁️ Viendo (verde) · ✔️ Finalizado (morado)
           <>
             <button
               type="button"
@@ -138,7 +140,7 @@ export function PosterCard({
               title={state?.status === 'POR_VER' ? 'Quitar de «Por ver»' : 'Añadir a «Por ver»'}
               aria-label={`${state?.status === 'POR_VER' ? 'Quitar de' : 'Añadir a'} «Por ver»: ${content.title}`}
             >
-              <span className="emo" aria-hidden="true">📝</span>
+              <Emoji name="lista" />
             </button>
             <button
               type="button"
@@ -149,7 +151,7 @@ export function PosterCard({
               title="Marcar como «Viendo»"
               aria-label={`Marcar como Viendo: ${content.title}`}
             >
-              <span className="emo" aria-hidden="true">👁️</span>
+              <Emoji name="ojo" />
             </button>
             <button
               type="button"
@@ -160,7 +162,7 @@ export function PosterCard({
               title="Marcar como «Finalizado» (todos los episodios vistos)"
               aria-label={`Marcar como Finalizado: ${content.title}`}
             >
-              <span className="emo emo-tick" aria-hidden="true">✔️</span>
+              <Emoji name="tick" />
             </button>
           </>
         )}

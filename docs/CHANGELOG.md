@@ -2,8 +2,13 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 0.17.0 · 2026-10-13 · Fase 16 · Ficha y botones
+- **Botón «Eliminar» en la ficha (16.1–16.3):** al final de la fila de estados (Por ver · Viendo · Finalizado · Dejado · **Eliminar**). Solo se activa cuando el contenido está en tu lista, en cualquiera de los estados; si no, aparece desactivado con la ayuda «Solo disponible cuando lo tienes en tu lista». Pide confirmación con el texto según el tipo («¿Estás seguro de borrar permanentemente esta película de tu lista?») y, al confirmar, se restan sus episodios y minutos del perfil y los estados quedan sin marcar.
+- **Botones de la búsqueda (16.4–16.6):** el icono de lista ya no tiene lápiz (portapapeles con lista), la marca ✔ queda centrada (medido: desvío < 0,2 px) y los tres botones son **semitransparentes** (opacidad ≈ 0,5–0,6), dejando ver la carátula; el activo se refuerza con un aro blanco y más color.
+- **Iconos de línea (16.7–16.9):** los «emojis» de la interfaz (botones de la búsqueda, menú, aviso de revisionado y fechas del roadmap) pasan a ser **iconos de contorno blanco y transparentes por dentro** con **Lucide** (`lucide-react` 0.469.0, licencia ISC; solo se incluyen los 8 necesarios). Se probó antes Twemoji (SVG de color) pero se descartó por ser figuras rellenas. Componente: `client/src/components/Emoji.tsx`. Licencia en `docs/THIRD_PARTY_LICENSES.md`.
+
 ## 0.16.0 · 2026-10-13 · Fase 15 · Botones de la búsqueda
-- Las tarjetas de la búsqueda (y las de la portada con las tendencias) cambian sus botones por **tres botones de estado**: **📝** a la izquierda (añadir a «Por ver»; vuelve a pulsarlo para quitarlo), **👁️** en el centro con fondo **verde** («Viendo») y **✔️** a la derecha con fondo **morado** («Finalizado»: marca todos los episodios como vistos). El emoji de la marca de verificación va sin fondo propio (en blanco sobre el morado). El estado activo se señala con un aro blanco y `aria-pressed`.
+- Las tarjetas de la búsqueda (y las de la portada con las tendencias) cambian sus botones por **tres botones de estado**: **lista** a la izquierda (añadir a «Por ver»; vuelve a pulsarlo para quitarlo), **ojo** en el centro con fondo **verde** («Viendo») y **marca ✔** a la derecha con fondo **morado** («Finalizado»: marca todos los episodios como vistos). El emoji de la marca de verificación va sin fondo propio (en blanco sobre el morado). El estado activo se señala con un aro blanco y `aria-pressed`.
 - **El corazón sale de la búsqueda.** Sigue disponible en la ficha del contenido y en las tarjetas de «Mi lista», que conservan ♥ y la flecha de avanzar de fase / volver a ver.
 - Solo cliente; sin cambios en la API (usa `/status` y `/later`).
 

@@ -2,17 +2,18 @@
 
 Aplicación para la gestión de series, películas o animes que ha visto una persona, con conexión para varios usuarios y algunas otras funcionalidades. Se ha creado con Claude Code como prueba.
 
-> **Versión 0.16.0** · Las versiones 0.x siguen el [roadmap](#roadmap): cada fase completada sube un número (fase 0 = 0.1, fase 1 = 0.2 … fase 15 = 0.16). La 1.0 se reserva para cuando el despliegue esté publicado y revisado.
+> **Versión 0.17.0** · Las versiones 0.x siguen el [roadmap](#roadmap): cada fase completada sube un número (fase 0 = 0.1, fase 1 = 0.2 … fase 16 = 0.17). La 1.0 se reserva para cuando el despliegue esté publicado y revisado.
 
 ## Qué hace
 - **Pantalla inicial**: las series más vistas del momento (o películas / anime según el filtro).
-- **Buscar y marcar** (Inicio): un buscador único cuyos resultados van apareciendo **mientras escribes** (series y películas con TMDB, anime con MyAnimeList/Jikan); cada tarjeta indica año, categoría y plataforma de origen. Sobre cada póster hay tres botones de estado: **📝 a la izquierda** = añadir a «Por ver», **👁️ en el centro (verde)** = «Viendo» y **✔️ a la derecha (morado)** = «Finalizado». El favorito (♥, máximo 10) está en la ficha y en «Mi lista».
+- **Buscar y marcar** (Inicio): un buscador único cuyos resultados van apareciendo **mientras escribes** (series y películas con TMDB, anime con MyAnimeList/Jikan); cada tarjeta indica año, categoría y plataforma de origen. Sobre cada póster hay tres botones de estado, semitransparentes y con iconos de línea blancos: **lista (izquierda)** = añadir a «Por ver», **ojo (centro, verde)** = «Viendo» y **marca ✔ (derecha, morado)** = «Finalizado». El favorito (♥, máximo 10) está en la ficha y en «Mi lista».
 - **Ficha del contenido**: sinopsis, estudio, puntuaciones (IMDb y Rotten Tomatoes; MyAnimeList en anime), estado (Por ver → Viendo → Finalizado / Dejado) y contador de episodios con − / + (al pulsar el número se escribe a mano; si se supera el total se fija el máximo y pasa a Finalizado).
 - **Perfil**: avatar redondo, tiempo total visto (horas → días → semanas → meses → años), contadores por estado y top 10 de favoritas.
 - **Perfiles con URL propia** (`/perfil/<usuario>`): solo para amigos (por defecto) o públicos, con la lista opcional.
 - **Enlaces de amistad**: pulsa tu nombre en el menú lateral para copiar un enlace que añade como amigo a quien lo abra; en el perfil de un amigo, el enlace envía una solicitud a esa persona. Pulsa tu foto para verla o cambiarla.
 - **Amigos**: solicitudes, tarjetas, y perfil/lista/amigos de cada amigo con el menú lateral adaptado ("Su perfil", "Su lista"…).
 - **Listas conjuntas** («Vuestra lista» en el perfil de un amigo): una por pareja, que cualquiera de los dos puede crear; ambos la editan y cada modificación queda en un historial con **Rollback**. Se puede **salir sin borrarla** y volver a unirse; se borra tras 2 meses sin actividad (con aviso 15 días antes en la app).
+- En la **ficha**, el botón rojo **«Eliminar»** (al final de los estados) quita el contenido de tu lista; solo está activo si lo tienes en ella.
 - En **Mi lista**, la flecha de cada tarjeta pasa el contenido a la siguiente fase (Por ver → Viendo → Finalizado) y, en «Finalizado», lo devuelve a «Por ver» para **volver a verlo** (se muestra como «Reviendo»; tus estadísticas conservan lo ya visto). Cada tarjeta tiene una **papelera** y el botón rojo **«Eliminar»** activa el borrado múltiple (con confirmación); borrar un contenido resta sus episodios y minutos de tu perfil.
 - **Roadmap público** en `/roadmap`, en vivo.
 
@@ -129,3 +130,4 @@ Limitaciones conocidas:
 - [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md): publicar la app
 - [docs/PROMPT_CLAUDE_CODE.md](docs/PROMPT_CLAUDE_CODE.md): prompt de desarrollo
 - [docs/ROADMAP_PROPUESTO.md](docs/ROADMAP_PROPUESTO.md): desglose original de fases
+- [docs/THIRD_PARTY_LICENSES.md](docs/THIRD_PARTY_LICENSES.md): licencias de terceros (iconos Lucide, datos)

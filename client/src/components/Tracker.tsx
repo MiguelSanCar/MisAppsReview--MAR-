@@ -1,7 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { Ratings, Status, statusLabel, STATUSES, ContentType } from '../types';
+import { Icon } from './ui';
 
-export function StatusPicker({ value, onChange, disabled, rewatch = 0 }: { value: Status | null; onChange: (s: Status) => void; disabled?: boolean; rewatch?: number }) {
+export function StatusPicker({
+  value, onChange, disabled, rewatch = 0, onDelete, canDelete,
+}: {
+  value: Status | null;
+  onChange: (s: Status) => void;
+  disabled?: boolean;
+  rewatch?: number;
+  /** Si se indica, se añade «Eliminar» al final de los estados. */
+  onDelete?: () => void;
+  /** «Eliminar» solo se activa si el contenido está en la lista (en cualquier estado). */
+  canDelete?: boolean;
+}) {
   return (
     <div className="seg" role="group" aria-label="Estado">
       {STATUSES.map((s) => (
@@ -9,6 +21,18 @@ export function StatusPicker({ value, onChange, disabled, rewatch = 0 }: { value
           {statusLabel(s, rewatch)}
         </button>
       ))}
+      {onDelete && (
+        <button
+          type="button"
+          className="seg-btn seg-del"
+          disabled={disabled || !canDelete}
+          onClick={onDelete}
+          title={canDelete ? 'Eliminar de mi lista' : 'Solo disponible cuando lo tienes en tu lista'}
+          aria-label="Eliminar de mi lista"
+        >
+          <Icon name="trash" /> Eliminar
+        </button>
+      )}
     </div>
   );
 }

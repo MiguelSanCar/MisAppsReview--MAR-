@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { api, errorText } from '../api';
+import { Emoji } from '../components/Emoji';
 import { PosterImage } from '../components/PosterCard';
+import { ConfirmDialog } from '../components/ConfirmDialog';
 import { EpisodeCounter, RatingBadges, StatusPicker } from '../components/Tracker';
 import { useToast } from '../components/Toast';
 import { ErrorBox, Icon, Spinner } from '../components/ui';
-import { Content, Status, TYPE_TEXT, UserState } from '../types';
+import { Content, Status, THIS_TYPE, TYPE_TEXT, UserState } from '../types';
 
 interface Loaded { content: Content; state: UserState | null }
 interface Reply { state: UserState | null; totalEpisodes: number | null }
@@ -18,6 +20,7 @@ export default function ContentPage() {
   const [omdbOn, setOmdbOn] = useState(true);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
     setData(null); setError('');
@@ -31,6 +34,22 @@ export default function ContentPage() {
     try {
       const r = await api.put<Reply>(`/api/library/${id}/${kind}`, body);
       setData((d) => d && { content: { ...d.content, totalEpisodes: r.totalEpisodes ?? d.content.totalEpisodes }, state: r.state });
+    } catch (e) {
+      toast(errorText(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /** Quita el contenido de la lista (y con él sus episodios y minutos del perfil). */
+  async function remove() {
+    if (busy) return;
+    setBusy(true);
+    try {
+      await api.del(`/api/library/${id}`);
+      setData((d) => d && { ...d, state: null });
+      setConfirmDelete(false);
+      toast('Contenido eliminado de tu lista', 'ok');
     } catch (e) {
       toast(errorText(e));
     } finally {
@@ -65,9 +84,16 @@ export default function ContentPage() {
           </div>
 
           <h2 className="h2">Estado</h2>
-          <StatusPicker value={state?.status ?? null} rewatch={state?.rewatch ?? 0} disabled={busy} onChange={(s: Status) => update('status', { status: s })} />
+          <StatusPicker
+            value={state?.status ?? null}
+            rewatch={state?.rewatch ?? 0}
+            disabled={busy}
+            onChange={(s: Status) => update('status', { status: s })}
+            onDelete={() => setConfirmDelete(true)}
+            canDelete={!!state}
+          />
           {!!state?.rewatch && (
-            <p className="rewatch-note">🔁 Visionado n.º {state.rewatch + 1}. Los episodios de tus visionados anteriores ({state.previousEpisodes}) siguen contando en tus estadísticas.</p>
+            <p className="rewatch-note"><Emoji name="repetir" size={15} className="in-text" /> Visionado n.º {state.rewatch + 1}. Los episodios de tus visionados anteriores ({state.previousEpisodes}) siguen contando en tus estadísticas.</p>
           )}
 
           <EpisodeCounter value={state?.watched ?? 0} total={c.totalEpisodes} disabled={busy} onSet={(n) => update('episodes', { watched: n })} />
@@ -77,6 +103,18 @@ export default function ContentPage() {
           <Link to="/home" className="small">Buscar otro título</Link>
         </div>
       </div>
+
+      {confirmDelete && (
+        <ConfirmDialog
+          title="Borrar de tu lista"
+          message={`¿Estás seguro de borrar permanentemente ${THIS_TYPE[c.type]} de tu lista?`}
+          detail={`«${c.title}». Se eliminarán también sus episodios vistos y los minutos de tu perfil.`}
+          confirmLabel="Borrar permanentemente"
+          busy={busy}
+          onConfirm={remove}
+          onCancel={() => setConfirmDelete(false)}
+        />
+      )}
     </div>
   );
 }

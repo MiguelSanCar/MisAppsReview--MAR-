@@ -282,7 +282,7 @@ a.fcard:hover, .lcard:hover { border-color: var(--accent); background: var(--pan
 .nav-top.active { background: var(--accent); color: #06121f; }
 .nav-sub { margin: 2px 0 6px 20px; padding-left: 8px; border-left: 2px solid var(--line); display: grid; gap: 2px; }
 .nav-sub .nav-sub { margin: 0 0 0 14px; }
-.nav-item .emo { display: inline-block; width: 1.5em; margin-right: 4px; text-align: center; }
+.nav-item .emoji { display: inline-block; width: 18px; height: 18px; vertical-align: -3px; margin-right: 8px; }
 .side-foot { margin-top: auto; padding-top: 14px; }
 
 /* ---------- borrar contenidos de «Mi lista» ---------- */
@@ -312,10 +312,24 @@ a.fcard:hover, .lcard:hover { border-color: var(--accent); background: var(--pan
 /* ---------- búsqueda: 📝 Por ver · 👁️ Viendo · ✔️ Finalizado ---------- */
 .poster-btn.st-btn { font-size: 1.15rem; line-height: 1; color: #fff; border: 2px solid transparent; }
 .poster-btn.mid { left: calc(50% - 20px); }
-.poster-btn.st-btn .emo { display: block; transform: translateY(1px); }
-.poster-btn.st-btn.todo { background: rgba(8, 12, 22, .78); }
-.poster-btn.st-btn.watching { background: #1f9d63; }
-.poster-btn.st-btn.done { background: #7c4dff; }
-.poster-btn.st-btn.done .emo-tick { filter: brightness(0) invert(1); } /* ✔️ sin fondo: el emoji en blanco sobre el morado */
+/* Semitransparentes: se deja ver la carátula. El estado activo se refuerza con un aro blanco y algo más de color. */
+.poster-btn.st-btn { backdrop-filter: blur(2px); }
+.poster-btn.st-btn.todo { background: rgba(8, 12, 22, .5); }
+.poster-btn.st-btn.watching { background: rgba(31, 157, 99, .58); }
+.poster-btn.st-btn.done { background: rgba(124, 77, 255, .58); }
+.poster-btn.st-btn .emoji { width: 22px; height: 22px; color: #fff; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .55)); } /* contorno blanco, hueco por dentro; la sombra lo hace legible sobre cualquier carátula */
 .poster-btn.st-btn.on { border-color: #fff; box-shadow: 0 0 0 3px rgba(255, 255, 255, .28); }
-.poster-btn.st-btn.todo.on { background: var(--later); }
+.poster-btn.st-btn.todo.on { background: rgba(94, 181, 255, .7); }
+.poster-btn.st-btn.watching.on { background: rgba(31, 157, 99, .85); }
+.poster-btn.st-btn.done.on { background: rgba(124, 77, 255, .85); }
+
+/* ---------- ficha: botón de eliminar al final de los estados ---------- */
+.seg-del { margin-left: 10px; display: inline-flex; align-items: center; gap: 6px; color: #ff8a94; border-color: rgba(229, 72, 77, .55); }
+.seg-del:not(:disabled):hover { background: #e5484d; border-color: #e5484d; color: #fff; }
+.seg-del:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ---------- iconos de línea (Lucide): contorno y transparentes por dentro ---------- */
+.emoji { flex: none; pointer-events: none; user-select: none; fill: none; }
+.emoji.in-text { display: inline-block; vertical-align: -2px; margin: 0 2px; }
+
+.poster-btn.st-btn.done .emoji { transform: translateY(.6px); } /* la marca queda 0,6 px alta en su caja: se compensa para que quede centrada */

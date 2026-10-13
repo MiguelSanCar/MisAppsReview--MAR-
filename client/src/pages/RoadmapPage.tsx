@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Emoji } from '../components/Emoji';
 import IdeasBox from '../roadmap/IdeasBox';
 import { useRoadmap } from '../roadmap/useRoadmap';
 import {
@@ -27,7 +28,7 @@ function EtaBadge({ eta, className = '' }: { eta: Eta; className?: string }) {
   const { text, tone } = describeEta(eta);
   return (
     <span className={`eta eta-${tone} ${className}`} title={eta.note}>
-      <i aria-hidden="true">📅</i> {text}
+      <Emoji name="calendario" size={13} className="in-text" /> {text}
     </span>
   );
 }
