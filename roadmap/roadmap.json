@@ -17,17 +17,20 @@
             {
               "id": "0.1",
               "title": "Monorepo con cliente y servidor",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "0.2",
               "title": "Documentación, .env.example y .gitignore",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "0.7",
               "title": "Un solo comando para levantar todo en local",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -39,22 +42,26 @@
             {
               "id": "0.3",
               "title": "Contenido inicial del roadmap",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "0.4",
               "title": "Página pública de solo lectura",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "0.5",
               "title": "Progreso global y por fase",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "0.6",
               "title": "Actualización automática",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         }
@@ -74,22 +81,26 @@
             {
               "id": "1.1",
               "title": "Usuarios y base de datos",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "1.2",
               "title": "Registro con validación",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "1.3",
               "title": "Inicio y cierre de sesión",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "1.7",
               "title": "Seguridad básica",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -101,17 +112,20 @@
             {
               "id": "1.4",
               "title": "Mostrar y ocultar contraseña",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "1.5",
               "title": "Pantalla inicial pública",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "1.6",
               "title": "Menú lateral con perfil",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         }
@@ -131,12 +145,14 @@
             {
               "id": "2.1",
               "title": "Series y películas (TMDB)",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "2.2",
               "title": "Anime (Jikan)",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -148,27 +164,32 @@
             {
               "id": "2.3",
               "title": "Buscador único con filtro por tipo",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "2.4",
               "title": "Favorito con corazón (máx. 10)",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "2.5",
               "title": "Ver más adelante",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "2.6",
               "title": "Estados vacíos y errores",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "2.7",
               "title": "Atribución a TMDB y aviso de claves",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         }
@@ -188,12 +209,14 @@
             {
               "id": "3.1",
               "title": "Sinopsis, episodios y estudio",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "3.2",
               "title": "Puntuaciones IMDb, Rotten Tomatoes y MyAnimeList",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -205,22 +228,26 @@
             {
               "id": "3.3",
               "title": "Estados: por ver, viendo, finalizado, dejado",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "3.4",
               "title": "Contador de episodios con + y −",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "3.5",
               "title": "Edición manual del contador",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "3.6",
               "title": "Mi lista con filtros",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         }
@@ -240,17 +267,20 @@
             {
               "id": "4.1",
               "title": "Horas totales vistas",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "4.2",
               "title": "Formato escalonado de tiempo",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "4.4",
               "title": "Contadores por estado",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -262,18 +292,21 @@
             {
               "id": "4.3",
               "title": "Top 10 de favoritos",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "4.5",
               "title": "Avatar circular con recorte",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "4.6",
               "title": "Duración real por episodio",
               "status": "hecho",
-              "note": "Activable con USE_REAL_RUNTIME; por defecto duraciones fijas"
+              "note": "Activable con USE_REAL_RUNTIME; por defecto duraciones fijas",
+              "eta": "2026-10-13"
             }
           ]
         }
@@ -294,30 +327,37 @@
               "id": "5.1",
               "title": "Elegir hosting",
               "status": "pendiente",
-              "note": "Pospuesto; mientras tanto, pruebas por túnel"
+              "note": "Pospuesto; mientras tanto, pruebas por túnel",
+              "eta": null,
+              "etaNote": "Depende de ti: elegir hosting (Render o Fly.io). Decidirlo lleva unos minutos"
             },
             {
               "id": "5.2",
               "title": "Configuración de producción",
               "status": "hecho",
-              "note": "Dockerfile y render.yaml preparados"
+              "note": "Dockerfile y render.yaml preparados",
+              "eta": "2026-10-13"
             },
             {
               "id": "5.3",
               "title": "Despliegue",
               "status": "pendiente",
-              "note": "Requiere cuenta de hosting"
+              "note": "Requiere cuenta de hosting",
+              "eta": null,
+              "etaNote": "Depende de ti: cuenta de hosting. Unas 4 h de trabajo una vez disponible"
             },
             {
               "id": "5.6",
               "title": "Copia de seguridad y exportación",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "5.7",
               "title": "Acceso temporal por túnel para pruebas",
               "status": "hecho",
-              "note": "npm run share"
+              "note": "npm run share",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -330,12 +370,14 @@
               "id": "5.4",
               "title": "URL de perfil de solo lectura",
               "status": "hecho",
-              "note": "Disponible en local; público tras el despliegue"
+              "note": "Disponible en local; público tras el despliegue",
+              "eta": "2026-10-13"
             },
             {
               "id": "5.5",
               "title": "Compartir lista de visualizados",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         }
@@ -355,22 +397,26 @@
             {
               "id": "6.1",
               "title": "Solicitudes y lista de amigos",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "6.2",
               "title": "Tarjetas de amigos",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "6.3",
               "title": "Perfil ajeno con menú propio",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "6.4",
               "title": "Volver al inicio propio",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         }
@@ -390,12 +436,14 @@
             {
               "id": "7.1",
               "title": "Lista entre dos usuarios",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "7.2",
               "title": "Edición compartida",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -407,12 +455,14 @@
             {
               "id": "7.3",
               "title": "Historial de cambios (50 por lista)",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "7.4",
               "title": "Rollback desde el historial",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         }
@@ -433,19 +483,22 @@
               "id": "8.1",
               "title": "Recuperar contraseña",
               "status": "hecho",
-              "note": "Enlace en consola hasta configurar el correo"
+              "note": "Enlace en consola hasta configurar el correo",
+              "eta": "2026-10-13"
             },
             {
               "id": "8.2",
               "title": "Verificar correo",
               "status": "hecho",
-              "note": "Enlace en consola hasta configurar el correo"
+              "note": "Enlace en consola hasta configurar el correo",
+              "eta": "2026-10-13"
             },
             {
               "id": "8.3",
               "title": "Buzón de ideas",
               "status": "hecho",
-              "note": "Prioridad baja"
+              "note": "Prioridad baja",
+              "eta": "2026-10-13"
             }
           ]
         }
@@ -466,7 +519,8 @@
             {
               "id": "9.1",
               "title": "Ventana con la foto actual y opción de cambiarla",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -478,22 +532,26 @@
             {
               "id": "9.2",
               "title": "Enlace propio: quien lo abre te añade como amigo",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "9.3",
               "title": "Enlace de otro perfil: envía una solicitud a esa persona",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "9.4",
               "title": "Pantalla de invitación (pide iniciar sesión o registrarse)",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "9.5",
               "title": "Saber quién generó cada enlace y poder renovarlo",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -505,17 +563,21 @@
             {
               "id": "9.6",
               "title": "Búsqueda al escribir, sin pulsar Enter (con interruptor para volver atrás)",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "9.7",
               "title": "Sugerencias mientras se escribe",
-              "status": "hecho"
+              "status": "hecho",
+              "note": "Retirada a petición (14.1); la búsqueda al escribir se mantiene",
+              "eta": "2026-10-13"
             },
             {
               "id": "9.8",
               "title": "Pantalla inicial con lo más visto del momento",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -527,7 +589,8 @@
             {
               "id": "9.9",
               "title": "Mostrar el tiempo de cada búsqueda para evaluar si es lo bastante rápida",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -539,7 +602,8 @@
             {
               "id": "9.10",
               "title": "Separar el aviso de «Sus amigos» de la lista de amigos",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         }
@@ -559,12 +623,14 @@
             {
               "id": "10.1",
               "title": "Botón «Inicio» diferenciado, a la altura de «Ajustes» y por debajo del resto",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "10.2",
               "title": "Renombrar «Listas conjuntas» a «Mis listas conjuntas»",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -576,12 +642,14 @@
             {
               "id": "10.3",
               "title": "La flecha de la tarjeta pasa el contenido a la siguiente fase (Por ver → Viendo → Finalizado)",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "10.4",
               "title": "Ocultar esa flecha en «Todos» y en las pestañas sin fase siguiente",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         }
@@ -601,22 +669,26 @@
             {
               "id": "11.1",
               "title": "URL única por perfil (/perfil/usuario) en lugar de /friend/número",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "11.2",
               "title": "Menú lateral y subpáginas (lista, amigos) con la nueva dirección",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "11.3",
               "title": "Redirección de las direcciones antiguas",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "11.4",
               "title": "Botón para copiar la URL del perfil",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -628,23 +700,27 @@
             {
               "id": "11.5",
               "title": "Perfil público (cualquiera, sin cuenta) o solo amigos (por defecto)",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "11.6",
               "title": "Perfil privado visto por otra persona: aviso y opción de enviar solicitud",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "11.7",
               "title": "Sustituir el enlace compartido actual por la visibilidad pública",
               "status": "hecho",
-              "note": "Los perfiles que ya compartían pasan a públicos; /u/<token> redirige"
+              "note": "Los perfiles que ya compartían pasan a públicos; /u/<token> redirige",
+              "eta": "2026-10-13"
             },
             {
               "id": "11.8",
               "title": "Elegir si el perfil público muestra también la lista",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         }
@@ -664,17 +740,20 @@
             {
               "id": "12.1",
               "title": "Opción «Vuestra lista» en el menú lateral del perfil de un amigo",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "12.2",
               "title": "Abrir directamente la lista conjunta de la pareja si existe",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "12.3",
               "title": "Sin lista: «Aún no tenéis una lista conjunta» y botón «Crear nueva lista conjunta»",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -686,17 +765,20 @@
             {
               "id": "12.4",
               "title": "Una lista conjunta por pareja por ahora (preparado para varias)",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "12.5",
               "title": "Cualquiera de los dos puede crearla sin permiso de la otra persona",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "12.6",
               "title": "Salir de una lista sin borrarla y poder volver a unirse",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         },
@@ -708,36 +790,44 @@
             {
               "id": "12.7",
               "title": "Registrar la última actividad de cada lista",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "12.8",
               "title": "Aviso dentro de la app cuando falten 15 días para el borrado",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "12.9",
               "title": "Base del envío de correos (SMTP): módulo y configuración, sin usar todavía",
               "status": "hecho",
-              "note": "Módulo, configuración y comando de prueba listos; sin usar todavía"
+              "note": "Módulo, configuración y comando de prueba listos; sin usar todavía",
+              "eta": "2026-10-13"
             },
             {
               "id": "12.10",
               "title": "Aviso por correo 15 días antes del borrado",
               "status": "pendiente",
-              "note": "Prioridad baja; depende de conectar el correo (12.12)"
+              "note": "Prioridad baja; depende de conectar el correo (12.12)",
+              "eta": null,
+              "etaNote": "Depende de 12.12. Unas 2 h una vez conectado el correo"
             },
             {
               "id": "12.11",
               "title": "Borrado automático tras 2 meses sin actividad",
               "status": "hecho",
-              "note": "Tarea periódica: al arrancar y cada 6 horas"
+              "note": "Tarea periódica: al arrancar y cada 6 horas",
+              "eta": "2026-10-13"
             },
             {
               "id": "12.12",
               "title": "Conectar el envío de correos (recuperar contraseña, verificar correo y avisos)",
               "status": "pendiente",
-              "note": "Prioridad baja"
+              "note": "Prioridad baja",
+              "eta": null,
+              "etaNote": "Depende de ti: un servicio SMTP. Aprox. 1 día de trabajo; prioridad baja"
             }
           ]
         }
@@ -757,27 +847,178 @@
             {
               "id": "13.1",
               "title": "Límite de espera propio por fuente (TMDB 6 s, Jikan 2 s)",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "13.2",
               "title": "Corte con retroceso progresivo: 1 min, 2, 4… hasta 15 min; se reinicia al responder",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "13.3",
               "title": "Interruptor para desactivar Jikan (JIKAN_ENABLED=false), sin esperas ni avisos",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
             },
             {
               "id": "13.4",
               "title": "Avisos más claros: «tarda más de lo normal» y «no responde ahora mismo»",
-              "status": "hecho"
+              "status": "hecho",
+              "eta": "2026-10-13"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f14",
+      "name": "Fase 14 · Menú, búsqueda y gestión de la lista",
+      "release": "0.15.0",
+      "summary": "Menú jerárquico, origen de los datos, revisionado y borrado de contenidos",
+      "features": [
+        {
+          "id": "f14-busqueda",
+          "title": "Búsqueda",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "14.1",
+              "title": "Retirar el autocompletado (sugerencias) y mantener los resultados mientras se escribe",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "14.2",
+              "title": "Mostrar la plataforma de origen (TMDB, MyAnimeList) tras el año y la categoría",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            }
+          ]
+        },
+        {
+          "id": "f14-menu",
+          "title": "Menú lateral",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "14.3",
+              "title": "«Inicio» arriba como nivel principal; las entradas «Mi…» como subsección con una tabulación",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "14.4",
+              "title": "«Ajustes» en el mismo nivel que «Inicio»",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "14.5",
+              "title": "Emoticonos: 📝 Mi lista, 🗂️ Mis listas conjuntas, 👥 Mis amigos",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "14.6",
+              "title": "«Mis listas conjuntas» justo debajo de la lista y una tabulación más",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            }
+          ]
+        },
+        {
+          "id": "f14-revisionado",
+          "title": "Revisionado",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "14.7",
+              "title": "Flecha en las tarjetas «Finalizado»: vuelve a «Por ver» con los episodios a 0",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "14.8",
+              "title": "La ficha muestra el estado «Reviendo» mientras dure el nuevo visionado",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "14.9",
+              "title": "Las estadísticas conservan los episodios y minutos de los visionados anteriores",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            }
+          ]
+        },
+        {
+          "id": "f14-borrado",
+          "title": "Eliminar contenidos de «Mi lista»",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "14.10",
+              "title": "Papelera arriba a la derecha de cada tarjeta, con confirmación por tipo de contenido",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "14.11",
+              "title": "Modo «Eliminar» junto a los filtros: tarjetas temblando, selección por clic y sin favorito ni flecha",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "14.12",
+              "title": "Botón «Confirmar borrado» con una segunda confirmación",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "14.13",
+              "title": "Borrado en bloque en una sola operación",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "14.14",
+              "title": "Al borrar un contenido se restan sus episodios y minutos del perfil",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "14.15",
+              "title": "Al quitar episodios a mano se restan también de las estadísticas",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            }
+          ]
+        },
+        {
+          "id": "f14-roadmap",
+          "title": "Roadmap con fechas de entrega",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "14.16",
+              "title": "Fecha de entrega (real o estimada) en cada tarea, tarjeta y columna",
+              "status": "hecho",
+              "eta": "2026-10-13",
+              "note": "Prioridad alta"
+            },
+            {
+              "id": "14.17",
+              "title": "Sin fecha cuando depende de algo externo, con el motivo y el esfuerzo estimado",
+              "status": "hecho",
+              "eta": "2026-10-13"
             }
           ]
         }
       ]
     }
   ],
-  "release": "0.14.0"
+  "release": "0.15.0",
+  "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

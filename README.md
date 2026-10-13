@@ -2,18 +2,18 @@
 
 Aplicación para la gestión de series, películas o animes que ha visto una persona, con conexión para varios usuarios y algunas otras funcionalidades. Se ha creado con Claude Code como prueba.
 
-> **Versión 0.14.0** · Las versiones 0.x siguen el [roadmap](#roadmap): cada fase completada sube un número (fase 0 = 0.1, fase 1 = 0.2 … fase 13 = 0.14). La 1.0 se reserva para cuando el despliegue esté publicado y revisado.
+> **Versión 0.15.0** · Las versiones 0.x siguen el [roadmap](#roadmap): cada fase completada sube un número (fase 0 = 0.1, fase 1 = 0.2 … fase 14 = 0.15). La 1.0 se reserva para cuando el despliegue esté publicado y revisado.
 
 ## Qué hace
 - **Pantalla inicial**: las series más vistas del momento (o películas / anime según el filtro).
-- **Buscar y marcar** (Inicio): un buscador único con resultados y sugerencias **mientras escribes** (series y películas con TMDB, anime con MyAnimeList/Jikan). Sobre cada póster: **♥ abajo a la izquierda** = favorito (se marca como visto; máximo 10) y **↪ abajo a la derecha** = ver más adelante.
+- **Buscar y marcar** (Inicio): un buscador único cuyos resultados van apareciendo **mientras escribes** (series y películas con TMDB, anime con MyAnimeList/Jikan); cada tarjeta indica año, categoría y plataforma de origen. Sobre cada póster: **♥ abajo a la izquierda** = favorito (se marca como visto; máximo 10) y **↪ abajo a la derecha** = ver más adelante.
 - **Ficha del contenido**: sinopsis, estudio, puntuaciones (IMDb y Rotten Tomatoes; MyAnimeList en anime), estado (Por ver → Viendo → Finalizado / Dejado) y contador de episodios con − / + (al pulsar el número se escribe a mano; si se supera el total se fija el máximo y pasa a Finalizado).
 - **Perfil**: avatar redondo, tiempo total visto (horas → días → semanas → meses → años), contadores por estado y top 10 de favoritas.
 - **Perfiles con URL propia** (`/perfil/<usuario>`): solo para amigos (por defecto) o públicos, con la lista opcional.
 - **Enlaces de amistad**: pulsa tu nombre en el menú lateral para copiar un enlace que añade como amigo a quien lo abra; en el perfil de un amigo, el enlace envía una solicitud a esa persona. Pulsa tu foto para verla o cambiarla.
 - **Amigos**: solicitudes, tarjetas, y perfil/lista/amigos de cada amigo con el menú lateral adaptado ("Su perfil", "Su lista"…).
 - **Listas conjuntas** («Vuestra lista» en el perfil de un amigo): una por pareja, que cualquiera de los dos puede crear; ambos la editan y cada modificación queda en un historial con **Rollback**. Se puede **salir sin borrarla** y volver a unirse; se borra tras 2 meses sin actividad (con aviso 15 días antes en la app).
-- En **Mi lista**, la flecha de cada tarjeta pasa el contenido a la siguiente fase (Por ver → Viendo → Finalizado).
+- En **Mi lista**, la flecha de cada tarjeta pasa el contenido a la siguiente fase (Por ver → Viendo → Finalizado) y, en «Finalizado», lo devuelve a «Por ver» para **volver a verlo** (se muestra como «Reviendo»; tus estadísticas conservan lo ya visto). Cada tarjeta tiene una **papelera** y el botón rojo **«Eliminar»** activa el borrado múltiple (con confirmación); borrar un contenido resta sus episodios y minutos de tu perfil.
 - **Roadmap público** en `/roadmap`, en vivo.
 
 ## Levantar en local
@@ -80,7 +80,7 @@ Seguridad y detalles:
 - Si cambias el cliente, vuelve a lanzar `npm run share` (recompila `client/dist`). Los cambios del servidor se recargan solos.
 
 ### Búsqueda al escribir
-Se lanza 300 ms después de la última letra y la pantalla muestra cuánto tardó (servidor y total). Si resultara lenta, pon `LIVE_SEARCH = false` en `client/src/config.ts`: vuelve a buscarse solo con Enter o con el botón (las sugerencias siguen).
+Se lanza 300 ms después de la última letra y la pantalla muestra cuánto tardó (servidor y total). Si resultara lenta, pon `LIVE_SEARCH = false` en `client/src/config.ts`: vuelve a buscarse solo con Enter o con el botón .
 
 ### Correo (SMTP): base lista, sin usar todavía
 Existe un módulo de envío (`server/src/mailer.ts`) pero la app aún no lo usa: recuperar contraseña y verificar correo escriben el enlace en la consola. Para dejarlo preparado, define en `.env` `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS` y `MAIL_FROM` (ver `.env.example`) y comprueba la conexión con:
@@ -90,7 +90,7 @@ npm run mail:test -w server -- tu@correo.com
 
 ### Comandos útiles
 ```bash
-npm test                          # 133 tests (dominio + API completa con proveedores simulados)
+npm test                          # 146 tests (dominio + API completa con proveedores simulados)
 npm run build                     # compila cliente (client/dist) y servidor (server/dist)
 npm start                         # producción local: sirve API + cliente en el puerto 3001 (requiere build)
 npm run dev:mock -w server        # app completa con TMDB/Jikan/OMDb SIMULADOS (títulos falsos) en el puerto 3101
@@ -110,7 +110,7 @@ Dockerfile, render.yaml   despliegue (ver docs/DESPLIEGUE.md)
 
 ## Roadmap
 
-`/roadmap` es público y de solo lectura. Lee `roadmap/roadmap.json` y se refresca solo cada pocos segundos. Formato: `phases[] > features[] > tasks[]`; cada tarea tiene `status` (`pendiente`, `en_progreso`, `hecho`) y el de cada tarjeta se calcula a partir de sus tareas. El roadmap lo mantiene Claude: si se pide algo que choca con el plan, se reestructura el JSON y se anota en el CHANGELOG.
+`/roadmap` es público y de solo lectura. Lee `roadmap/roadmap.json` y se refresca solo cada pocos segundos. Formato: `phases[] > features[] > tasks[]`; cada tarea tiene `status` (`pendiente`, `en_progreso`, `hecho`) y el de cada tarjeta se calcula a partir de sus tareas. Cada tarea lleva su **fecha de entrega** (`eta`: la real si está hecha, la estimada si no) y, si no puede tener fecha por depender de algo externo, `etaNote` con el motivo y el esfuerzo; las tarjetas y columnas muestran la de su última tarea pendiente. El roadmap lo mantiene Claude: si se pide algo que choca con el plan, se reestructura el JSON y se anota en el CHANGELOG.
 
 En local, además, aparece un **buzón de ideas** (solo desde `localhost`, no en producción): se guardan en `roadmap/ideas.json`.
 
