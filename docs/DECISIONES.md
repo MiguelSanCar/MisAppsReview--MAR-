@@ -56,3 +56,4 @@
 | **Temblor respetando «reducir movimiento»** | Con `prefers-reduced-motion` se sustituye por un borde discontinuo. |
 | **Fechas del roadmap por tarea** (`eta`, `etaNote`) | La fecha de tarjeta y columna se calcula (la de la última pendiente), así no hay datos duplicados que se desincronicen. Sin fecha + esfuerzo estimado cuando depende de algo externo. Al terminar una tarea se pone su fecha real. |
 | **Plataforma de origen = fuente de los datos** (TMDB / MyAnimeList) | IMDb no es una fuente de datos aquí (solo puntuaciones vía OMDb en la ficha); mostrar IMDb como origen sería incorrecto. |
+| **Botones de estado en la búsqueda (📝 👁️ ✔️)** | Sustituyen a ♥ y ↪ solo en las tarjetas de búsqueda y portada. 👁️ y ✔️ fijan el estado (no son interruptores: deshacer es desde «Mi lista» o la ficha); 📝 sigue siendo un interruptor como el antiguo «ver más adelante». ✔️ usa el mismo cálculo que «Finalizado» en la ficha (marca todos los episodios). |

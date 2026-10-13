@@ -48,6 +48,7 @@ npm run mail:test -w server -- tu@correo.com   # comprueba SMTP (base lista, aú
  - Enlaces de amistad (`invite_links`): el propio añade como amigo a quien lo abre; el de otro perfil solo **envía una solicitud**. Cada enlace guarda quién lo generó y se puede renovar.
  - Listas conjuntas: una por pareja (`maxListsPerPair`), la crea cualquiera de los dos; salir no la borra (`left_at`); se borra tras 60 días sin actividad (ver no cuenta) con aviso en la app 15 días antes. El aviso por correo (12.10/12.12) está pendiente.
  - «Mi lista»: la flecha de la tarjeta avanza de fase en «Por ver» (→ Viendo) y «Viendo» (→ Finalizado) y en «Finalizado» hace **revisionado** (`POST /api/library/:id/rewatch`: vuelve a «Por ver» con episodios a 0 y se muestra «Reviendo»). Las estadísticas suman episodios actuales + `prev_episodes`; borrar un contenido (papelera o modo «Eliminar», `POST /api/library/delete`) o quitar episodios a mano los resta.
+ - Tarjetas de **búsqueda/portada**: 📝 Por ver (izq., interruptor) · 👁️ Viendo (centro, fondo verde) · ✔️ Finalizado (dcha., fondo morado, marca todos los episodios); no hay corazón. Las de «Mi lista» siguen con ♥ y flecha.
  - Menú: «Inicio» (nivel 0) → «Mi…» (una tabulación) → «Mis listas conjuntas» (otra más); «Ajustes» al nivel de «Inicio». La búsqueda es al escribir, **sin autocompletado** (retirado a petición).
 
 ## Roadmap y versiones

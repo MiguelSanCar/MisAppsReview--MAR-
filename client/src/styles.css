@@ -308,3 +308,14 @@ a.fcard:hover, .lcard:hover { border-color: var(--accent); background: var(--pan
 /* ---------- revisionado ---------- */
 .poster-btn.advance.again { background: rgba(94, 181, 255, .92); }
 .rewatch-note { margin: 10px 0 0; padding: 8px 12px; border: 1px solid var(--later); border-radius: 10px; background: rgba(94, 181, 255, .08); font-size: 0.88rem; max-width: 60ch; }
+
+/* ---------- búsqueda: 📝 Por ver · 👁️ Viendo · ✔️ Finalizado ---------- */
+.poster-btn.st-btn { font-size: 1.15rem; line-height: 1; color: #fff; border: 2px solid transparent; }
+.poster-btn.mid { left: calc(50% - 20px); }
+.poster-btn.st-btn .emo { display: block; transform: translateY(1px); }
+.poster-btn.st-btn.todo { background: rgba(8, 12, 22, .78); }
+.poster-btn.st-btn.watching { background: #1f9d63; }
+.poster-btn.st-btn.done { background: #7c4dff; }
+.poster-btn.st-btn.done .emo-tick { filter: brightness(0) invert(1); } /* ✔️ sin fondo: el emoji en blanco sobre el morado */
+.poster-btn.st-btn.on { border-color: #fff; box-shadow: 0 0 0 3px rgba(255, 255, 255, .28); }
+.poster-btn.st-btn.todo.on { background: var(--later); }

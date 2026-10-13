@@ -1017,8 +1017,53 @@
           ]
         }
       ]
+    },
+    {
+      "id": "f15",
+      "name": "Fase 15 · Botones de la búsqueda",
+      "release": "0.16.0",
+      "summary": "Tres botones de estado en las tarjetas de búsqueda",
+      "features": [
+        {
+          "id": "f15-botones",
+          "title": "Botones de estado en la búsqueda",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "15.1",
+              "title": "📝 (izquierda): añadir a «Por ver»",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "15.2",
+              "title": "👁️ (centro, fondo verde): marcar como «Viendo»",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "15.3",
+              "title": "✔️ (derecha, fondo morado): marcar como «Finalizado»",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "15.4",
+              "title": "El corazón sale de la búsqueda (se mantiene en la ficha y en «Mi lista»)",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            },
+            {
+              "id": "15.5",
+              "title": "Estado activo visible y accesible en cada botón",
+              "status": "hecho",
+              "eta": "2026-10-13"
+            }
+          ]
+        }
+      ]
     }
   ],
-  "release": "0.15.0",
+  "release": "0.16.0",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

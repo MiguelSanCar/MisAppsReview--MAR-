@@ -2,6 +2,11 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 0.16.0 · 2026-10-13 · Fase 15 · Botones de la búsqueda
+- Las tarjetas de la búsqueda (y las de la portada con las tendencias) cambian sus botones por **tres botones de estado**: **📝** a la izquierda (añadir a «Por ver»; vuelve a pulsarlo para quitarlo), **👁️** en el centro con fondo **verde** («Viendo») y **✔️** a la derecha con fondo **morado** («Finalizado»: marca todos los episodios como vistos). El emoji de la marca de verificación va sin fondo propio (en blanco sobre el morado). El estado activo se señala con un aro blanco y `aria-pressed`.
+- **El corazón sale de la búsqueda.** Sigue disponible en la ficha del contenido y en las tarjetas de «Mi lista», que conservan ♥ y la flecha de avanzar de fase / volver a ver.
+- Solo cliente; sin cambios en la API (usa `/status` y `/later`).
+
 ## 0.15.0 · 2026-10-13 · Fase 14 · Menú, búsqueda y gestión de la lista
 - **Roadmap con fechas (14.16, 14.17) — prioridad alta:** cada tarea, cada tarjeta y cada columna indican cuándo estará lista: **«Hecho el 13 oct»** (fecha real), **«Listo hoy»** / **«Listo ~ 15 oct»** (estimada), **«Retrasado (previsto …)»** si se pasa, y **«Sin fecha»** cuando depende de algo externo (con el motivo y el esfuerzo estimado al pasar el ratón o debajo). La fecha de una tarjeta o columna es la de su última tarea pendiente (o la de la última terminada si está todo hecho). Datos: campos `eta` y `etaNote` de cada tarea en `roadmap.json`.
 - **Búsqueda (14.1, 14.2):** se **retira el autocompletado** (desplegable de sugerencias, su ruta `/api/search/suggest` y sus tests); los contenidos siguen apareciendo mientras se escribe. Tras el año y la categoría se muestra la **plataforma de origen** (TMDB, MyAnimeList). Nota: IMDb y Rotten Tomatoes son solo las puntuaciones de la ficha; los datos de series y películas vienen de TMDB.

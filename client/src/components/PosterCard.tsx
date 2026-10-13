@@ -25,7 +25,7 @@ interface Props {
   /**
    * Si se indica, el botón de la flecha (abajo a la derecha) pasa el contenido a la siguiente fase
    * (Por ver → Viendo → Finalizado) o, en «Finalizado», lo vuelve a poner en «Por ver» para volver a verlo.
-   * `null` = no hay acción: sin botón. Sin indicar: la flecha es «ver más adelante».
+   * `null` = no hay acción: sin botón. Sin indicar (búsqueda): botones 📝 Por ver, 👁️ Viendo y ✔️ Finalizado.
    */
   advance?: Advance | null;
   /** Papelera (arriba a la derecha): pide borrar el contenido de la lista. */
@@ -55,6 +55,20 @@ export function PosterCard({
       const r = 'rewatch' in advance
         ? await api.post<{ state: UserState | null }>(`/api/library/${content.id}/rewatch`)
         : await api.put<{ state: UserState | null }>(`/api/library/${content.id}/status`, { status: advance.to });
+      onState(content.id, r.state);
+    } catch (e) {
+      toast(errorText(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  /** Búsqueda: fija el estado con los botones 📝 / 👁️ / ✔️ (el estado activo no se repite). */
+  async function setStatus(status: Status) {
+    if (busy || !onState || state?.status === status) return;
+    setBusy(true);
+    try {
+      const r = await api.put<{ state: UserState | null }>(`/api/library/${content.id}/status`, { status });
       onState(content.id, r.state);
     } catch (e) {
       toast(errorText(e));
@@ -112,7 +126,47 @@ export function PosterCard({
           </button>
         )}
 
-        {!readOnly && onState && !selectMode && (
+        {!readOnly && onState && !selectMode && advance === undefined && (
+          // Tarjetas de búsqueda: 📝 Por ver · 👁️ Viendo (verde) · ✔️ Finalizado (morado)
+          <>
+            <button
+              type="button"
+              className={`poster-btn left st-btn todo ${state?.status === 'POR_VER' ? 'on' : ''}`}
+              onClick={() => act('later')}
+              disabled={busy}
+              aria-pressed={state?.status === 'POR_VER'}
+              title={state?.status === 'POR_VER' ? 'Quitar de «Por ver»' : 'Añadir a «Por ver»'}
+              aria-label={`${state?.status === 'POR_VER' ? 'Quitar de' : 'Añadir a'} «Por ver»: ${content.title}`}
+            >
+              <span className="emo" aria-hidden="true">📝</span>
+            </button>
+            <button
+              type="button"
+              className={`poster-btn mid st-btn watching ${state?.status === 'VIENDO' ? 'on' : ''}`}
+              onClick={() => setStatus('VIENDO')}
+              disabled={busy}
+              aria-pressed={state?.status === 'VIENDO'}
+              title="Marcar como «Viendo»"
+              aria-label={`Marcar como Viendo: ${content.title}`}
+            >
+              <span className="emo" aria-hidden="true">👁️</span>
+            </button>
+            <button
+              type="button"
+              className={`poster-btn right st-btn done ${state?.status === 'FINALIZADO' ? 'on' : ''}`}
+              onClick={() => setStatus('FINALIZADO')}
+              disabled={busy}
+              aria-pressed={state?.status === 'FINALIZADO'}
+              title="Marcar como «Finalizado» (todos los episodios vistos)"
+              aria-label={`Marcar como Finalizado: ${content.title}`}
+            >
+              <span className="emo emo-tick" aria-hidden="true">✔️</span>
+            </button>
+          </>
+        )}
+
+        {!readOnly && onState && !selectMode && advance !== undefined && (
+          // «Mi lista»: ♥ favorito y flecha de avanzar de fase / volver a ver
           <>
             <button
               type="button"
@@ -124,30 +178,17 @@ export function PosterCard({
             >
               <Icon name="heart" />
             </button>
-            {advance === undefined ? (
+            {advance && (
               <button
                 type="button"
-                className={`poster-btn right ${state?.status === 'POR_VER' ? 'on later' : ''}`}
-                onClick={() => act('later')}
+                className={`poster-btn right advance ${'rewatch' in advance ? 'again' : ''}`}
+                onClick={moveOn}
                 disabled={busy}
-                aria-pressed={state?.status === 'POR_VER'}
-                title={state?.status === 'POR_VER' ? 'Quitar de ver más adelante' : 'Ver más adelante'}
+                title={advanceTitle}
+                aria-label={`${advanceTitle}: «${content.title}»`}
               >
                 <Icon name="later" />
               </button>
-            ) : (
-              advance && (
-                <button
-                  type="button"
-                  className={`poster-btn right advance ${'rewatch' in advance ? 'again' : ''}`}
-                  onClick={moveOn}
-                  disabled={busy}
-                  title={advanceTitle}
-                  aria-label={`${advanceTitle}: «${content.title}»`}
-                >
-                  <Icon name="later" />
-                </button>
-              )
             )}
           </>
         )}
