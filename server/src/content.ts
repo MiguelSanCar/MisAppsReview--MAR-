@@ -1,0 +1,243 @@
+import { all, get, run } from './db';
+import { HttpError } from './http';
+import type { ContentType } from './domain/rules';
+import { config } from './config';
+import { detailJikan, searchJikan, trendingJikan } from './providers/jikan';
+import { detailTmdb, searchTmdb, tmdbAvailable, trendingTmdb } from './providers/tmdb';
+import { omdbAvailable, ratingsByImdbId } from './providers/omdb';
+import type { ProviderItem, Ratings } from './providers/types';
+
+export interface ContentRow {
+  id: number;
+  source: 'tmdb' | 'jikan';
+  external_id: string;
+  type: ContentType;
+  title: string;
+  poster_url: string | null;
+  synopsis: string | null;
+  year: number | null;
+  total_episodes: number | null;
+  runtime_minutes: number | null;
+  studio: string | null;
+  imdb_id: string | null;
+  ratings: string | null;
+  detailed_at: string | null;
+  ratings_at: string | null;
+  ratings_try_at: string | null;
+}
+
+export interface ContentDto {
+  id: number;
+  source: string;
+  externalId: string;
+  type: ContentType;
+  title: string;
+  posterUrl: string | null;
+  synopsis: string | null;
+  year: number | null;
+  totalEpisodes: number | null;
+  runtimeMinutes: number | null;
+  studio: string | null;
+  ratings: Ratings;
+  imdbUrl: string | null;
+}
+
+const nowIso = () => new Date().toISOString();
+const DAY = 86400_000;
+
+export function toDto(r: ContentRow): ContentDto {
+  return {
+    id: r.id,
+    source: r.source,
+    externalId: r.external_id,
+    type: r.type,
+    title: r.title,
+    posterUrl: r.poster_url,
+    synopsis: r.synopsis,
+    year: r.year,
+    totalEpisodes: r.total_episodes,
+    runtimeMinutes: r.runtime_minutes,
+    studio: r.studio,
+    ratings: r.ratings ? JSON.parse(r.ratings) : {},
+    imdbUrl: r.imdb_id ? `https://www.imdb.com/title/${r.imdb_id}/` : null,
+  };
+}
+
+export const getContent = (id: number) => get<ContentRow>('SELECT * FROM content WHERE id = ?', [id]);
+
+const malText = (s?: number | null) => (typeof s === 'number' ? `${s.toFixed(2)}/10` : null);
+
+/** Guarda/actualiza un resultado de búsqueda sin pisar datos ya completos con nulos. */
+export function upsertFromProvider(i: ProviderItem): ContentRow {
+  const ex = get<ContentRow>("SELECT * FROM content WHERE source = ? AND external_id = ?", [i.source, i.externalId]);
+  // Con la búsqueda "al escribir" llegan los mismos resultados una y otra vez: no se escribe si no hay nada nuevo.
+  if (
+    ex &&
+    ex.title === i.title &&
+    !((!ex.poster_url && i.posterUrl) || (!ex.synopsis && i.synopsis) || (!ex.year && i.year) ||
+      (ex.total_episodes == null && i.totalEpisodes != null) || (ex.studio == null && i.studio) ||
+      (ex.runtime_minutes == null && i.runtimeMinutes != null) || (!ex.ratings && malText(i.malScore)))
+  ) {
+    return ex;
+  }
+  run(
+    `INSERT INTO content (source, external_id, type, title, poster_url, synopsis, year, total_episodes, runtime_minutes, studio, imdb_id)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT(source, external_id) DO UPDATE SET
+       title = excluded.title,
+       poster_url = COALESCE(excluded.poster_url, content.poster_url),
+       synopsis = COALESCE(excluded.synopsis, content.synopsis),
+       year = COALESCE(excluded.year, content.year),
+       total_episodes = COALESCE(content.total_episodes, excluded.total_episodes),
+       runtime_minutes = COALESCE(content.runtime_minutes, excluded.runtime_minutes),
+       studio = COALESCE(content.studio, excluded.studio)`,
+    [i.source, i.externalId, i.type, i.title, i.posterUrl, i.synopsis, i.year, i.totalEpisodes, i.runtimeMinutes, i.studio, i.imdbId ?? null],
+  );
+  const row = get<ContentRow>('SELECT * FROM content WHERE source = ? AND external_id = ?', [i.source, i.externalId])!;
+  const mal = malText(i.malScore);
+  if (mal && !row.ratings) {
+    run('UPDATE content SET ratings = ?, ratings_at = ? WHERE id = ?', [JSON.stringify({ mal }), nowIso(), row.id]);
+    return getContent(row.id)!;
+  }
+  return row;
+}
+
+/** Completa los datos de la ficha (episodios totales, estudio, id de IMDb...) la primera vez. */
+export async function ensureCore(row: ContentRow): Promise<ContentRow> {
+  if (row.detailed_at) return row;
+  const d = row.source === 'tmdb' ? await detailTmdb(row.external_id) : await detailJikan(row.external_id);
+  run(
+    `UPDATE content SET title = ?, poster_url = COALESCE(?, poster_url), synopsis = COALESCE(?, synopsis),
+       year = COALESCE(?, year), total_episodes = ?, runtime_minutes = ?, studio = ?, imdb_id = COALESCE(?, imdb_id),
+       detailed_at = ? WHERE id = ?`,
+    [d.title, d.posterUrl, d.synopsis, d.year, d.totalEpisodes, d.runtimeMinutes, d.studio, d.imdbId ?? null, nowIso(), row.id],
+  );
+  const mal = malText(d.malScore);
+  if (mal) run('UPDATE content SET ratings = ?, ratings_at = ? WHERE id = ?', [JSON.stringify({ mal }), nowIso(), row.id]);
+  return getContent(row.id)!;
+}
+
+/** IMDb + Rotten Tomatoes vía OMDb (series y películas). Si falla, reintenta pasados 10 minutos. */
+export async function ensureRatings(row: ContentRow): Promise<ContentRow> {
+  if (row.source !== 'tmdb' || !row.imdb_id || !omdbAvailable()) return row;
+  const fresh = row.ratings_at && Date.now() - Date.parse(row.ratings_at) < 7 * DAY;
+  const triedRecently = row.ratings_try_at && Date.now() - Date.parse(row.ratings_try_at) < 10 * 60_000;
+  if (fresh || triedRecently) return row;
+  try {
+    const ratings = await ratingsByImdbId(row.imdb_id);
+    run('UPDATE content SET ratings = ?, ratings_at = ?, ratings_try_at = NULL WHERE id = ?', [JSON.stringify(ratings), nowIso(), row.id]);
+  } catch {
+    run('UPDATE content SET ratings_try_at = ? WHERE id = ?', [nowIso(), row.id]);
+  }
+  return getContent(row.id)!;
+}
+
+export async function loadContent(id: number): Promise<ContentRow> {
+  const row = getContent(id);
+  if (!row) throw new HttpError(404, 'Contenido no encontrado');
+  return row;
+}
+
+/** Contenido con datos completos; si el proveedor falla da un error claro. */
+export async function loadCore(id: number): Promise<ContentRow> {
+  const row = await loadContent(id);
+  try {
+    return await ensureCore(row);
+  } catch {
+    throw new HttpError(502, 'No se pudieron obtener los datos del contenido. Inténtalo de nuevo en un momento.');
+  }
+}
+
+export interface SearchStatus {
+  tmdb: boolean;
+  omdb: boolean;
+  jikan: boolean;
+}
+export const searchStatus = (): SearchStatus => ({ tmdb: tmdbAvailable(), omdb: omdbAvailable(), jikan: true });
+
+export type SearchType = "todo" | ContentType;
+
+type Settled<T> = { ok: true; value: T } | { ok: false; reason: "error" | "slow" };
+
+/** Espera a un proveedor como mucho `ms`; si tarda más, se sigue sin él (su respuesta quedará en caché para la siguiente). */
+function settle<T>(p: Promise<T>, ms: number): Promise<Settled<T>> {
+  return new Promise((resolve) => {
+    const t = setTimeout(() => resolve({ ok: false, reason: "slow" }), ms);
+    p.then(
+      (value) => { clearTimeout(t); resolve({ ok: true, value }); },
+      () => { clearTimeout(t); resolve({ ok: false, reason: "error" }); },
+    );
+  });
+}
+
+const interleave = (lists: ProviderItem[][]) => {
+  const merged: ProviderItem[] = [];
+  for (let i = 0; lists.some((l) => i < l.length); i++) for (const l of lists) if (i < l.length) merged.push(l[i]);
+  return merged;
+};
+
+async function gather(jobs: { label: string; p: Promise<ProviderItem[]> }[], warnings: string[]) {
+  const settled = await Promise.all(jobs.map((j) => settle(j.p, config.searchSoftMs)));
+  const lists: ProviderItem[][] = [];
+  settled.forEach((s, i) => {
+    if (s.ok) lists.push(s.value);
+    else if (s.reason === "slow") warnings.push(`${jobs[i].label} está tardando; aparecerá en la siguiente búsqueda.`);
+    else warnings.push(`No se pudo consultar ${jobs[i].label}. Inténtalo de nuevo más tarde.`);
+  });
+  return interleave(lists);
+}
+
+/** Buscador único: combina TMDB (series/películas) y Jikan (anime) y entrelaza resultados. */
+async function searchProviders(q: string, type: SearchType) {
+  const warnings: string[] = [];
+  const jobs: { label: string; p: Promise<ProviderItem[]> }[] = [];
+  if (type !== "anime") {
+    if (!tmdbAvailable()) warnings.push("Falta TMDB_API_KEY: la búsqueda de series y películas no está disponible.");
+    else jobs.push({ label: "TMDB", p: searchTmdb(q, type === "serie" ? "serie" : type === "pelicula" ? "pelicula" : "todo") });
+  }
+  if (type === "anime" || type === "todo") jobs.push({ label: "MyAnimeList (Jikan)", p: searchJikan(q) });
+  return { items: await gather(jobs, warnings), warnings };
+}
+
+export async function search(q: string, type: SearchType) {
+  const { items, warnings } = await searchProviders(q, type);
+  return { results: items.map((i) => toDto(upsertFromProvider(i))), warnings };
+}
+
+/** Sugerencias al escribir: solo títulos (no guarda nada en la BD). */
+export async function suggest(q: string, type: SearchType) {
+  const { items, warnings } = await searchProviders(q, type);
+  const seen = new Set<string>();
+  const suggestions = [];
+  for (const i of items) {
+    const key = i.title.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    suggestions.push({ title: i.title, year: i.year, type: i.type, posterUrl: i.posterUrl });
+    if (suggestions.length >= 8) break;
+  }
+  return { suggestions, warnings };
+}
+
+/** Lo más visto del momento: series (por defecto), películas o anime. Sin clave de TMDB, la portada cae en anime. */
+export async function trending(type: SearchType) {
+  const warnings: string[] = [];
+  let kind: "serie" | "pelicula" | "anime" = type === "todo" ? "serie" : type;
+  if (kind !== "anime" && !tmdbAvailable()) {
+    if (type === "todo") kind = "anime";
+    else warnings.push("Falta TMDB_API_KEY: no se pueden mostrar series ni películas.");
+  }
+  let items: ProviderItem[] = [];
+  if (!(kind !== "anime" && !tmdbAvailable())) {
+    const label = kind === "anime" ? "MyAnimeList (Jikan)" : "TMDB";
+    const p = kind === "anime" ? trendingJikan() : trendingTmdb(kind === "pelicula" ? "movie" : "tv");
+    items = await gather([{ label, p }], warnings);
+  }
+  const title = kind === "serie" ? "Series más vistas del momento" : kind === "pelicula" ? "Películas más vistas del momento" : "Anime más visto del momento";
+  return { title, kind, results: items.map((i) => toDto(upsertFromProvider(i))), warnings };
+}
+
+export function contentByIds(ids: number[]): ContentRow[] {
+  if (!ids.length) return [];
+  return all<ContentRow>(`SELECT * FROM content WHERE id IN (${ids.map(() => '?').join(',')})`, ids);
+}
