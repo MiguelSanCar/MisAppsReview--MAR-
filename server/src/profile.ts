@@ -8,7 +8,7 @@ import { getUser, publicUser } from './users';
 export function buildProfile(userId: number) {
   const user = getUser(userId)!;
   const rows = all<UserContentRow>(
-    `SELECT c.*, uc.status, uc.watched_episodes, uc.is_favorite, uc.updated_at
+    `SELECT c.*, uc.status, uc.watched_episodes, uc.is_favorite, uc.updated_at, uc.prev_episodes, uc.rewatch
      FROM user_content uc JOIN content c ON c.id = uc.content_id WHERE uc.user_id = ?`,
     [userId],
   );
@@ -18,10 +18,13 @@ export function buildProfile(userId: number) {
   const byStatus = Object.fromEntries(STATUSES.map((s) => [s, 0])) as Record<Status, number>;
   const byType: Record<string, number> = { serie: 0, pelicula: 0, anime: 0 };
   for (const r of rows) {
-    totalMinutes += minutesWatched(r.type, r.watched_episodes, r.runtime_minutes);
-    episodes += r.watched_episodes;
+    // Visionado actual + visionados anteriores (revisionado): volver a ver algo no borra lo ya visto
+    const seen = r.watched_episodes + r.prev_episodes;
+    totalMinutes += minutesWatched(r.type, seen, r.runtime_minutes);
+    episodes += seen;
     byStatus[r.status]++;
-    if (r.status === 'FINALIZADO') byType[r.type]++;
+    // «Terminadas»: finalizadas ahora o ya terminadas antes (está reviéndolas)
+    if (r.status === 'FINALIZADO' || r.prev_episodes > 0) byType[r.type]++;
   }
 
   const favorites = rows

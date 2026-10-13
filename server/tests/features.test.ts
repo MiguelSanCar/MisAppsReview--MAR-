@@ -12,26 +12,16 @@ beforeAll(async () => {
 });
 afterAll(() => app.stop());
 
-describe('búsqueda al escribir: sugerencias, tendencias y rapidez', () => {
-  it('las sugerencias devuelven títulos (sin ids) y se pueden filtrar por tipo', async () => {
-    const r = await ana.get('/api/search/suggest?q=brea&type=todo');
-    expect(r.status).toBe(200);
-    const titles = r.body.suggestions.map((s: any) => s.title);
-    expect(titles).toContain('Breaking Bad');
-    expect(titles).not.toContain('Anime en TMDB');
-    expect(r.body.suggestions[0]).toEqual(expect.objectContaining({ title: expect.any(String), type: expect.any(String) }));
-    expect(r.body.suggestions.length).toBeLessThanOrEqual(8);
-    expect(new Set(titles.map((t: string) => t.toLowerCase())).size).toBe(titles.length); // sin repetidos
-    expect((await ana.get('/api/search/suggest?q=a')).body.suggestions).toEqual([]);
-    expect((await ana.get('/api/search/suggest?q=abc&type=nope')).status).toBe(400);
-    expect((await new Client().get('/api/search/suggest?q=abc')).status).toBe(401);
+describe('búsqueda al escribir: tendencias y rapidez', () => {
+  it('el autocompletado (sugerencias) se retiró: la ruta ya no existe', async () => {
+    expect((await ana.get('/api/search/suggest?q=brea&type=todo')).status).toBe(404);
   });
 
-  it('sugerencias y búsqueda de la misma consulta comparten una sola petición a TMDB', async () => {
+  it('dos búsquedas simultáneas de la misma consulta comparten una sola petición a TMDB', async () => {
     const q = 'compartida' + Date.now();
     const before = app.mock.calls.filter((c) => c === '/tmdb/search/multi').length;
-    await Promise.all([ana.get(`/api/search/suggest?q=${q}&type=serie`), ana.get(`/api/search?q=${q}&type=serie`)]);
-    await ana.get(`/api/search?q=${q}&type=todo`);
+    await Promise.all([ana.get(`/api/search?q=${q}&type=serie`), ana.get(`/api/search?q=${q}&type=serie`)]);
+    await ana.get(`/api/search?q=${q}&type=todo`); // y la siguiente sale de la caché
     expect(app.mock.calls.filter((c) => c === '/tmdb/search/multi').length - before).toBe(1);
   });
 
@@ -84,7 +74,6 @@ describe('búsqueda al escribir: sugerencias, tendencias y rapidez', () => {
       expect(anime.body.results).toEqual([]);
       expect(anime.body.warnings.join(' ')).toMatch(/JIKAN_ENABLED=false/);
       expect((await ana.get('/api/search/trending?type=anime')).body.warnings.join(' ')).toMatch(/desactivada/);
-      expect((await ana.get('/api/search/suggest?q=sinjikan&type=todo')).body.warnings).toEqual([]);
       expect(app.mock.calls.filter((c) => c.startsWith('/jikan')).length).toBe(before); // ni una llamada
     } finally {
       config.jikanEnabled = true;

@@ -217,21 +217,6 @@ export async function search(q: string, type: SearchType) {
   return { results: items.map((i) => toDto(upsertFromProvider(i))), warnings };
 }
 
-/** Sugerencias al escribir: solo títulos (no guarda nada en la BD). */
-export async function suggest(q: string, type: SearchType) {
-  const { items, warnings } = await searchProviders(q, type);
-  const seen = new Set<string>();
-  const suggestions = [];
-  for (const i of items) {
-    const key = i.title.toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    suggestions.push({ title: i.title, year: i.year, type: i.type, posterUrl: i.posterUrl });
-    if (suggestions.length >= 8) break;
-  }
-  return { suggestions, warnings };
-}
-
 /** Lo más visto del momento: series (por defecto), películas o anime. Sin clave de TMDB, la portada cae en anime. */
 export async function trending(type: SearchType) {
   const warnings: string[] = [];

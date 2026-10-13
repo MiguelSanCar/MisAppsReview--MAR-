@@ -163,4 +163,14 @@ export const MIGRATIONS: { version: number; name: string; sql: string }[] = [
         last_activity_at = COALESCE((SELECT MAX(created_at) FROM joint_list_history h WHERE h.list_id = joint_lists.id), created_at);
     `,
   },
+  {
+    version: 9,
+    name: 'revisionado',
+    sql: `
+      -- prev_episodes: episodios de visionados anteriores (ya terminados); siguen contando en las estadísticas.
+      -- rewatch: nº de veces que se ha vuelto a ver (>0 = «Reviendo» mientras no se finalice de nuevo).
+      ALTER TABLE user_content ADD COLUMN prev_episodes INTEGER NOT NULL DEFAULT 0;
+      ALTER TABLE user_content ADD COLUMN rewatch INTEGER NOT NULL DEFAULT 0;
+    `,
+  },
 ];

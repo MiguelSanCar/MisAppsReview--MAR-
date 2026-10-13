@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { z } from 'zod';
+import { run, transaction } from '../db';
 import { ah, HttpError, parse } from '../http';
 import { requireAuth, uid } from './auth';
 import {
-  ensureRatings, getContent, loadCore, loadContent, search, searchStatus, suggest, toDto, trending, SearchType,
+  ensureRatings, getContent, loadCore, loadContent, search, searchStatus, toDto, trending, SearchType,
 } from '../content';
 import {
   applyEpisodes, applyFavorite, applyStatus, CONTENT_TYPES, ItemState, STATUSES,
@@ -30,17 +31,6 @@ const typeParam = (v: unknown): SearchType => {
   if (type !== "todo" && !CONTENT_TYPES.includes(type)) throw new HttpError(400, "Tipo no válido");
   return type;
 };
-
-// Sugerencias al escribir (solo títulos, sin tocar la BD).
-searchRouter.get(
-  "/suggest",
-  requireAuth,
-  ah(async (req, res) => {
-    const q = String(req.query.q ?? "").trim();
-    if (q.length < 2 || q.length > 100) return res.json({ suggestions: [], warnings: [] });
-    res.json(await suggest(q, typeParam(req.query.type)));
-  }),
-);
 
 // Pantalla inicial: lo más visto del momento.
 searchRouter.get(
@@ -108,6 +98,7 @@ const current = (userId: number, contentId: number) => {
     item: s ? ({ status: s.status, watched: s.watched } as ItemState) : ({ status: 'POR_VER', watched: 0 } as ItemState),
     favorite: s?.favorite ?? false,
     exists: !!s,
+    prev: s?.previousEpisodes ?? 0,
   };
 };
 
@@ -145,7 +136,8 @@ libraryRouter.put(
     if (value) {
       saveState(u, id, { status: 'POR_VER', watched: cur.item.watched }, cur.favorite);
     } else if (cur.exists) {
-      if (!cur.favorite && cur.item.watched === 0) {
+      // Sin progreso, sin favorito y sin visionados anteriores: no queda nada que conservar
+      if (!cur.favorite && cur.item.watched === 0 && cur.prev === 0) {
         removeState(u, id);
       } else {
         const row = await loadCore(id);
@@ -184,6 +176,34 @@ libraryRouter.put(
     reply(u, id, res);
   }),
 );
+
+/**
+ * Volver a ver algo ya finalizado: pasa a «Por ver» con los episodios a 0 (se muestra como «Reviendo»).
+ * Los episodios del visionado terminado se guardan aparte para que las estadísticas no los pierdan.
+ */
+libraryRouter.post('/:id/rewatch', (req, res) => {
+  const id = idParam(req.params.id);
+  const u = uid(req);
+  const s = getState(u, id);
+  if (!s || s.status !== 'FINALIZADO') throw new HttpError(400, 'Solo puedes volver a ver un contenido que ya has finalizado');
+  run(
+    `UPDATE user_content SET prev_episodes = prev_episodes + watched_episodes, watched_episodes = 0,
+       status = 'POR_VER', rewatch = rewatch + 1, updated_at = ? WHERE user_id = ? AND content_id = ?`,
+    [new Date().toISOString(), u, id],
+  );
+  reply(u, id, res);
+});
+
+/** Borrado en bloque de la lista (también se llevan sus episodios y minutos de las estadísticas). */
+libraryRouter.post('/delete', (req, res) => {
+  const { ids } = parse(z.object({ ids: z.array(z.number().int().positive()).min(1, 'No hay nada que borrar').max(500, 'Demasiados contenidos a la vez') }), req.body);
+  const u = uid(req);
+  let deleted = 0;
+  transaction(() => {
+    for (const id of new Set(ids)) deleted += removeState(u, id).changes;
+  });
+  res.json({ deleted });
+});
 
 libraryRouter.delete('/:id', (req, res) => {
   removeState(uid(req), idParam(req.params.id));
