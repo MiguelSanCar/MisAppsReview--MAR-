@@ -1,0 +1,20 @@
+{
+  "name": "mar",
+  "private": true,
+  "version": "0.13.0",
+  "description": "Mis Apps Review (MAR)",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "engines": {
+    "node": ">=16.13 <17"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "build": "npm run build -w client && npm run build -w server",
+    "start": "npm run start -w server",
+    "test": "npm run test -w server",
+    "share": "node scripts/share.js"
+  }
+}
