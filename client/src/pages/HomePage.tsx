@@ -62,7 +62,7 @@ export default function HomePage() {
           {!d && search.loading && <Spinner text="Buscando…" />}
           {d && (d.results.length ? (
             <div className={`grid ${search.loading ? 'dim' : ''}`}>
-              {d.results.map((c) => <PosterCard key={c.id} content={c} state={d.states[c.id]} onState={onState} />)}
+              {d.results.map((c) => <PosterCard key={c.id} content={c} state={d.states[c.id]} onState={onState} showSource />)}
             </div>
           ) : (
             !d.warnings.length && <p className="muted center">Sin resultados. Prueba con otro título.</p>
@@ -77,7 +77,7 @@ export default function HomePage() {
             {trendLoading && !trend && <Spinner />}
             {trend && (
               <div className={`grid ${trendLoading ? 'dim' : ''}`}>
-                {trend.results.map((c) => <PosterCard key={c.id} content={c} state={trend.states[c.id]} onState={onState} />)}
+                {trend.results.map((c) => <PosterCard key={c.id} content={c} state={trend.states[c.id]} onState={onState} showSource />)}
               </div>
             )}
             {trend && !trend.results.length && !trend.warnings.length && <p className="muted center">No hay datos por ahora.</p>}

@@ -65,7 +65,10 @@ export default function ContentPage() {
           </div>
 
           <h2 className="h2">Estado</h2>
-          <StatusPicker value={state?.status ?? null} disabled={busy} onChange={(s: Status) => update('status', { status: s })} />
+          <StatusPicker value={state?.status ?? null} rewatch={state?.rewatch ?? 0} disabled={busy} onChange={(s: Status) => update('status', { status: s })} />
+          {!!state?.rewatch && (
+            <p className="rewatch-note">🔁 Visionado n.º {state.rewatch + 1}. Los episodios de tus visionados anteriores ({state.previousEpisodes}) siguen contando en tus estadísticas.</p>
+          )}
 
           <EpisodeCounter value={state?.watched ?? 0} total={c.totalEpisodes} disabled={busy} onSet={(n) => update('episodes', { watched: n })} />
           <p className="muted small">

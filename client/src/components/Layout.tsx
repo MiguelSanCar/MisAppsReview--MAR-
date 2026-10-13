@@ -25,7 +25,7 @@ function Item({ to, children, end }: { to: string; children: ReactNode; end?: bo
   return <NavLink to={to} end={end} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>{children}</NavLink>;
 }
 
-const quick = ({ isActive }: { isActive: boolean }) => `quick-item ${isActive ? 'active' : ''}`;
+const top = ({ isActive }: { isActive: boolean }) => `nav-top ${isActive ? 'active' : ''}`;
 
 export default function Layout() {
   const { user, logout } = useAuth();
@@ -105,35 +105,36 @@ export default function Layout() {
           {other && <span className="muted small">{otherData?.access === 'friend' ? 'Perfil de tu amigo' : 'Perfil de otra persona'}</span>}
         </div>
 
-        <nav className="side-nav">
-          {other ? (
-            <>
-              <Item to={base} end>Su perfil</Item>
-              {otherData?.canSeeList && <Item to={`${base}/lista`}>Su lista</Item>}
-              {otherData?.canSeeFriends && <Item to={`${base}/amigos`}>Sus amigos</Item>}
-              {otherData?.access === 'friend' && <Item to={`${base}/vuestra-lista`}>Vuestra lista</Item>}
-            </>
-          ) : (
-            <>
-              <Item to={`/perfil/${encodeURIComponent(user.username)}`} end>Mi perfil</Item>
-              <Item to="/list">Mi lista</Item>
-              <Item to="/friends">Mis amigos</Item>
-              <Item to="/lists">Mis listas conjuntas</Item>
-            </>
-          )}
-        </nav>
-
-        {/* «Inicio» (y «Ajustes») aparte del resto y a la misma altura, en la parte baja del menú */}
-        <div className={`side-quick ${other ? 'single' : ''}`}>
-          <NavLink to="/home" className={quick}>
+        {/* Jerarquía: «Inicio» (nivel 0) → «Mi…» (una tabulación) → «Mis listas conjuntas» (otra más); «Ajustes» al nivel de «Inicio» */}
+        <nav className="side-nav" aria-label="Navegación">
+          <NavLink to="/home" end className={top}>
             <Icon name="home" /> Inicio
           </NavLink>
+          <div className="nav-sub">
+            {other ? (
+              <>
+                <Item to={base} end>Su perfil</Item>
+                {otherData?.canSeeList && <Item to={`${base}/lista`}>Su lista</Item>}
+                {otherData?.canSeeFriends && <Item to={`${base}/amigos`}>Sus amigos</Item>}
+                {otherData?.access === 'friend' && <Item to={`${base}/vuestra-lista`}>Vuestra lista</Item>}
+              </>
+            ) : (
+              <>
+                <Item to={`/perfil/${encodeURIComponent(user.username)}`} end>Mi perfil</Item>
+                <Item to="/list"><span className="emo" aria-hidden="true">📝</span>Mi lista</Item>
+                <div className="nav-sub">
+                  <Item to="/lists"><span className="emo" aria-hidden="true">🗂️</span>Mis listas conjuntas</Item>
+                </div>
+                <Item to="/friends"><span className="emo" aria-hidden="true">👥</span>Mis amigos</Item>
+              </>
+            )}
+          </div>
           {!other && (
-            <NavLink to="/settings" className={quick}>
+            <NavLink to="/settings" className={top}>
               <Icon name="gear" /> Ajustes
             </NavLink>
           )}
-        </div>
+        </nav>
 
         <div className="side-foot">
           <Link to="/roadmap" className="muted small">Roadmap</Link>

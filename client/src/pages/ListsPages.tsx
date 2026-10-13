@@ -97,7 +97,7 @@ export function ListsPage() {
   );
 }
 
-const asUserState = (s: ListState): UserState => ({ ...s, favorite: false, updatedAt: '' });
+const asUserState = (s: ListState): UserState => ({ ...s, favorite: false, updatedAt: '', rewatch: 0, previousEpisodes: 0 });
 
 function describe(h: HistoryEntry): string {
   const st = (s: ListState | null) => (s ? `${STATUS_TEXT[s.status]}, ${s.watched} ep.` : 'fuera de la lista');

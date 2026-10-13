@@ -57,7 +57,7 @@
 .tasks { list-style: none; margin: 0; padding: 4px 12px 12px; display: grid; gap: 8px; }
 .task { display: flex; gap: 8px; align-items: flex-start; font-size: 0.85rem; }
 .task .dot { margin-top: 6px; }
-.task.st-hecho span { color: var(--muted); text-decoration: line-through; }
+.task.st-hecho .task-main > span:first-child { color: var(--muted); text-decoration: line-through; }
 .task em { color: var(--muted); font-style: normal; font-size: 0.78rem; }
 
 @media (max-width: 700px) {
@@ -78,3 +78,17 @@
 .ideas ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .ideas li { display: flex; justify-content: space-between; gap: 12px; align-items: center; background: var(--panel-2); padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; }
 .ideas li button { background: none; color: var(--muted); padding: 2px 6px; }
+
+/* ---------- fechas de entrega ---------- */
+.eta { display: inline-flex; align-items: center; gap: 5px; font-size: 0.74rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.eta i { font-style: normal; font-size: 0.8rem; }
+.eta-done { color: var(--done); }
+.eta-today { color: var(--doing); font-weight: 600; }
+.eta-soon { color: var(--accent); }
+.eta-late { color: #ff6b81; font-weight: 600; }
+.eta-none { color: var(--muted); font-style: italic; }
+.card-head .eta { margin-top: 2px; }
+.col-head .eta { font-size: 0.78rem; }
+.task-main { display: grid; gap: 2px; min-width: 0; }
+.task-eta { font-size: 0.7rem; }
+.eta-note { color: var(--muted); font-style: normal; font-size: 0.72rem; line-height: 1.35; }

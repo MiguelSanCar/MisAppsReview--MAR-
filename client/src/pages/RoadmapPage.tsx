@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import IdeasBox from '../roadmap/IdeasBox';
 import { useRoadmap } from '../roadmap/useRoadmap';
 import {
-  allTasks, countTasks, featureStatus, STATUS_LABEL,
-  type Feature, type Phase, type Status,
+  allTasks, countTasks, describeEta, featureStatus, groupEta, STATUS_LABEL, taskEta,
+  type Eta, type Feature, type Phase, type Status,
 } from '../roadmap/types';
 import './roadmap.css';
 
@@ -19,6 +19,16 @@ function ProgressBar({ done, doing, total }: { done: number; doing: number; tota
       <span className="bar-done" style={{ width: `${pct(done)}%` }} />
       <span className="bar-doing" style={{ width: `${pct(doing)}%` }} />
     </div>
+  );
+}
+
+/** Fecha de entrega (real si está hecho, estimada si no). Sin fecha: se explica el motivo y el esfuerzo. */
+function EtaBadge({ eta, className = '' }: { eta: Eta; className?: string }) {
+  const { text, tone } = describeEta(eta);
+  return (
+    <span className={`eta eta-${tone} ${className}`} title={eta.note}>
+      <i aria-hidden="true">📅</i> {text}
+    </span>
   );
 }
 
@@ -39,15 +49,20 @@ function FeatureCard({ feature }: { feature: Feature }) {
           {STATUS_LABEL[status]}
           <b className="chev">{open ? '▴' : '▾'}</b>
         </span>
+        <EtaBadge eta={groupEta(feature.tasks)} />
       </button>
       {open && (
         <ul className="tasks">
           {feature.tasks.map((t) => (
             <li key={t.id} className={`task st-${t.status}`}>
               <i className="dot" />
-              <span>
-                {t.title}
-                {t.note && <em> · {t.note}</em>}
+              <span className="task-main">
+                <span>
+                  {t.title}
+                  {t.note && <em> · {t.note}</em>}
+                </span>
+                <EtaBadge eta={taskEta(t)} className="task-eta" />
+                {!t.eta && t.status !== 'hecho' && t.etaNote && <em className="eta-note">{t.etaNote}</em>}
               </span>
             </li>
           ))}
@@ -67,6 +82,7 @@ function PhaseColumn({ phase, filter }: { phase: Phase; filter: Filter }) {
         <p>{phase.summary}</p>
         <ProgressBar {...stats} />
         <small>{stats.done} de {stats.total} tareas</small>
+        <EtaBadge eta={groupEta(allTasks(phase.features))} />
       </header>
       <div className="col-body">
         {features.length

@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Ratings, Status, STATUS_TEXT, STATUSES, ContentType } from '../types';
+import { Ratings, Status, statusLabel, STATUSES, ContentType } from '../types';
 
-export function StatusPicker({ value, onChange, disabled }: { value: Status | null; onChange: (s: Status) => void; disabled?: boolean }) {
+export function StatusPicker({ value, onChange, disabled, rewatch = 0 }: { value: Status | null; onChange: (s: Status) => void; disabled?: boolean; rewatch?: number }) {
   return (
     <div className="seg" role="group" aria-label="Estado">
       {STATUSES.map((s) => (
         <button key={s} type="button" disabled={disabled} className={`seg-btn st-${s} ${value === s ? 'on' : ''}`} aria-pressed={value === s} onClick={() => onChange(s)}>
-          {STATUS_TEXT[s]}
+          {statusLabel(s, rewatch)}
         </button>
       ))}
     </div>

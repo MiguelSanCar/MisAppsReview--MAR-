@@ -28,7 +28,17 @@ export interface Content {
   imdbUrl: string | null;
 }
 
-export interface UserState { status: Status; watched: number; favorite: boolean; updatedAt: string }
+export interface UserState {
+  status: Status;
+  /** Episodios vistos en el visionado actual. */
+  watched: number;
+  favorite: boolean;
+  updatedAt: string;
+  /** Veces que se ha vuelto a ver (>0 y «Por ver» = «Reviendo»). */
+  rewatch: number;
+  /** Episodios de visionados anteriores (siguen contando en las estadísticas). */
+  previousEpisodes: number;
+}
 export interface LibraryItem extends Content { state: UserState }
 
 /** Estado dentro de una lista conjunta (sin favorito). */
@@ -92,3 +102,12 @@ export interface ListSummary {
   myStatus: "active" | "left" | "none";
   inactivity: Inactivity;
 }
+
+/** Plataforma de la que se recuperan los datos de un contenido. */
+export const SOURCE_TEXT: Record<string, string> = { tmdb: 'TMDB', jikan: 'MyAnimeList' };
+
+/** «Reviendo» mientras dure un nuevo visionado (se vuelve a ver algo ya finalizado). */
+export const statusLabel = (s: Status, rewatch = 0) => (rewatch > 0 && s === 'POR_VER' ? 'Reviendo' : STATUS_TEXT[s]);
+
+/** «esta serie», «esta película», «este anime» (para los mensajes de confirmación). */
+export const THIS_TYPE: Record<ContentType, string> = { serie: 'esta serie', pelicula: 'esta película', anime: 'este anime' };

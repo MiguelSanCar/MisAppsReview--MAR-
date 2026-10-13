@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, errorText } from '../api';
-import { Content, Status, STATUS_TEXT, TYPE_TEXT, UserState } from '../types';
+import { Content, SOURCE_TEXT, Status, STATUS_TEXT, statusLabel, TYPE_TEXT, UserState } from '../types';
 import { Icon } from './ui';
 import { useToast } from './Toast';
+
+/** Qué hace la flecha de abajo a la derecha en «Mi lista»: pasar a la siguiente fase o volver a ver. */
+export type Advance = { to: Status } | { rewatch: true };
 
 interface Props {
   content: Content;
@@ -17,11 +20,20 @@ interface Props {
   /** Acción alternativa en lugar de navegar. */
   onOpen?: () => void;
   showStatus?: boolean;
+  /** Añade la plataforma de origen (TMDB, MyAnimeList) tras el año y la categoría. */
+  showSource?: boolean;
   /**
    * Si se indica, el botón de la flecha (abajo a la derecha) pasa el contenido a la siguiente fase
-   * (p. ej. Por ver → Viendo) en lugar de «ver más adelante». `null` = no hay fase siguiente: sin botón.
+   * (Por ver → Viendo → Finalizado) o, en «Finalizado», lo vuelve a poner en «Por ver» para volver a verlo.
+   * `null` = no hay acción: sin botón. Sin indicar: la flecha es «ver más adelante».
    */
-  advance?: { to: Status } | null;
+  advance?: Advance | null;
+  /** Papelera (arriba a la derecha): pide borrar el contenido de la lista. */
+  onDelete?: () => void;
+  /** Modo borrado: la tarjeta tiembla, se oculta favorito/flecha/papelera y un clic la (des)selecciona. */
+  selectMode?: boolean;
+  selected?: boolean;
+  onToggleSelect?: () => void;
 }
 
 export function PosterImage({ content }: { content: Pick<Content, 'posterUrl' | 'title'> }) {
@@ -30,7 +42,9 @@ export function PosterImage({ content }: { content: Pick<Content, 'posterUrl' | 
   return <img src={content.posterUrl} alt={`Póster de ${content.title}`} loading="lazy" onError={() => setFailed(true)} />;
 }
 
-export function PosterCard({ content, state, onState, readOnly, to, onOpen, showStatus, advance }: Props) {
+export function PosterCard({
+  content, state, onState, readOnly, to, onOpen, showStatus, showSource, advance, onDelete, selectMode, selected, onToggleSelect,
+}: Props) {
   const toast = useToast();
   const [busy, setBusy] = useState(false);
 
@@ -38,7 +52,9 @@ export function PosterCard({ content, state, onState, readOnly, to, onOpen, show
     if (busy || !onState || !advance) return;
     setBusy(true);
     try {
-      const r = await api.put<{ state: UserState | null }>(`/api/library/${content.id}/status`, { status: advance.to });
+      const r = 'rewatch' in advance
+        ? await api.post<{ state: UserState | null }>(`/api/library/${content.id}/rewatch`)
+        : await api.put<{ state: UserState | null }>(`/api/library/${content.id}/status`, { status: advance.to });
       onState(content.id, r.state);
     } catch (e) {
       toast(errorText(e));
@@ -63,19 +79,40 @@ export function PosterCard({ content, state, onState, readOnly, to, onOpen, show
 
   const progress = state && content.totalEpisodes && content.type !== 'pelicula' ? `${state.watched}/${content.totalEpisodes}` : null;
   const poster = <PosterImage content={content} />;
+  const advanceTitle = advance ? ('rewatch' in advance ? 'Volver a ver (episodios a 0; tus estadísticas se conservan)' : `Pasar a ${STATUS_TEXT[advance.to]}`) : '';
 
   return (
-    <article className="pcard">
+    <article className={`pcard ${selectMode ? 'shaking' : ''} ${selected ? 'selected' : ''}`}>
       <div className="poster">
-        {to === null ? (
+        {selectMode ? (
+          <button type="button" className="poster-link" onClick={onToggleSelect} role="checkbox" aria-checked={!!selected} aria-label={`Seleccionar «${content.title}» para borrar`}>
+            {poster}
+          </button>
+        ) : to === null ? (
           <div className="poster-link">{poster}</div>
         ) : onOpen ? (
           <button type="button" className="poster-link" onClick={onOpen} aria-label={`Abrir ${content.title}`}>{poster}</button>
         ) : (
           <Link className="poster-link" to={to ?? `/content/${content.id}`} aria-label={`Abrir ${content.title}`}>{poster}</Link>
         )}
-        {showStatus && state && <span className={`badge st-${state.status}`}>{STATUS_TEXT[state.status]}{progress ? ` · ${progress}` : ''}</span>}
-        {!readOnly && onState && (
+
+        {showStatus && state && (
+          <span className={`badge st-${state.status}`}>
+            {statusLabel(state.status, state.rewatch)}{progress ? ` · ${progress}` : ''}{state.rewatch > 0 ? ' 🔁' : ''}
+          </span>
+        )}
+
+        {selectMode && (
+          <span className="sel-check" aria-hidden="true">{selected && <Icon name="check" />}</span>
+        )}
+
+        {!readOnly && onDelete && !selectMode && (
+          <button type="button" className="poster-trash" onClick={onDelete} title="Eliminar de mi lista" aria-label={`Eliminar «${content.title}» de mi lista`}>
+            <Icon name="trash" />
+          </button>
+        )}
+
+        {!readOnly && onState && !selectMode && (
           <>
             <button
               type="button"
@@ -102,11 +139,11 @@ export function PosterCard({ content, state, onState, readOnly, to, onOpen, show
               advance && (
                 <button
                   type="button"
-                  className="poster-btn right advance"
+                  className={`poster-btn right advance ${'rewatch' in advance ? 'again' : ''}`}
                   onClick={moveOn}
                   disabled={busy}
-                  title={`Pasar a ${STATUS_TEXT[advance.to]}`}
-                  aria-label={`Pasar «${content.title}» a ${STATUS_TEXT[advance.to]}`}
+                  title={advanceTitle}
+                  aria-label={`${advanceTitle}: «${content.title}»`}
                 >
                   <Icon name="later" />
                 </button>
@@ -117,7 +154,9 @@ export function PosterCard({ content, state, onState, readOnly, to, onOpen, show
       </div>
       <div className="pcard-info">
         <strong title={content.title}>{content.title}</strong>
-        <span className="muted">{[content.year, TYPE_TEXT[content.type]].filter(Boolean).join(' · ')}</span>
+        <span className="muted">
+          {[content.year, TYPE_TEXT[content.type], showSource ? SOURCE_TEXT[content.source] ?? content.source : null].filter(Boolean).join(' · ')}
+        </span>
       </div>
     </article>
   );
