@@ -1,0 +1,748 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-13",
+  "title": "MAR · Mis Apps Review",
+  "subtitle": "Registro personal de series, películas y anime",
+  "phases": [
+    {
+      "id": "f0",
+      "name": "Fase 0 · Base",
+      "summary": "Estructura del proyecto y roadmap público",
+      "features": [
+        {
+          "id": "f0-base",
+          "title": "Estructura del proyecto",
+          "category": "Infra",
+          "tasks": [
+            {
+              "id": "0.1",
+              "title": "Monorepo con cliente y servidor",
+              "status": "hecho"
+            },
+            {
+              "id": "0.2",
+              "title": "Documentación, .env.example y .gitignore",
+              "status": "hecho"
+            },
+            {
+              "id": "0.7",
+              "title": "Un solo comando para levantar todo en local",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f0-roadmap",
+          "title": "Página de roadmap",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "0.3",
+              "title": "Contenido inicial del roadmap",
+              "status": "hecho"
+            },
+            {
+              "id": "0.4",
+              "title": "Página pública de solo lectura",
+              "status": "hecho"
+            },
+            {
+              "id": "0.5",
+              "title": "Progreso global y por fase",
+              "status": "hecho"
+            },
+            {
+              "id": "0.6",
+              "title": "Actualización automática",
+              "status": "hecho"
+            }
+          ]
+        }
+      ],
+      "release": "0.1.0"
+    },
+    {
+      "id": "f1",
+      "name": "Fase 1 · Cuentas",
+      "summary": "Registro, acceso y estructura de la app",
+      "features": [
+        {
+          "id": "f1-auth",
+          "title": "Registro y acceso",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "1.1",
+              "title": "Usuarios y base de datos",
+              "status": "hecho"
+            },
+            {
+              "id": "1.2",
+              "title": "Registro con validación",
+              "status": "hecho"
+            },
+            {
+              "id": "1.3",
+              "title": "Inicio y cierre de sesión",
+              "status": "hecho"
+            },
+            {
+              "id": "1.7",
+              "title": "Seguridad básica",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f1-ui",
+          "title": "Pantallas y menú",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "1.4",
+              "title": "Mostrar y ocultar contraseña",
+              "status": "hecho"
+            },
+            {
+              "id": "1.5",
+              "title": "Pantalla inicial pública",
+              "status": "hecho"
+            },
+            {
+              "id": "1.6",
+              "title": "Menú lateral con perfil",
+              "status": "hecho"
+            }
+          ]
+        }
+      ],
+      "release": "0.2.0"
+    },
+    {
+      "id": "f2",
+      "name": "Fase 2 · Búsqueda",
+      "summary": "Encontrar contenido y guardarlo con un click",
+      "features": [
+        {
+          "id": "f2-datos",
+          "title": "Fuentes de datos",
+          "category": "Datos",
+          "tasks": [
+            {
+              "id": "2.1",
+              "title": "Series y películas (TMDB)",
+              "status": "hecho"
+            },
+            {
+              "id": "2.2",
+              "title": "Anime (Jikan)",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f2-busqueda",
+          "title": "Buscador y tarjetas",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "2.3",
+              "title": "Buscador único con filtro por tipo",
+              "status": "hecho"
+            },
+            {
+              "id": "2.4",
+              "title": "Favorito con corazón (máx. 10)",
+              "status": "hecho"
+            },
+            {
+              "id": "2.5",
+              "title": "Ver más adelante",
+              "status": "hecho"
+            },
+            {
+              "id": "2.6",
+              "title": "Estados vacíos y errores",
+              "status": "hecho"
+            },
+            {
+              "id": "2.7",
+              "title": "Atribución a TMDB y aviso de claves",
+              "status": "hecho"
+            }
+          ]
+        }
+      ],
+      "release": "0.3.0"
+    },
+    {
+      "id": "f3",
+      "name": "Fase 3 · Contenido",
+      "summary": "Ficha de cada título y seguimiento de episodios",
+      "features": [
+        {
+          "id": "f3-ficha",
+          "title": "Ficha del contenido",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "3.1",
+              "title": "Sinopsis, episodios y estudio",
+              "status": "hecho"
+            },
+            {
+              "id": "3.2",
+              "title": "Puntuaciones IMDb, Rotten Tomatoes y MyAnimeList",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f3-seguimiento",
+          "title": "Seguimiento",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "3.3",
+              "title": "Estados: por ver, viendo, finalizado, dejado",
+              "status": "hecho"
+            },
+            {
+              "id": "3.4",
+              "title": "Contador de episodios con + y −",
+              "status": "hecho"
+            },
+            {
+              "id": "3.5",
+              "title": "Edición manual del contador",
+              "status": "hecho"
+            },
+            {
+              "id": "3.6",
+              "title": "Mi lista con filtros",
+              "status": "hecho"
+            }
+          ]
+        }
+      ],
+      "release": "0.4.0"
+    },
+    {
+      "id": "f4",
+      "name": "Fase 4 · Perfil",
+      "summary": "Estadísticas y favoritos",
+      "features": [
+        {
+          "id": "f4-stats",
+          "title": "Estadísticas",
+          "category": "Datos",
+          "tasks": [
+            {
+              "id": "4.1",
+              "title": "Horas totales vistas",
+              "status": "hecho"
+            },
+            {
+              "id": "4.2",
+              "title": "Formato escalonado de tiempo",
+              "status": "hecho"
+            },
+            {
+              "id": "4.4",
+              "title": "Contadores por estado",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f4-perfil",
+          "title": "Pantalla de perfil",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "4.3",
+              "title": "Top 10 de favoritos",
+              "status": "hecho"
+            },
+            {
+              "id": "4.5",
+              "title": "Avatar circular con recorte",
+              "status": "hecho"
+            },
+            {
+              "id": "4.6",
+              "title": "Duración real por episodio",
+              "status": "hecho",
+              "note": "Activable con USE_REAL_RUNTIME; por defecto duraciones fijas"
+            }
+          ]
+        }
+      ],
+      "release": "0.5.0"
+    },
+    {
+      "id": "f5",
+      "name": "Fase 5 · Despliegue",
+      "summary": "Publicar la app y compartir perfiles",
+      "features": [
+        {
+          "id": "f5-deploy",
+          "title": "Publicación",
+          "category": "Infra",
+          "tasks": [
+            {
+              "id": "5.1",
+              "title": "Elegir hosting",
+              "status": "pendiente",
+              "note": "Pospuesto; mientras tanto, pruebas por túnel"
+            },
+            {
+              "id": "5.2",
+              "title": "Configuración de producción",
+              "status": "hecho",
+              "note": "Dockerfile y render.yaml preparados"
+            },
+            {
+              "id": "5.3",
+              "title": "Despliegue",
+              "status": "pendiente",
+              "note": "Requiere cuenta de hosting"
+            },
+            {
+              "id": "5.6",
+              "title": "Copia de seguridad y exportación",
+              "status": "hecho"
+            },
+            {
+              "id": "5.7",
+              "title": "Acceso temporal por túnel para pruebas",
+              "status": "hecho",
+              "note": "npm run share"
+            }
+          ]
+        },
+        {
+          "id": "f5-share",
+          "title": "Compartir",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "5.4",
+              "title": "URL de perfil de solo lectura",
+              "status": "hecho",
+              "note": "Disponible en local; público tras el despliegue"
+            },
+            {
+              "id": "5.5",
+              "title": "Compartir lista de visualizados",
+              "status": "hecho"
+            }
+          ]
+        }
+      ],
+      "release": "0.6.0"
+    },
+    {
+      "id": "f6",
+      "name": "Fase 6 · Amigos",
+      "summary": "Ver el perfil de otras personas",
+      "features": [
+        {
+          "id": "f6-amigos",
+          "title": "Amistades",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "6.1",
+              "title": "Solicitudes y lista de amigos",
+              "status": "hecho"
+            },
+            {
+              "id": "6.2",
+              "title": "Tarjetas de amigos",
+              "status": "hecho"
+            },
+            {
+              "id": "6.3",
+              "title": "Perfil ajeno con menú propio",
+              "status": "hecho"
+            },
+            {
+              "id": "6.4",
+              "title": "Volver al inicio propio",
+              "status": "hecho"
+            }
+          ]
+        }
+      ],
+      "release": "0.7.0"
+    },
+    {
+      "id": "f7",
+      "name": "Fase 7 · Listas conjuntas",
+      "summary": "Listas compartidas con historial",
+      "features": [
+        {
+          "id": "f7-listas",
+          "title": "Lista compartida",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "7.1",
+              "title": "Lista entre dos usuarios",
+              "status": "hecho"
+            },
+            {
+              "id": "7.2",
+              "title": "Edición compartida",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f7-historial",
+          "title": "Historial y rollback",
+          "category": "Datos",
+          "tasks": [
+            {
+              "id": "7.3",
+              "title": "Historial de cambios (50 por lista)",
+              "status": "hecho"
+            },
+            {
+              "id": "7.4",
+              "title": "Rollback desde el historial",
+              "status": "hecho"
+            }
+          ]
+        }
+      ],
+      "release": "0.8.0"
+    },
+    {
+      "id": "f8",
+      "name": "Fase 8 · Opcionales",
+      "summary": "Mejoras futuras de prioridad baja",
+      "features": [
+        {
+          "id": "f8-extra",
+          "title": "Extras",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "8.1",
+              "title": "Recuperar contraseña",
+              "status": "hecho",
+              "note": "Enlace en consola hasta configurar el correo"
+            },
+            {
+              "id": "8.2",
+              "title": "Verificar correo",
+              "status": "hecho",
+              "note": "Enlace en consola hasta configurar el correo"
+            },
+            {
+              "id": "8.3",
+              "title": "Buzón de ideas",
+              "status": "hecho",
+              "note": "Prioridad baja"
+            }
+          ]
+        }
+      ],
+      "release": "0.9.0"
+    },
+    {
+      "id": "f9",
+      "name": "Fase 9 · Mejoras",
+      "summary": "Enlaces de amistad y búsqueda más ágil",
+      "release": "0.10.0",
+      "features": [
+        {
+          "id": "f9-perfil",
+          "title": "Foto de perfil desde el menú",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "9.1",
+              "title": "Ventana con la foto actual y opción de cambiarla",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f9-enlaces",
+          "title": "Enlaces de amistad",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "9.2",
+              "title": "Enlace propio: quien lo abre te añade como amigo",
+              "status": "hecho"
+            },
+            {
+              "id": "9.3",
+              "title": "Enlace de otro perfil: envía una solicitud a esa persona",
+              "status": "hecho"
+            },
+            {
+              "id": "9.4",
+              "title": "Pantalla de invitación (pide iniciar sesión o registrarse)",
+              "status": "hecho"
+            },
+            {
+              "id": "9.5",
+              "title": "Saber quién generó cada enlace y poder renovarlo",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f9-busqueda",
+          "title": "Búsqueda más ágil",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "9.6",
+              "title": "Búsqueda al escribir, sin pulsar Enter (con interruptor para volver atrás)",
+              "status": "hecho"
+            },
+            {
+              "id": "9.7",
+              "title": "Sugerencias mientras se escribe",
+              "status": "hecho"
+            },
+            {
+              "id": "9.8",
+              "title": "Pantalla inicial con lo más visto del momento",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f9-medicion",
+          "title": "Medición de velocidad",
+          "category": "Datos",
+          "tasks": [
+            {
+              "id": "9.9",
+              "title": "Mostrar el tiempo de cada búsqueda para evaluar si es lo bastante rápida",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f9-pulido",
+          "title": "Pulido",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "9.10",
+              "title": "Separar el aviso de «Sus amigos» de la lista de amigos",
+              "status": "hecho"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f10",
+      "name": "Fase 10 · Menú y listas",
+      "release": "0.11.0",
+      "summary": "Ajustes rápidos de menú, nombres y tarjetas",
+      "features": [
+        {
+          "id": "f10-menu",
+          "title": "Menú lateral",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "10.1",
+              "title": "Botón «Inicio» diferenciado, a la altura de «Ajustes» y por debajo del resto",
+              "status": "hecho"
+            },
+            {
+              "id": "10.2",
+              "title": "Renombrar «Listas conjuntas» a «Mis listas conjuntas»",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f10-tarjetas",
+          "title": "Tarjetas de «Mi lista»",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "10.3",
+              "title": "La flecha de la tarjeta pasa el contenido a la siguiente fase (Por ver → Viendo → Finalizado)",
+              "status": "hecho"
+            },
+            {
+              "id": "10.4",
+              "title": "Ocultar esa flecha en «Todos» y en las pestañas sin fase siguiente",
+              "status": "hecho"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f11",
+      "name": "Fase 11 · Perfiles con URL propia",
+      "release": "0.12.0",
+      "summary": "Cada perfil tiene su dirección; público o solo para amigos",
+      "features": [
+        {
+          "id": "f11-url",
+          "title": "Dirección única por perfil",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "11.1",
+              "title": "URL única por perfil (/perfil/usuario) en lugar de /friend/número",
+              "status": "hecho"
+            },
+            {
+              "id": "11.2",
+              "title": "Menú lateral y subpáginas (lista, amigos) con la nueva dirección",
+              "status": "hecho"
+            },
+            {
+              "id": "11.3",
+              "title": "Redirección de las direcciones antiguas",
+              "status": "hecho"
+            },
+            {
+              "id": "11.4",
+              "title": "Botón para copiar la URL del perfil",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f11-visibilidad",
+          "title": "Visibilidad del perfil",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "11.5",
+              "title": "Perfil público (cualquiera, sin cuenta) o solo amigos (por defecto)",
+              "status": "hecho"
+            },
+            {
+              "id": "11.6",
+              "title": "Perfil privado visto por otra persona: aviso y opción de enviar solicitud",
+              "status": "hecho"
+            },
+            {
+              "id": "11.7",
+              "title": "Sustituir el enlace compartido actual por la visibilidad pública",
+              "status": "hecho",
+              "note": "Los perfiles que ya compartían pasan a públicos; /u/<token> redirige"
+            },
+            {
+              "id": "11.8",
+              "title": "Elegir si el perfil público muestra también la lista",
+              "status": "hecho"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f12",
+      "name": "Fase 12 · Vuestra lista",
+      "release": "0.13.0",
+      "summary": "Lista conjunta desde el perfil del amigo y su ciclo de vida",
+      "features": [
+        {
+          "id": "f12-vuestra",
+          "title": "«Vuestra lista» en el perfil del amigo",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "12.1",
+              "title": "Opción «Vuestra lista» en el menú lateral del perfil de un amigo",
+              "status": "hecho"
+            },
+            {
+              "id": "12.2",
+              "title": "Abrir directamente la lista conjunta de la pareja si existe",
+              "status": "hecho"
+            },
+            {
+              "id": "12.3",
+              "title": "Sin lista: «Aún no tenéis una lista conjunta» y botón «Crear nueva lista conjunta»",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f12-modelo",
+          "title": "Listas por pareja",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "12.4",
+              "title": "Una lista conjunta por pareja por ahora (preparado para varias)",
+              "status": "hecho"
+            },
+            {
+              "id": "12.5",
+              "title": "Cualquiera de los dos puede crearla sin permiso de la otra persona",
+              "status": "hecho"
+            },
+            {
+              "id": "12.6",
+              "title": "Salir de una lista sin borrarla y poder volver a unirse",
+              "status": "hecho"
+            }
+          ]
+        },
+        {
+          "id": "f12-vida",
+          "title": "Inactividad y borrado",
+          "category": "Infra",
+          "tasks": [
+            {
+              "id": "12.7",
+              "title": "Registrar la última actividad de cada lista",
+              "status": "hecho"
+            },
+            {
+              "id": "12.8",
+              "title": "Aviso dentro de la app cuando falten 15 días para el borrado",
+              "status": "hecho"
+            },
+            {
+              "id": "12.9",
+              "title": "Base del envío de correos (SMTP): módulo y configuración, sin usar todavía",
+              "status": "hecho",
+              "note": "Módulo, configuración y comando de prueba listos; sin usar todavía"
+            },
+            {
+              "id": "12.10",
+              "title": "Aviso por correo 15 días antes del borrado",
+              "status": "pendiente",
+              "note": "Prioridad baja; depende de conectar el correo (12.12)"
+            },
+            {
+              "id": "12.11",
+              "title": "Borrado automático tras 2 meses sin actividad",
+              "status": "hecho",
+              "note": "Tarea periódica: al arrancar y cada 6 horas"
+            },
+            {
+              "id": "12.12",
+              "title": "Conectar el envío de correos (recuperar contraseña, verificar correo y avisos)",
+              "status": "pendiente",
+              "note": "Prioridad baja"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "release": "0.13.0"
+}
