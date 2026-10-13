@@ -742,7 +742,42 @@
           ]
         }
       ]
+    },
+    {
+      "id": "f13",
+      "name": "Fase 13 · Búsqueda robusta",
+      "release": "0.14.0",
+      "summary": "Menos avisos y esperas cuando una fuente tarda o está bloqueada",
+      "features": [
+        {
+          "id": "f13-proveedores",
+          "title": "Fuentes lentas o bloqueadas",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "13.1",
+              "title": "Límite de espera propio por fuente (TMDB 6 s, Jikan 2 s)",
+              "status": "hecho"
+            },
+            {
+              "id": "13.2",
+              "title": "Corte con retroceso progresivo: 1 min, 2, 4… hasta 15 min; se reinicia al responder",
+              "status": "hecho"
+            },
+            {
+              "id": "13.3",
+              "title": "Interruptor para desactivar Jikan (JIKAN_ENABLED=false), sin esperas ni avisos",
+              "status": "hecho"
+            },
+            {
+              "id": "13.4",
+              "title": "Avisos más claros: «tarda más de lo normal» y «no responde ahora mismo»",
+              "status": "hecho"
+            }
+          ]
+        }
+      ]
     }
   ],
-  "release": "0.13.0"
+  "release": "0.14.0"
 }

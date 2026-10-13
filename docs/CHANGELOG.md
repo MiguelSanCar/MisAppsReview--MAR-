@@ -2,6 +2,14 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 0.14.0 · 2026-10-13 · Fase 13 · Búsqueda robusta
+Motivo: aparecían los avisos «TMDB está tardando» y «MyAnimeList (Jikan) está tardando». Se midió en la red corporativa: Jikan no responde nunca (bloqueado) y el límite único de 3,5 s también cortaba a TMDB, que en una conexión fría a través del proxy puede tardar más. Además cada búsqueda con «Todo» esperaba 3,5 s mientras no actuaba el corte.
+- **13.1** Límite de espera por fuente: TMDB 6 s (`TMDB_SOFT_MS`), Jikan 2 s (`JIKAN_SOFT_MS`); sustituye al único `SEARCH_SOFT_MS`.
+- **13.2** El corte automático ahora tiene **retroceso progresivo**: 1 min tras el primer fallo, el doble con cada fallo seguido hasta 15 min (`PROVIDER_DOWN_MS`, `PROVIDER_DOWN_MAX_MS`), y se reinicia en cuanto la fuente responde. Antes se volvía a probar (y a esperar) cada minuto. Medido: de 3,5 s por búsqueda a ~150 ms tras las 2 primeras.
+- **13.3** `JIKAN_ENABLED=false` desactiva Jikan por completo: «Todo» no espera ni avisa; en «Anime» y en la portada de anime se indica que está desactivado; `/api/search/status` lo refleja.
+- **13.4** Avisos más claros: «tarda más de lo normal» (la respuesta llegará en la siguiente búsqueda) y «no responde ahora mismo (¿red bloqueada?); se omite un rato y se volverá a probar solo».
+- 133 tests (nuevos: corte progresivo, tope, reinicio, errores de API que no cortan, interruptor de Jikan).
+
 ## 0.13.0 · 2026-10-13 · Fase 12 · Vuestra lista
 - **«Vuestra lista» (12.1–12.3):** nueva entrada en el menú del perfil de un amigo. Si la pareja ya tiene lista conjunta, se abre directamente; si no, pantalla «Aún no tenéis una lista conjunta» / «Crea una lista conjunta e invita a tu amigo» con el botón **«Crear nueva lista conjunta»**, que la crea al instante (nombre por defecto «Lista de X y Y») y la otra persona la ve sin aceptar nada.
 - **Listas por pareja (12.4–12.6):** una lista por pareja por ahora (`maxListsPerPair`, el modelo admite varias); la pareja se guarda aparte de los miembros. Cada persona puede **salir** de la lista sin borrarla (`left_at`), verla en «Listas que has dejado» y **volver a unirse** mientras sigan siendo amigas. Si salen las dos, la lista se conserva.

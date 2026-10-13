@@ -153,11 +153,11 @@ export interface SearchStatus {
   omdb: boolean;
   jikan: boolean;
 }
-export const searchStatus = (): SearchStatus => ({ tmdb: tmdbAvailable(), omdb: omdbAvailable(), jikan: true });
+export const searchStatus = (): SearchStatus => ({ tmdb: tmdbAvailable(), omdb: omdbAvailable(), jikan: config.jikanEnabled });
 
 export type SearchType = "todo" | ContentType;
 
-type Settled<T> = { ok: true; value: T } | { ok: false; reason: "error" | "slow" };
+type Settled<T> = { ok: true; value: T } | { ok: false; reason: "error" | "slow" | "down" };
 
 /** Espera a un proveedor como mucho `ms`; si tarda más, se sigue sin él (su respuesta quedará en caché para la siguiente). */
 function settle<T>(p: Promise<T>, ms: number): Promise<Settled<T>> {
@@ -165,7 +165,11 @@ function settle<T>(p: Promise<T>, ms: number): Promise<Settled<T>> {
     const t = setTimeout(() => resolve({ ok: false, reason: "slow" }), ms);
     p.then(
       (value) => { clearTimeout(t); resolve({ ok: true, value }); },
-      () => { clearTimeout(t); resolve({ ok: false, reason: "error" }); },
+      (e) => {
+        clearTimeout(t);
+        // 503 «temporalmente» = el corte automático ya sabía que este proveedor no responde
+        resolve({ ok: false, reason: e instanceof HttpError && e.status === 503 && /temporalmente/.test(e.message) ? "down" : "error" });
+      },
     );
   });
 }
@@ -176,26 +180,35 @@ const interleave = (lists: ProviderItem[][]) => {
   return merged;
 };
 
-async function gather(jobs: { label: string; p: Promise<ProviderItem[]> }[], warnings: string[]) {
-  const settled = await Promise.all(jobs.map((j) => settle(j.p, config.searchSoftMs)));
+type Job = { label: string; p: Promise<ProviderItem[]>; softMs: number };
+
+async function gather(jobs: Job[], warnings: string[]) {
+  const settled = await Promise.all(jobs.map((j) => settle(j.p, j.softMs)));
   const lists: ProviderItem[][] = [];
   settled.forEach((s, i) => {
+    const label = jobs[i].label;
     if (s.ok) lists.push(s.value);
-    else if (s.reason === "slow") warnings.push(`${jobs[i].label} está tardando; aparecerá en la siguiente búsqueda.`);
-    else warnings.push(`No se pudo consultar ${jobs[i].label}. Inténtalo de nuevo más tarde.`);
+    else if (s.reason === "slow") warnings.push(`${label} tarda más de lo normal; sus resultados aparecerán en la siguiente búsqueda.`);
+    else if (s.reason === "down") warnings.push(`${label} no responde ahora mismo (¿red bloqueada?); se omite un rato y se volverá a probar solo.`);
+    else warnings.push(`No se pudo consultar ${label}. Inténtalo de nuevo más tarde.`);
   });
   return interleave(lists);
 }
 
+const JIKAN_OFF = "La búsqueda de anime está desactivada (JIKAN_ENABLED=false).";
+
 /** Buscador único: combina TMDB (series/películas) y Jikan (anime) y entrelaza resultados. */
 async function searchProviders(q: string, type: SearchType) {
   const warnings: string[] = [];
-  const jobs: { label: string; p: Promise<ProviderItem[]> }[] = [];
+  const jobs: Job[] = [];
   if (type !== "anime") {
     if (!tmdbAvailable()) warnings.push("Falta TMDB_API_KEY: la búsqueda de series y películas no está disponible.");
-    else jobs.push({ label: "TMDB", p: searchTmdb(q, type === "serie" ? "serie" : type === "pelicula" ? "pelicula" : "todo") });
+    else jobs.push({ label: "TMDB", softMs: config.tmdbSoftMs, p: searchTmdb(q, type === "serie" ? "serie" : type === "pelicula" ? "pelicula" : "todo") });
   }
-  if (type === "anime" || type === "todo") jobs.push({ label: "MyAnimeList (Jikan)", p: searchJikan(q) });
+  if (type === "anime" || type === "todo") {
+    if (config.jikanEnabled) jobs.push({ label: "MyAnimeList (Jikan)", softMs: config.jikanSoftMs, p: searchJikan(q) });
+    else if (type === "anime") warnings.push(JIKAN_OFF);
+  }
   return { items: await gather(jobs, warnings), warnings };
 }
 
@@ -228,10 +241,12 @@ export async function trending(type: SearchType) {
     else warnings.push("Falta TMDB_API_KEY: no se pueden mostrar series ni películas.");
   }
   let items: ProviderItem[] = [];
-  if (!(kind !== "anime" && !tmdbAvailable())) {
+  if (kind === "anime" && !config.jikanEnabled) {
+    warnings.push(JIKAN_OFF);
+  } else if (!(kind !== "anime" && !tmdbAvailable())) {
     const label = kind === "anime" ? "MyAnimeList (Jikan)" : "TMDB";
     const p = kind === "anime" ? trendingJikan() : trendingTmdb(kind === "pelicula" ? "movie" : "tv");
-    items = await gather([{ label, p }], warnings);
+    items = await gather([{ label, p, softMs: kind === "anime" ? config.jikanSoftMs : config.tmdbSoftMs }], warnings);
   }
   const title = kind === "serie" ? "Series más vistas del momento" : kind === "pelicula" ? "Películas más vistas del momento" : "Anime más visto del momento";
   return { title, kind, results: items.map((i) => toDto(upsertFromProvider(i))), warnings };

@@ -32,7 +32,7 @@
 | **CSS plano** (sin Tailwind ni librerías de UI) | La interfaz es pequeña; evita dependencias. |
 | **Correo simulado** | Sin servicio SMTP, los enlaces de recuperación/verificación se escriben en consola (y en pantalla en local). |
 | **`NODE_EXTRA_CA_CERTS` en vez de desactivar TLS** | Detrás de un proxy corporativo que re-firma HTTPS, se añade confianza en la CA de la empresa (certs/, ignorado por git). Nunca `NODE_TLS_REJECT_UNAUTHORIZED=0`. |
-| **Corte automático de proveedores (60 s)** | Si TMDB/Jikan no responden (bloqueo, timeout) no se reintenta durante 60 s; los errores de la API (401, 404) no lo activan. |
+| **Corte automático de proveedores con retroceso** | Si TMDB/Jikan no responden (bloqueo, timeout, 5xx) no se reintenta durante 1 min; cada fallo seguido duplica la pausa hasta 15 min y responder la reinicia. Los errores de la API (401, 404) no lo activan. |
 | **Un solo servidor y una sola BD al compartir** | Con dos servidores (dev y share) cada uno tenía su BD y aparecían cuentas duplicadas e inconsistentes; sql.js guarda la BD entera en memoria, así que dos procesos sobre el mismo fichero se pisarían. El túnel apunta al servidor de desarrollo; el script exige un `JWT_SECRET` propio. |
 | **`trust proxy = loopback` en local** | Solo se confía en cabeceras `X-Forwarded-*` de proxies del propio equipo (el túnel); en producción, 1 salto. |
 | **Búsquedas en caché de memoria, no en BD** | Con búsqueda al escribir habría una escritura (y un volcado completo de sql.js) por pulsación. La caché en memoria comparte además las peticiones simultáneas (sugerencias + resultados = una sola llamada a TMDB). |
@@ -47,3 +47,5 @@
 | **Borrado por inactividad con tarea propia** (`listLife.ts`) | Al arrancar y cada 6 h; `inactivityInfo()` calcula también el aviso de la app (45 días) sin depender de un correo. |
 | **SMTP como base sin usar** | `mailer.ts` ya valida, evita inyección de cabeceras y cae a consola sin SMTP; conectarlo (12.12) es sustituir `deliverLink` y añadir el aviso de borrado. |
 | **Flecha de tarjeta según pestaña** | En «Mi lista» avanza de fase solo donde hay fase siguiente (Por ver, Viendo); en la búsqueda sigue siendo «ver más adelante». |
+| **Límite de espera por fuente** | TMDB es la fuente principal y a través del proxy corporativo la primera conexión puede tardar (6 s); Jikan es opcional y a menudo bloqueado (2 s). Un único límite daba avisos falsos sobre TMDB y retrasaba cada búsqueda. |
+| **`JIKAN_ENABLED`** | Salida limpia para redes que bloquean Jikan: ni esperas ni avisos. |

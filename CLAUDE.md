@@ -39,7 +39,7 @@ npm run mail:test -w server -- tu@correo.com   # comprueba SMTP (base lista, aú
  - `client/src`: `App.tsx` (rutas), `auth/`, `profile/` (contexto y envoltorio de `/perfil/:username`), `components/`, `pages/`, `roadmap/`, `config.ts` (`LIVE_SEARCH`), `api.ts` (`ApiError.data`, cancelación), `clipboard.ts`.
  - **BD**: SQLite con `sql.js` (en memoria, se vuelca a `data/mar.db` 300 ms tras escribir). **Un solo proceso por fichero**: dos servidores sobre la misma BD se pisarían. Migraciones numeradas (hoy 8): nunca editar una publicada, añadir otra. `db.export()` reinicia la conexión: se reactiva `PRAGMA foreign_keys` tras cada volcado.
  - Express 4: los handlers `async` van envueltos en `ah(...)`; los errores con `HttpError(status, mensaje)` (puede llevar `code`/`extra`); validación con zod vía `parse()`.
- - Los proveedores externos solo se llaman desde el servidor. Búsquedas: caché **en memoria** (`memCached`); fichas y OMDb: caché persistente (`cached`). `guarded()` corta 60 s un proveedor caído y la búsqueda no espera más de `searchSoftMs`.
+ - Los proveedores externos solo se llaman desde el servidor. Búsquedas: caché **en memoria** (`memCached`); fichas y OMDb: caché persistente (`cached`). `guarded()` corta un proveedor caído (1 min, duplicando hasta 15 min; se reinicia al responder) y la búsqueda espera como máximo `tmdbSoftMs` (6 s) / `jikanSoftMs` (2 s). `JIKAN_ENABLED=false` lo desactiva (Jikan está bloqueado en la red corporativa).
 
 ## Reglas de negocio que no son obvias
 

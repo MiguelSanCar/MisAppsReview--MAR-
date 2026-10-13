@@ -30,9 +30,16 @@ export const config = {
   omdbBase: env.OMDB_BASE_URL || 'https://www.omdbapi.com',
   providerTimeoutMs: Number(env.PROVIDER_TIMEOUT_MS) || 8000,
   jikanTimeoutMs: Number(env.JIKAN_TIMEOUT_MS) || 5000,
-  // Tiempo máximo que una búsqueda espera a un proveedor lento antes de devolver lo que ya tenga.
-  searchSoftMs: Number(env.SEARCH_SOFT_MS) || 3500,
+  // Tiempo máximo que una búsqueda espera a CADA proveedor antes de devolver lo que ya tenga. TMDB es la fuente
+  // principal (y a través de un proxy corporativo la primera conexión puede tardar); Jikan es opcional y a veces
+  // está bloqueado, así que se le espera menos.
+  tmdbSoftMs: Number(env.TMDB_SOFT_MS) || 6000,
+  jikanSoftMs: Number(env.JIKAN_SOFT_MS) || 2000,
+  // false = no consultar Jikan/MyAnimeList (p. ej. si la red lo bloquea): sin esperas ni avisos.
+  jikanEnabled: env.JIKAN_ENABLED !== 'false',
+  // Corte de un proveedor caído: primera espera y máximo (se duplica con cada fallo seguido).
   providerDownMs: Number(env.PROVIDER_DOWN_MS ?? 60_000),
+  providerDownMaxMs: Number(env.PROVIDER_DOWN_MAX_MS ?? 15 * 60_000),
   jikanMinGapMs: Number(env.JIKAN_MIN_GAP_MS ?? 400),
 
   // Duración real de las APIs (tarea 4.6). Por defecto: duraciones fijas por tipo.

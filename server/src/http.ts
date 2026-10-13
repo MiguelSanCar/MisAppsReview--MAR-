@@ -2,6 +2,7 @@ import http from 'http';
 import https from 'https';
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import type { ZodTypeAny, z } from 'zod';
+import { config } from './config';
 
 export class HttpError extends Error {
   /** Código estable para el cliente (p. ej. "private"). */
@@ -40,19 +41,28 @@ export function getJson<T = any>(
   });
 }
 
-const downUntil = new Map<string, number>();
+const breaker = new Map<string, { until: number; fails: number }>();
 
 /**
- * Corte automático: si un proveedor no responde (red caída, bloqueo, timeout) no se reintenta durante
- * `ttlMs`, para que una API caída no ralentice cada búsqueda. Los errores de la API (401, 404…) no lo activan.
+ * Corte automático de un proveedor que no responde (red caída, bloqueo, timeout, 5xx): durante `baseMs` no se
+ * reintenta, para que una API caída no ralentice cada búsqueda. Si al volver a probar sigue caído, la espera
+ * se duplica (hasta `providerDownMaxMs`); en cuanto responde, se reinicia. Los errores de la API (401, 404…)
+ * no lo activan.
  */
-export async function guarded<T>(key: string, ttlMs: number, fn: () => Promise<T>): Promise<T> {
-  if ((downUntil.get(key) ?? 0) > Date.now()) throw new HttpError(503, "Proveedor no disponible temporalmente");
+export async function guarded<T>(key: string, baseMs: number, fn: () => Promise<T>): Promise<T> {
+  const st = breaker.get(key);
+  if (st && st.until > Date.now()) throw new HttpError(503, 'Proveedor no disponible temporalmente');
   try {
-    return await fn();
+    const r = await fn();
+    breaker.delete(key); // ha respondido: se reinicia el retroceso
+    return r;
   } catch (e) {
     const status = e instanceof HttpError ? e.status : 0;
-    if (status === 0 || status >= 502) downUntil.set(key, Date.now() + ttlMs);
+    if (status === 0 || status >= 502) {
+      const fails = (breaker.get(key)?.fails ?? 0) + 1;
+      const wait = Math.min(baseMs * 2 ** (fails - 1), Math.max(baseMs, config.providerDownMaxMs));
+      breaker.set(key, { until: Date.now() + wait, fails });
+    }
     throw e;
   }
 }

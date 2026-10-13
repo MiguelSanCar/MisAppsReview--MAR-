@@ -2,7 +2,7 @@
 
 Aplicación para la gestión de series, películas o animes que ha visto una persona, con conexión para varios usuarios y algunas otras funcionalidades. Se ha creado con Claude Code como prueba.
 
-> **Versión 0.13.0** · Las versiones 0.x siguen el [roadmap](#roadmap): cada fase completada sube un número (fase 0 = 0.1, fase 1 = 0.2 … fase 12 = 0.13). La 1.0 se reserva para cuando el despliegue esté publicado y revisado.
+> **Versión 0.14.0** · Las versiones 0.x siguen el [roadmap](#roadmap): cada fase completada sube un número (fase 0 = 0.1, fase 1 = 0.2 … fase 13 = 0.14). La 1.0 se reserva para cuando el despliegue esté publicado y revisado.
 
 ## Qué hace
 - **Pantalla inicial**: las series más vistas del momento (o películas / anime según el filtro).
@@ -45,12 +45,19 @@ Tras pegar las claves, **reinicia** `npm run dev` (el servidor lee `.env` solo a
 
 Sin claves la app arranca igual: avisa en pantalla y en la consola. **El anime funciona sin clave** (Jikan). Reinicia `npm run dev` tras editar `.env`.
 
+### Avisos «tarda más de lo normal» / «no responde ahora mismo»
+No son errores de la app: la búsqueda espera como máximo 6 s a TMDB y 2 s a Jikan y devuelve lo que ya tiene. Si una fuente no responde, se omite un rato (1 min, luego 2, 4… hasta 15) y se vuelve a probar sola. **Jikan (MyAnimeList) suele estar bloqueado en redes corporativas**; si es tu caso, desactívalo y desaparecen los avisos y las esperas:
+```
+JIKAN_ENABLED=false     # en .env; reinicia npm run dev (el anime dejará de buscarse)
+```
+Otros ajustes: `TMDB_SOFT_MS`, `JIKAN_SOFT_MS`, `PROVIDER_DOWN_MS`, `PROVIDER_DOWN_MAX_MS`.
+
 ### Red corporativa que inspecciona HTTPS (error "self signed certificate in certificate chain")
 Si TMDB falla con ese error es que tu red (p. ej. Netskope) re-firma el tráfico con su propio certificado: Windows y el navegador lo aceptan, pero Node no usa el almacén de Windows. Solución, sin desactivar ninguna verificación:
 1. Exporta el certificado raíz de la empresa y los intermedios a un PEM en `certs/corporate-ca.pem` (carpeta ignorada por git). Con PowerShell: `Export-Certificate -Cert <cert> -FilePath x.cer` y conviértelos a PEM (base64 entre `-----BEGIN CERTIFICATE-----` y `-----END CERTIFICATE-----`).
 2. `npm run dev` y `npm run share` lo detectan solos (`scripts/ca.js`) y lo pasan a Node como `NODE_EXTRA_CA_CERTS`. También puedes apuntar a otro fichero con `EXTRA_CA_CERTS=ruta` en `.env`.
 
-> Si un proveedor (p. ej. Jikan/MyAnimeList) está bloqueado por la red, la búsqueda lo salta durante 60 s tras el primer fallo y avisa en pantalla; el resto sigue funcionando.
+> Si un proveedor (p. ej. Jikan/MyAnimeList) está bloqueado por la red, la búsqueda lo omite un rato (con retroceso progresivo) y avisa en pantalla; el resto sigue funcionando. Ver «Avisos» más arriba.
 
 ### Probar desde otras máquinas (sin hosting)
 Una sola app y **una sola base de datos** (`data/mar.db`): el modo compartido no arranca otro servidor, expone el de desarrollo.
@@ -83,7 +90,7 @@ npm run mail:test -w server -- tu@correo.com
 
 ### Comandos útiles
 ```bash
-npm test                          # 124 tests (dominio + API completa con proveedores simulados)
+npm test                          # 133 tests (dominio + API completa con proveedores simulados)
 npm run build                     # compila cliente (client/dist) y servidor (server/dist)
 npm start                         # producción local: sirve API + cliente en el puerto 3001 (requiere build)
 npm run dev:mock -w server        # app completa con TMDB/Jikan/OMDb SIMULADOS (títulos falsos) en el puerto 3101

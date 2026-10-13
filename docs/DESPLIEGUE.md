@@ -18,6 +18,8 @@ Estado: **preparado, sin publicar** (hace falta una cuenta de hosting tuya). Tod
 | `OMDB_API_KEY` | Para IMDb + Rotten Tomatoes | https://www.omdbapi.com/apikey.aspx (gratis, 1.000/día) |
 | `DB_FILE` | No (`/data/mar.db` en Docker) | Ruta del fichero SQLite |
 | `PORT` | No (`3001`) | Puerto |
+| `JIKAN_ENABLED` | No (`true`) | `false` desactiva la búsqueda de anime (Jikan) |
+| `TMDB_SOFT_MS` / `JIKAN_SOFT_MS` | No (`6000` / `2000`) | Espera máxima de la búsqueda a cada fuente |
 | `USE_REAL_RUNTIME` | No (`false`) | `true` = duración real de las APIs en lugar de 50/90/23 min |
 | `JOINT_HISTORY_LIMIT` | No (`50`, mínimo 15) | Modificaciones guardadas por lista conjunta |
 | `JOINT_INACTIVITY_DAYS` / `JOINT_WARNING_DAYS` | No (`60` / `15`) | Borrado de listas conjuntas por inactividad y antelación del aviso |
