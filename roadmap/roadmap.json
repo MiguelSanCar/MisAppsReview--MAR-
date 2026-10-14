@@ -1295,8 +1295,8 @@
             {
               "id": "17.18",
               "title": "Tests automáticos del manifiesto y las cabeceras; auditoría Lighthouse si funciona con Node 16",
-              "status": "pendiente",
-              "eta": "2026-10-22"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.19",
@@ -1322,32 +1322,32 @@
             {
               "id": "17.21",
               "title": "Roadmap: arriba a la izquierda, el logotipo completo (en lugar del texto «MAR») para volver a la página",
-              "status": "pendiente",
-              "eta": "2026-10-22"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.22",
               "title": "Páginas públicas (inicio de sesión y registro) a la altura exacta del móvil (100dvh), sin desplazamiento vertical",
-              "status": "pendiente",
-              "eta": "2026-10-22"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.23",
               "title": "Logotipo con las letras exactas de la fuente Lock Block (glifos M, A y R convertidos a trazados SVG), en lugar de una interpretación; licencia de uso personal anotada en docs/THIRD_PARTY_LICENSES.md",
-              "status": "pendiente",
-              "eta": "2026-10-22"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.24",
               "title": "La «M» del icono de la app (favicon e iconos de la PWA) es la M de esa misma fuente",
-              "status": "pendiente",
-              "eta": "2026-10-22"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.25",
               "title": "Comprobación visual con capturas (cabecera, roadmap, login a 360×640, favicon a 16 y 32 px) y despliegue",
-              "status": "pendiente",
-              "eta": "2026-10-22"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },

@@ -1,5 +1,5 @@
 import { FormEvent, ReactNode, useEffect, useState } from 'react';
-import { Link, Navigate, Outlet, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { api, errorText } from '../api';
 import { useAuth } from '../auth/AuthContext';
 import { Footer } from '../components/Layout';
@@ -17,8 +17,11 @@ function useNext() {
 /** Cabecera pública: arriba a la derecha "Iniciar sesión" y "Registrarse". */
 export function PublicLayout() {
   const { user } = useAuth();
+  const { pathname } = useLocation();
+  // Pantallas de acceso: en el móvil ocupan justo la altura de la ventana, sin desplazamiento vertical.
+  const fit = ['/', '/login', '/register', '/forgot'].includes(pathname) || pathname.startsWith('/reset/') || pathname.startsWith('/verify/');
   return (
-    <div className="public">
+    <div className={`public ${fit ? 'fit' : ''}`}>
       <header className="pub-top">
         <Link to="/" className="brand" aria-label="MAR, ir al inicio"><Logo height={20} /></Link>
         <nav className="pub-nav">

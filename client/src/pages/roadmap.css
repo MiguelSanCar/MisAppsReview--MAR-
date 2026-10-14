@@ -2,7 +2,7 @@
 .rm-top { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; }
 .rm-top h1 { margin: 4px 0; font-size: 2.2rem; letter-spacing: 0.04em; }
 .rm-top p { margin: 0; color: var(--muted); }
-.rm-back { color: var(--accent); text-decoration: none; font-size: 0.9rem; }
+.rm-back { display: inline-flex; align-items: center; color: var(--text); text-decoration: none; margin-bottom: 12px; }
 .rm-global { min-width: min(320px, 100%); display: grid; gap: 6px; }
 .rm-global strong { font-size: 2rem; line-height: 1; }
 .rm-global small, .col-head small { color: var(--muted); }
