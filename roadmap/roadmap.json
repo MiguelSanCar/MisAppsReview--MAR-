@@ -1473,32 +1473,32 @@
             {
               "id": "18.12",
               "title": "Paleta clara con variables CSS; el oscuro sigue siendo el tema por defecto",
-              "status": "pendiente",
-              "eta": "2026-10-19"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.13",
               "title": "Interruptor arriba a la derecha de la cabecera con luna y sol (iconos de contorno blanco)",
-              "status": "pendiente",
-              "eta": "2026-10-19"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.14",
               "title": "Preferencia guardada por usuario (migración 10 y ajuste en Ajustes) y aplicada al volver a entrar",
-              "status": "pendiente",
-              "eta": "2026-10-19"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.15",
               "title": "Sin parpadeo al cargar (script externo mínimo) y color de la barra del navegador según el tema; antes de iniciar sesión se recuerda en el navegador",
-              "status": "pendiente",
-              "eta": "2026-10-19"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.16",
               "title": "Tests y capturas en ambos temas (móvil y ordenador)",
-              "status": "pendiente",
-              "eta": "2026-10-19"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
@@ -1509,7 +1509,7 @@
           "tasks": [
             {
               "id": "18.17",
-              "title": "Géneros de cada contenido (migración 10: content.genres; TMDB ya los da) con relleno perezoso de lo ya guardado",
+              "title": "Géneros de cada contenido (migración 11: content.genres; TMDB ya los da) con relleno perezoso de lo ya guardado",
               "status": "pendiente",
               "eta": "2026-10-21"
             },

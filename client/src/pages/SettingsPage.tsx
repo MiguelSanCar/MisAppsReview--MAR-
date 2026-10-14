@@ -5,12 +5,14 @@ import { copyText } from '../clipboard';
 import { AvatarCropper } from '../components/AvatarCropper';
 import { useToast } from '../components/Toast';
 import { Avatar } from '../components/ui';
+import { useTheme } from '../theme/ThemeContext';
 import type { Me } from '../types';
 import { profileUrl } from './ProfilePages';
 
 export default function SettingsPage() {
   const { user, setUser } = useAuth();
   const toast = useToast();
+  const { theme, setTheme } = useTheme();
   const [file, setFile] = useState<File | null>(null);
   const [devLink, setDevLink] = useState<string | undefined>();
   if (!user) return null;
@@ -66,6 +68,15 @@ export default function SettingsPage() {
             {user.avatarUrl && <button className="btn ghost" onClick={removeAvatar}>Quitar</button>}
           </div>
         )}
+      </section>
+
+      <section className="panel">
+        <h2 className="h2">Apariencia</h2>
+        <p className="note">Elige el tema de la aplicación. Se guarda en tu cuenta y se aplica cuando entres desde cualquier dispositivo. También puedes cambiarlo con el interruptor de la cabecera.</p>
+        <div className="seg" role="radiogroup" aria-label="Tema">
+          <button type="button" role="radio" aria-checked={theme === 'dark'} className={`seg-btn ${theme === 'dark' ? 'on' : ''}`} onClick={() => setTheme('dark')}>Oscuro (predeterminado)</button>
+          <button type="button" role="radio" aria-checked={theme === 'light'} className={`seg-btn ${theme === 'light' ? 'on' : ''}`} onClick={() => setTheme('light')}>Claro</button>
+        </div>
       </section>
 
       <section className="panel">

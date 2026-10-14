@@ -12,6 +12,7 @@ export interface UserRow {
   share_token: string | null;
   profile_public: number;
   email_verified: number;
+  theme: string;
   created_at: string;
 }
 
@@ -40,4 +41,6 @@ export const selfDto = (u: UserRow) => ({
   profilePublic: !!u.profile_public,
   /** En un perfil público, mostrar también la lista de visualizados. */
   showList: !!u.share_list,
+  /** Tema de la interfaz: 'dark' (por defecto) o 'light'. */
+  theme: u.theme === 'light' ? 'light' : 'dark',
 });

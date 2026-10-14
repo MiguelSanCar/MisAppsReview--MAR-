@@ -173,4 +173,12 @@ export const MIGRATIONS: { version: number; name: string; sql: string }[] = [
       ALTER TABLE user_content ADD COLUMN rewatch INTEGER NOT NULL DEFAULT 0;
     `,
   },
+  {
+    version: 10,
+    name: 'tema de la interfaz',
+    sql: `
+      -- theme: preferencia de la persona ('dark' por defecto, 'light'); se aplica al iniciar sesión en cualquier dispositivo.
+      ALTER TABLE users ADD COLUMN theme TEXT NOT NULL DEFAULT 'dark';
+    `,
+  },
 ];

@@ -83,3 +83,15 @@
 | **`IntersectionObserver` con 600 px de margen y botón «Cargar más» de reserva** | Se piden más antes de llegar al final, sin escuchar el evento `scroll` (que castiga a los móviles lentos). El observador se recrea tras cada lote para encadenar lotes en pantallas altas. |
 | **Sin virtualización completa (ventanas con `react-window`)** | Es más código y más frágil (tarjetas de altura variable, selección múltiple, foco y lectores de pantalla). Se consigue casi lo mismo con `content-visibility: auto` (el navegador no maqueta ni pinta lo que no se ve) y tarjetas memoizadas. Límite conocido: con ~1000+ contenidos el DOM supera los 20 000 nodos; si llegara el caso, se añadiría ventana. |
 | **Tarjetas con `React.memo` y callbacks estables** | Sin ello cada lote repintaba todas las tarjetas ya cargadas (coste cuadrático): con 300 contenidos y la CPU 4× más lenta, el script pasó de 8,7 s a 0,7 s y la maquetación de 3,3 s a 0,7 s. |
+
+## Tema claro y oscuro (fase 18)
+
+| Decisión | Motivo |
+|---|---|
+| **Variables CSS y `data-theme` en `<html>`** | Los colores ya eran variables (`--bg`, `--panel`, `--accent`…): el tema claro es un bloque `:root[data-theme="light"]` que las redefine. Sin librerías ni clases por componente. El oscuro sigue siendo el valor por defecto (sin atributo). |
+| **`--on-accent` en lugar de `#06121f` fijo** | El texto sobre fondos de color (botón principal, estados) es oscuro en el tema oscuro y blanco en el claro, donde esos colores son más oscuros. |
+| **Script externo `theme-init.js` en la cabecera** | La CSP prohíbe scripts en línea, y aplicar el tema desde React provocaría un parpadeo blanco. Un script mínimo y bloqueante lo fija antes de pintar. |
+| **Doble almacenamiento: navegador y cuenta** | Antes de iniciar sesión solo existe `localStorage`. Con sesión, la preferencia vive en `users.theme` (migración 10) y manda al iniciar sesión en otro dispositivo. Una cuenta nueva nace con el tema que el visitante ya usaba (`theme` opcional en el registro). |
+| **Interruptor `role="switch"` con luna y sol de contorno blanco** | Accesible (estado en `aria-checked`) y legible en los dos temas, porque el fondo del interruptor es de color en ambos (`--switch-track`). |
+| **Paleta clara comprobada con un medidor de contraste WCAG** | En el navegador se midió cada texto visible en 5 pantallas y 2 temas: todo ≥ 4,5 (3 en texto grande). Salieron 4 pares justo por debajo y se ajustaron (`--accent`, `--done`, `--todo`, texto de `.seg-btn.on`). |
+| **Los botones sobre carátulas no cambian de tema** | Van sobre imágenes, así que siguen siendo oscuros translúcidos con iconos blancos en ambos temas. |

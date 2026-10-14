@@ -4,6 +4,7 @@ import { api, errorText } from '../api';
 import { useAuth } from '../auth/AuthContext';
 import { Footer } from '../components/Layout';
 import { Logo } from '../components/Logo';
+import { ThemeSwitch } from '../components/ThemeSwitch';
 import { ErrorBox, Field, PasswordInput } from '../components/ui';
 
 /** Destino tras iniciar sesión: solo rutas internas (evita redirecciones a otros sitios). */
@@ -34,6 +35,7 @@ export function PublicLayout() {
               <Link className="btn primary" to="/register">Registrarse</Link>
             </>
           )}
+          <ThemeSwitch />
         </nav>
       </header>
       <div className="pub-body"><Outlet /></div>

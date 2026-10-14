@@ -17,7 +17,7 @@
   padding: 6px 14px; border-radius: 99px; cursor: pointer; font: inherit; font-size: 0.85rem;
 }
 .filters button:hover { color: var(--text); }
-.filters button.on { background: var(--accent); color: #06121f; border-color: var(--accent); font-weight: 600; }
+.filters button.on { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 600; }
 .live { margin-left: auto; color: var(--muted); font-size: 0.8rem; display: flex; align-items: center; gap: 6px; }
 .live .dot { background: var(--done); animation: pulse 2s infinite; }
 @keyframes pulse { 50% { opacity: .3; } }
@@ -43,7 +43,7 @@
 .chev { margin-left: auto; }
 .count { font-size: 0.78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 
-.tag { font-size: 0.68rem; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 99px; background: #243049; color: var(--accent); }
+.tag { font-size: 0.68rem; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 99px; background: var(--tag-bg); color: var(--accent); }
 .tag-Backend { color: #c3a6ff; background: #2a2146; }
 .tag-Frontend { color: #5eb5ff; background: #15304b; }
 .tag-Datos { color: #ffd479; background: #3b3115; }
@@ -66,7 +66,7 @@
   .live { margin-left: 0; }
 }
 
-.rel { margin-left: 8px; font-size: 0.68rem; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: #243049; color: var(--accent); vertical-align: middle; letter-spacing: .04em; }
+.rel { margin-left: 8px; font-size: 0.68rem; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--tag-bg); color: var(--accent); vertical-align: middle; letter-spacing: .04em; }
 .rel.big { font-size: 0.85rem; margin-left: 12px; }
 
 .ideas { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; max-width: 640px; }
@@ -74,7 +74,7 @@
 .ideas summary span { color: var(--muted); font-weight: 400; font-size: 0.8rem; }
 .ideas form { display: flex; gap: 8px; margin: 12px 0; }
 .ideas input { flex: 1; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg-2); color: var(--text); font: inherit; }
-.ideas button { background: var(--accent); color: #06121f; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer; font-weight: 600; }
+.ideas button { background: var(--accent); color: var(--on-accent); border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer; font-weight: 600; }
 .ideas ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .ideas li { display: flex; justify-content: space-between; gap: 12px; align-items: center; background: var(--panel-2); padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; }
 .ideas li button { background: none; color: var(--muted); padding: 2px 6px; }
@@ -85,10 +85,14 @@
 .eta-done { color: var(--done); }
 .eta-today { color: var(--doing); font-weight: 600; }
 .eta-soon { color: var(--accent); }
-.eta-late { color: #ff6b81; font-weight: 600; }
+.eta-late { color: var(--danger); font-weight: 600; }
 .eta-none { color: var(--muted); font-style: italic; }
 .card-head .eta { margin-top: 2px; }
 .col-head .eta { font-size: 0.78rem; }
 .task-main { display: grid; gap: 2px; min-width: 0; }
 .task-eta { font-size: 0.7rem; }
 .eta-note { color: var(--muted); font-style: normal; font-size: 0.72rem; line-height: 1.35; }
+
+:root[data-theme="light"] .tag-Backend { color: #5b3cc4; background: #ece6ff; }
+:root[data-theme="light"] .tag-Datos { color: #8a5a00; background: #fff1cf; }
+:root[data-theme="light"] .tag-Infra { color: #0a7a5c; background: #d9f5ec; }

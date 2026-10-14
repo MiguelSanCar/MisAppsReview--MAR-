@@ -7,6 +7,7 @@ import { useProfileCtx } from '../profile/ProfileContext';
 import { AvatarDialog } from './AvatarDialog';
 import { Emoji } from './Emoji';
 import { Logo } from './Logo';
+import { ThemeSwitch } from './ThemeSwitch';
 import { useToast } from './Toast';
 import { Avatar, Icon } from './ui';
 
@@ -88,6 +89,7 @@ export default function Layout() {
           <Icon name={open ? 'close' : 'menu'} />
         </button>
         <Link to="/home" className="brand" aria-label="MAR, ir al inicio"><Logo height={20} /></Link>
+        <ThemeSwitch className="topbar-theme" />
       </header>
 
       {open && <div className="scrim" onClick={() => setOpen(false)} />}

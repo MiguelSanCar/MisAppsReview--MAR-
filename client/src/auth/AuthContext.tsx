@@ -35,7 +35,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       user, loading, setUser, refresh,
       login: async (identifier, password) => setUser((await api.post<{ user: Me }>('/api/auth/login', { identifier, password })).user),
-      register: async (username, email, password) => setUser((await api.post<{ user: Me }>('/api/auth/register', { username, email, password })).user),
+      register: async (username, email, password) => {
+        // La cuenta nace con el tema que la persona ya estaba usando en este navegador
+        const theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+        setUser((await api.post<{ user: Me }>('/api/auth/register', { username, email, password, theme })).user);
+      },
       logout: async () => { await api.post('/api/auth/logout'); setUser(null); },
     }),
     [user, loading, refresh],

@@ -53,6 +53,8 @@ export interface Me extends PublicUser {
   profilePublic: boolean;
   /** En un perfil público, mostrar también la lista de visualizados. */
   showList: boolean;
+  /** Tema de la interfaz guardado en la cuenta. */
+  theme: 'dark' | 'light';
 }
 
 export interface WatchTime { value: number; unit: string; text: string }

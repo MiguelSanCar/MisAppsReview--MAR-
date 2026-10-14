@@ -53,6 +53,13 @@ accountRouter.put('/visibility', (req, res) => {
   res.json({ user: selfDto(getUser(uid(req))!) });
 });
 
+// --- Tema de la interfaz (claro / oscuro): se guarda por usuario ---
+accountRouter.put('/theme', (req, res) => {
+  const { theme } = parse(z.object({ theme: z.enum(['dark', 'light'], { errorMap: () => ({ message: 'Tema no válido' }) }) }), req.body);
+  run('UPDATE users SET theme = ? WHERE id = ?', [theme, uid(req)]);
+  res.json({ user: selfDto(getUser(uid(req))!) });
+});
+
 // --- Exportar todos los datos (copia de seguridad personal) ---
 accountRouter.get('/export', (req, res) => {
   const u = getUser(uid(req))!;

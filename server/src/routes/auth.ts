@@ -61,6 +61,8 @@ const registerSchema = z.object({
   username: z.string().trim().regex(/^[A-Za-z0-9_.-]{3,20}$/, 'El usuario debe tener 3-20 caracteres (letras, números, _ . -)'),
   email: z.string().trim().email('Correo no válido').max(120, 'Correo demasiado largo'),
   password: passwordRule,
+  /** Tema que la persona ya estaba usando en el navegador (opcional; por defecto oscuro). */
+  theme: z.enum(['dark', 'light']).optional(),
 });
 const loginSchema = z.object({
   identifier: z.string().trim().min(1, 'Indica tu usuario o correo'),
@@ -97,11 +99,11 @@ authRouter.post(
   '/register',
   limiter,
   ah(async (req, res) => {
-    const { username, email, password } = parse(registerSchema, req.body);
+    const { username, email, password, theme } = parse(registerSchema, req.body);
     if (get('SELECT 1 FROM users WHERE username = ?', [username])) throw new HttpError(409, 'Ese nombre de usuario ya está en uso');
     if (get('SELECT 1 FROM users WHERE email = ?', [email])) throw new HttpError(409, 'Ese correo ya está registrado');
     const hash = await bcrypt.hash(password, 10);
-    const { lastId } = run('INSERT INTO users (username, email, password_hash, created_at) VALUES (?, ?, ?, ?)', [username, email, hash, new Date().toISOString()]);
+    const { lastId } = run('INSERT INTO users (username, email, password_hash, theme, created_at) VALUES (?, ?, ?, ?, ?)', [username, email, hash, theme ?? 'dark', new Date().toISOString()]);
     setSession(req, res, lastId);
     res.status(201).json({ user: selfDto(getUser(lastId)!) });
   }),

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Emoji } from '../components/Emoji';
 import { Logo } from '../components/Logo';
+import { ThemeSwitch } from '../components/ThemeSwitch';
 import IdeasBox from '../roadmap/IdeasBox';
 import { useRoadmap } from '../roadmap/useRoadmap';
 import {
@@ -106,8 +107,11 @@ export default function RoadmapPage() {
   return (
     <div className="rm">
       <header className="rm-top">
-        <div>
+        <div className="rm-nav">
           <Link to="/" className="rm-back" aria-label="MAR, volver al inicio"><Logo height={26} /></Link>
+          <ThemeSwitch />
+        </div>
+        <div>
           <h1>Roadmap{data?.release && <span className="rel big">v{data.release}</span>}</h1>
           <p>{data?.subtitle ?? 'Cargando…'}</p>
         </div>
