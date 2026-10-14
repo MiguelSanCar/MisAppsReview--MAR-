@@ -1196,26 +1196,26 @@
             {
               "id": "17.5",
               "title": "Iconos de la PWA (192, 512, maskable y apple-touch-icon de 180) generados desde el logotipo",
-              "status": "pendiente",
-              "eta": "2026-10-16"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.6",
               "title": "manifest.webmanifest (nombre, display standalone, colores, idioma e iconos)",
-              "status": "pendiente",
-              "eta": "2026-10-16"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.7",
               "title": "index.html: enlace al manifiesto, theme-color, metaetiquetas de iOS y viewport-fit=cover",
-              "status": "pendiente",
-              "eta": "2026-10-16"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.8",
               "title": "Servidor: CSP de helmet y tipo MIME del manifiesto, con test en server/tests",
-              "status": "pendiente",
-              "eta": "2026-10-16"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
