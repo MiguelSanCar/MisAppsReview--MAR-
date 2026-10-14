@@ -118,6 +118,7 @@ export default function Layout() {
                 <Item to={base} end>Su perfil</Item>
                 {otherData?.canSeeList && <Item to={`${base}/lista`}>Su lista</Item>}
                 {otherData?.canSeeFriends && <Item to={`${base}/amigos`}>Sus amigos</Item>}
+                {otherData && <Item to={`${base}/comparar`}>Comparar perfil</Item>}
                 {otherData?.access === 'friend' && <Item to={`${base}/vuestra-lista`}>Vuestra lista</Item>}
               </>
             ) : (

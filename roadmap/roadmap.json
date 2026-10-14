@@ -1442,26 +1442,26 @@
             {
               "id": "18.8",
               "title": "API de comparación (mismas reglas de acceso que el perfil: amigo o público)",
-              "status": "pendiente",
-              "eta": "2026-10-16"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.9",
               "title": "Opción «Comparar perfil» en el menú lateral cuando estás dentro del perfil de otra persona",
-              "status": "pendiente",
-              "eta": "2026-10-16"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.10",
               "title": "Pantalla con las estadísticas de cada uno a un lado: en verde quien tiene más y en rojo quien tiene menos (empate neutro; también con icono y texto, no solo color)",
-              "status": "pendiente",
-              "eta": "2026-10-16"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.11",
               "title": "Tests de permisos (amigo, público, privado, uno mismo) y de la comparación",
-              "status": "pendiente",
-              "eta": "2026-10-16"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },

@@ -1,5 +1,6 @@
 import { Request, Router } from 'express';
 import { HttpError } from '../http';
+import { compareProfiles, summarize } from '../compare';
 import { buildProfile } from '../profile';
 import { libraryCounts, pageLibrary } from '../library';
 import { CONTENT_TYPES, STATUSES } from '../domain/rules';
@@ -85,6 +86,17 @@ profilesRouter.get('/:username/library', (req, res) => {
     { limit: req.query.limit ? Number(req.query.limit) : undefined, cursor },
   );
   res.json({ user: publicUser(target), ...page, ...(cursor ? {} : { counts: libraryCounts(target.id) }) });
+});
+
+// Comparar estadísticas con las de otra persona: solo con amigos o perfiles públicos (las mismas reglas que ver su perfil).
+profilesRouter.get('/:username/compare', requireAuth, (req, res) => {
+  const { target, access } = resolve(req, req.params.username);
+  if (access === 'self') throw new HttpError(400, 'No puedes compararte contigo mismo');
+  if (access === 'private') deny('Solo puedes comparar con amigos o con perfiles públicos', 'private');
+  const me = buildProfile(req.user!.id);
+  const them = buildProfile(target.id);
+  const rows = compareProfiles(me, them);
+  res.json({ access, me: me.user, them: them.user, rows, summary: summarize(rows) });
 });
 
 profilesRouter.get('/:username/friends', (req, res) => {

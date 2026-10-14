@@ -19,6 +19,7 @@ const ListDetailPage = lazy(() => import('./pages/ListsPages').then((m) => ({ de
 const ProfileHomePage = lazy(() => import('./pages/ProfilePages').then((m) => ({ default: m.ProfileHomePage })));
 const ProfileListPage = lazy(() => import('./pages/ProfilePages').then((m) => ({ default: m.ProfileListPage })));
 const ProfileFriendsPage = lazy(() => import('./pages/ProfilePages').then((m) => ({ default: m.ProfileFriendsPage })));
+const ProfileComparePage = lazy(() => import('./pages/ProfilePages').then((m) => ({ default: m.ProfileComparePage })));
 const ProfileShell = lazy(() => import('./profile/ProfileShell'));
 const RoadmapPage = lazy(() => import('./pages/RoadmapPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
@@ -54,6 +55,7 @@ export default function App() {
         <Route index element={<ProfileHomePage />} />
         <Route path="lista" element={<ProfileListPage />} />
         <Route path="amigos" element={<ProfileFriendsPage />} />
+        <Route path="comparar" element={<ProfileComparePage />} />
         <Route path="vuestra-lista" element={<SharedListGate />} />
       </Route>
 

@@ -91,6 +91,23 @@ export interface ProfileData extends Profile {
   canSeeFriends: boolean;
 }
 
+export interface CompareRow {
+  key: string;
+  label: string;
+  me: number;
+  them: number;
+  meText: string;
+  themText: string;
+  winner: 'me' | 'them' | 'tie';
+}
+export interface CompareData {
+  access: ProfileAccess;
+  me: PublicUser;
+  them: PublicUser;
+  rows: CompareRow[];
+  summary: { me: number; them: number; ties: number };
+}
+
 export interface ListMember extends PublicUser { left: boolean }
 export interface Inactivity { lastActivityAt: string; deleteAt: string; daysLeft: number; warning: boolean }
 export interface ListSummary {

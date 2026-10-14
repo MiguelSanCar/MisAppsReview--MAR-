@@ -405,3 +405,28 @@ a, button, .chip, .tab, label.file-btn { touch-action: manipulation; } /* sin re
 /* Lista larga (scroll infinito): las tarjetas fuera de pantalla no se pintan ni se maquetan */
 .grid > .pcard { content-visibility: auto; contain-intrinsic-size: auto 320px; }
 .list-more { display: grid; place-items: center; min-height: 64px; margin: 16px 0 8px; }
+
+/* ---------- comparar perfiles ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.cmp-page { max-width: 760px; }
+.cmp { display: grid; gap: 8px; }
+.cmp-row { display: grid; grid-template-columns: 1fr minmax(88px, 1.1fr) 1fr; gap: 8px; align-items: stretch; }
+.cmp-head { align-items: end; margin-bottom: 4px; }
+.cmp-who { display: grid; justify-items: center; gap: 4px; text-align: center; min-width: 0; }
+.cmp-who strong { overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.cmp-label { display: grid; place-items: center; text-align: center; color: var(--muted); font-size: 0.82rem; line-height: 1.2; padding: 0 2px; }
+.cmp-cell { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 8px 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); font-weight: 700; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.cmp-cell.cmp-win { color: var(--done); border-color: var(--done); background: rgba(61, 220, 151, .12); }
+.cmp-cell.cmp-lose { color: var(--danger); border-color: var(--danger); background: rgba(255, 107, 129, .12); }
+.cmp-cell.cmp-tie { color: var(--muted); }
+/* La señal no depende solo del color: triángulo ▲ (más) / ▼ (menos), dibujado en CSS */
+.cmp-mark { display: inline-block; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; flex: none; }
+.cmp-win .cmp-mark { border-bottom: 9px solid currentColor; }
+.cmp-lose .cmp-mark { border-top: 9px solid currentColor; }
+.cmp-tie .cmp-mark { display: none; }
+.cmp-legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.85rem; margin: 0 0 12px; }
+.cmp-key { display: inline-flex; align-items: center; gap: 6px; }
+.cmp-key.cmp-win { color: var(--done); }
+.cmp-key.cmp-lose { color: var(--danger); }
+@media (max-width: 420px) { .cmp-cell { font-size: 0.95rem; padding: 8px 6px; gap: 5px; } .cmp-row { grid-template-columns: 1fr minmax(74px, 0.9fr) 1fr; gap: 6px; } }
+.cmp { margin-bottom: 14px; }

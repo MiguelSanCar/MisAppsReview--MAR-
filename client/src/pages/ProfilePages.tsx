@@ -7,7 +7,7 @@ import { PosterCard } from '../components/PosterCard';
 import { useToast } from '../components/Toast';
 import { Avatar, ErrorBox, formatDay, Spinner } from '../components/ui';
 import { useProfileCtx } from '../profile/ProfileContext';
-import { LibraryItem, ProfileData, PublicUser, STATUS_TEXT, STATUSES } from '../types';
+import { CompareData, CompareRow, LibraryItem, ProfileData, PublicUser, STATUS_TEXT, STATUSES } from '../types';
 import { FriendCard } from './FriendsPages';
 import { ListGrid } from './ListViews';
 
@@ -194,6 +194,74 @@ export function ProfileFriendsPage() {
         )
       ) : !error && <Spinner />}
       <p className="muted small hint-below">Los perfiles privados solo los ven sus amigos.</p>
+    </div>
+  );
+}
+
+/** Una celda de la comparación: verde (▲ más) para quien tiene más, rojo (▼ menos) para quien tiene menos; el empate no se colorea. */
+function CompareCell({ row, side }: { row: CompareRow; side: 'me' | 'them' }) {
+  const kind = row.winner === 'tie' ? 'tie' : row.winner === side ? 'win' : 'lose';
+  const hint = kind === 'win' ? 'más' : kind === 'lose' ? 'menos' : 'igual';
+  return (
+    <div className={`cmp-cell cmp-${kind} ${side}`} role="cell">
+      <span className="cmp-val">{side === 'me' ? row.meText : row.themText}</span>
+      <span className="cmp-mark" aria-hidden="true" />
+      <span className="sr-only"> ({hint})</span>
+    </div>
+  );
+}
+
+/** /perfil/<usuario>/comparar */
+export function ProfileComparePage() {
+  const ctx = useProfileCtx()!;
+  const { user } = useAuth();
+  const [data, setData] = useState<CompareData | null>(null);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    setData(null); setError('');
+    if (!user) return;
+    api.get<CompareData>(`/api/profiles/${encodeURIComponent(ctx.username)}/compare`).then(setData).catch((e) => setError(errorText(e)));
+  }, [ctx.username, user?.id]);
+
+  if (!user) {
+    const next = encodeURIComponent(`/perfil/${ctx.username}/comparar`);
+    return (
+      <div className="page">
+        <h1 className="h1">Comparar con {ctx.username}</h1>
+        <p className="note">Para comparar tus estadísticas con las de {ctx.username} necesitas <Link to={`/login?next=${next}`}>iniciar sesión</Link>.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="page cmp-page">
+      <h1 className="h1">Comparar con {ctx.username}</h1>
+      {error && <ErrorBox>{error}</ErrorBox>}
+      {!data ? !error && <Spinner /> : (
+        <>
+          <p className="muted cmp-legend">
+            <span className="cmp-key cmp-win"><i className="cmp-mark" aria-hidden="true" /> más</span>
+            <span className="cmp-key cmp-lose"><i className="cmp-mark" aria-hidden="true" /> menos</span>
+            <span className="cmp-key cmp-tie">igual</span>
+          </p>
+          <div className="cmp" role="table" aria-label={`Comparación de estadísticas entre tú y ${data.them.username}`}>
+            <div className="cmp-row cmp-head" role="row">
+              <div className="cmp-who" role="columnheader"><Avatar user={data.me} size={56} /><strong>Tú</strong><span className="muted small">{data.summary.me} en cabeza</span></div>
+              <div className="cmp-label" role="columnheader"><span className="sr-only">Estadística</span></div>
+              <div className="cmp-who" role="columnheader"><Avatar user={data.them} size={56} /><strong>{data.them.username}</strong><span className="muted small">{data.summary.them} en cabeza</span></div>
+            </div>
+            {data.rows.map((r) => (
+              <div className="cmp-row" role="row" key={r.key}>
+                <CompareCell row={r} side="me" />
+                <div className="cmp-label" role="rowheader">{r.label}</div>
+                <CompareCell row={r} side="them" />
+              </div>
+            ))}
+          </div>
+          <p className="muted small">Gana la columna con el valor más alto en cada fila; en {data.summary.ties === 1 ? '1 fila hay empate' : `${data.summary.ties} filas hay empate`}.</p>
+        </>
+      )}
     </div>
   );
 }
