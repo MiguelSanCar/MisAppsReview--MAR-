@@ -78,18 +78,69 @@ export interface LibraryFilter {
   q?: string;
 }
 
-/** Lista de contenidos de una persona (ordenados por última actividad). */
-export function listLibrary(userId: number, f: LibraryFilter = {}): LibraryItem[] {
+const FILTER_SQL = (f: LibraryFilter, userId: number) => {
   const where = ['uc.user_id = ?'];
   const params: (string | number)[] = [userId];
   if (f.status) { where.push('uc.status = ?'); params.push(f.status); }
   if (f.type) { where.push('c.type = ?'); params.push(f.type); }
   if (f.favorite) where.push('uc.is_favorite = 1');
   if (f.q) { where.push('c.title LIKE ?'); params.push(`%${f.q}%`); }
-  return all<UserContentRow>(
-    `SELECT c.*, uc.status, uc.watched_episodes, uc.is_favorite, uc.updated_at, uc.prev_episodes, uc.rewatch
-     FROM user_content uc JOIN content c ON c.id = uc.content_id
-     WHERE ${where.join(' AND ')} ORDER BY uc.updated_at DESC`,
-    params,
-  ).map(toItem);
+  return { where, params };
+};
+
+const SELECT_ITEM = `SELECT c.*, uc.status, uc.watched_episodes, uc.is_favorite, uc.updated_at, uc.prev_episodes, uc.rewatch
+     FROM user_content uc JOIN content c ON c.id = uc.content_id`;
+
+/** Lista completa de una persona (ordenada por última actividad). Para exportar; las pantallas usan pageLibrary. */
+export function listLibrary(userId: number, f: LibraryFilter = {}): LibraryItem[] {
+  const { where, params } = FILTER_SQL(f, userId);
+  return all<UserContentRow>(`${SELECT_ITEM} WHERE ${where.join(' AND ')} ORDER BY uc.updated_at DESC, c.id DESC`, params).map(toItem);
+}
+
+export const PAGE_SIZE = 24;
+export const PAGE_MAX = 60;
+
+export interface LibraryPage {
+  items: LibraryItem[];
+  /** Cursor para pedir el siguiente lote (null si no hay más). */
+  nextCursor: string | null;
+  /** Total con los filtros aplicados. */
+  total: number;
+}
+
+/**
+ * Un lote de la lista, ordenado por última actividad. Usa un cursor de teclado (fecha + id) y no un desplazamiento:
+ * si el usuario cambia el estado de una tarjeta mientras se cargan más, el contenido que sube al principio no
+ * provoca duplicados ni saltos en los lotes siguientes.
+ */
+export function pageLibrary(userId: number, f: LibraryFilter = {}, opts: { limit?: number; cursor?: string | null } = {}): LibraryPage {
+  const limit = Math.min(Math.max(Math.trunc(opts.limit ?? PAGE_SIZE) || PAGE_SIZE, 1), PAGE_MAX);
+  const { where, params } = FILTER_SQL(f, userId);
+  const total = get<{ n: number }>(`SELECT COUNT(*) AS n FROM user_content uc JOIN content c ON c.id = uc.content_id WHERE ${where.join(' AND ')}`, params)!.n;
+  const w = [...where];
+  const p = [...params];
+  if (opts.cursor) {
+    const m = /^(.+)[|](\d+)$/.exec(opts.cursor);
+    if (!m) throw new HttpError(400, 'Cursor no válido');
+    w.push('(uc.updated_at < ? OR (uc.updated_at = ? AND c.id < ?))');
+    p.push(m[1], m[1], Number(m[2]));
+  }
+  const rows = all<UserContentRow>(`${SELECT_ITEM} WHERE ${w.join(' AND ')} ORDER BY uc.updated_at DESC, c.id DESC LIMIT ?`, [...p, limit + 1]);
+  const more = rows.length > limit;
+  const page = rows.slice(0, limit);
+  const last = page[page.length - 1];
+  return { items: page.map(toItem), nextCursor: more && last ? `${last.updated_at}|${last.id}` : null, total };
+}
+
+/** Contadores de las pestañas (sobre toda la lista, sin filtros). */
+export function libraryCounts(userId: number): Record<string, number> {
+  const out: Record<string, number> = { todos: 0, favoritos: 0, POR_VER: 0, VIENDO: 0, FINALIZADO: 0, DEJADO: 0 };
+  for (const r of all<{ status: string; n: number; fav: number }>(
+    'SELECT status, COUNT(*) AS n, SUM(is_favorite) AS fav FROM user_content WHERE user_id = ? GROUP BY status', [userId],
+  )) {
+    out[r.status] = r.n;
+    out.todos += r.n;
+    out.favoritos += r.fav ?? 0;
+  }
+  return out;
 }

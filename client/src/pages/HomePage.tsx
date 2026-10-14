@@ -32,7 +32,7 @@ export default function HomePage() {
   }, [trendType]);
 
   useEffect(() => {
-    api.get<{ items: LibraryItem[] }>('/api/library?status=VIENDO').then((r) => setWatching(r.items.slice(0, 8))).catch(() => {});
+    api.get<{ items: LibraryItem[] }>('/api/library?status=VIENDO&limit=8').then((r) => setWatching(r.items.slice(0, 8))).catch(() => {});
   }, []);
 
   const onState = (id: number, state: UserState | null) => {

@@ -40,7 +40,7 @@ interface Props {
 export function PosterImage({ content }: { content: Pick<Content, 'posterUrl' | 'title'> }) {
   const [failed, setFailed] = useState(false);
   if (!content.posterUrl || failed) return <span className="poster-ph">{content.title}</span>;
-  return <img src={content.posterUrl} alt={`Póster de ${content.title}`} loading="lazy" onError={() => setFailed(true)} />;
+  return <img src={content.posterUrl} alt={`Póster de ${content.title}`} loading="lazy" decoding="async" onError={() => setFailed(true)} />;
 }
 
 export function PosterCard({

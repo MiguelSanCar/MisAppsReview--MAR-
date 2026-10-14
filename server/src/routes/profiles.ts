@@ -1,7 +1,7 @@
 import { Request, Router } from 'express';
 import { HttpError } from '../http';
 import { buildProfile } from '../profile';
-import { listLibrary } from '../library';
+import { libraryCounts, pageLibrary } from '../library';
 import { CONTENT_TYPES, STATUSES } from '../domain/rules';
 import { getUser, getUserByName, publicUser, UserRow } from '../users';
 import { requireAuth } from './auth';
@@ -78,7 +78,13 @@ profilesRouter.get('/:username/library', (req, res) => {
   const type = req.query.type ? String(req.query.type) : undefined;
   if (status && !STATUSES.includes(status as any)) throw new HttpError(400, 'Estado no válido');
   if (type && !CONTENT_TYPES.includes(type as any)) throw new HttpError(400, 'Tipo no válido');
-  res.json({ user: publicUser(target), items: listLibrary(target.id, { status: status as any, type }) });
+  const cursor = req.query.cursor ? String(req.query.cursor) : null;
+  const page = pageLibrary(
+    target.id,
+    { status: status as any, type, favorite: req.query.favorite === '1', q: req.query.q ? String(req.query.q).slice(0, 100) : undefined },
+    { limit: req.query.limit ? Number(req.query.limit) : undefined, cursor },
+  );
+  res.json({ user: publicUser(target), ...page, ...(cursor ? {} : { counts: libraryCounts(target.id) }) });
 });
 
 profilesRouter.get('/:username/friends', (req, res) => {

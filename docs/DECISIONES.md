@@ -72,3 +72,14 @@
 | **Objetivos táctiles de 44 px solo con `pointer: coarse`** | En ordenador la interfaz no cambia; en móvil se cumple la recomendación de Apple/Google. Los campos usan 16 px para que iOS no haga zoom al enfocar. |
 | **Pestañas de «Mi lista» en una fila con desplazamiento** | Ocupaban tres filas en 390 px. |
 | **Carga diferida de pantallas poco frecuentes** | El paquete inicial baja de 248 a 217 kB (de 76,9 a 69,5 kB comprimido). |
+
+## Lista infinita (fase 18)
+
+| Decisión | Motivo |
+|---|---|
+| **Paginación en el servidor, no solo en el cliente** | Con miles de contenidos no se envían ni se parsean todos de golpe: el primer lote (24) llega al instante y el JSON es pequeño. |
+| **Cursor de teclado (`updated_at` + `id`) en lugar de `OFFSET`** | Si se cambia una tarjeta ya cargada mientras se piden más (sube al principio del orden), un desplazamiento duplicaría o saltaría contenidos; con cursor, los lotes siguientes continúan donde estaban. Se comprueba en `library-page.test.ts`. |
+| **Los contadores de las pestañas vienen del servidor (solo en el primer lote)** | Ya no se pueden contar sobre lo cargado: «Todos 300» debe verse con 24 tarjetas en pantalla. Tras cambiar o borrar se refrescan con `?limit=1`. |
+| **`IntersectionObserver` con 600 px de margen y botón «Cargar más» de reserva** | Se piden más antes de llegar al final, sin escuchar el evento `scroll` (que castiga a los móviles lentos). El observador se recrea tras cada lote para encadenar lotes en pantallas altas. |
+| **Sin virtualización completa (ventanas con `react-window`)** | Es más código y más frágil (tarjetas de altura variable, selección múltiple, foco y lectores de pantalla). Se consigue casi lo mismo con `content-visibility: auto` (el navegador no maqueta ni pinta lo que no se ve) y tarjetas memoizadas. Límite conocido: con ~1000+ contenidos el DOM supera los 20 000 nodos; si llegara el caso, se añadiría ventana. |
+| **Tarjetas con `React.memo` y callbacks estables** | Sin ello cada lote repintaba todas las tarjetas ya cargadas (coste cuadrático): con 300 contenidos y la CPU 4× más lenta, el script pasó de 8,7 s a 0,7 s y la maquetación de 3,3 s a 0,7 s. |

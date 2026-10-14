@@ -15,8 +15,8 @@ import { ListGrid } from './ListViews';
 export const profileUrl = (username: string) => `${window.location.origin}/perfil/${encodeURIComponent(username)}`;
 
 export function ProfileView({
-  profile, own, items, canOpen,
-}: { profile: ProfileData; own?: boolean; items?: LibraryItem[] | null; canOpen: boolean }) {
+  profile, own, listEndpoint, canOpen,
+}: { profile: ProfileData; own?: boolean; listEndpoint?: string | null; canOpen: boolean }) {
   const { user, stats, favorites } = profile;
   const toast = useToast();
 
@@ -80,10 +80,10 @@ export function ProfileView({
         )}
       </section>
 
-      {items && (
+      {listEndpoint && (
         <section>
           <h2 className="h2">Lista de visualizados</h2>
-          <ListGrid items={items} readOnly noLinks={!canOpen} />
+          <ListGrid endpoint={listEndpoint} readOnly noLinks={!canOpen} />
         </section>
       )}
     </div>
@@ -147,40 +147,25 @@ export function ProfileHomePage() {
   const ctx = useProfileCtx()!;
   const { user } = useAuth();
   const { state } = ctx;
-  const [items, setItems] = useState<LibraryItem[] | null>(null);
 
   // Sin sesión no hay menú lateral: si el perfil público muestra su lista, se incluye aquí.
   const inline = state.status === 'ok' && !user && state.data.canSeeList;
-  useEffect(() => {
-    setItems(null);
-    if (inline) api.get<{ items: LibraryItem[] }>(`/api/profiles/${encodeURIComponent(ctx.username)}/library`).then((r) => setItems(r.items)).catch(() => {});
-  }, [inline, ctx.username]);
 
   if (state.status === 'loading') return <Spinner />;
   if (state.status === 'notfound') return <Missing>Este perfil no existe</Missing>;
   if (state.status === 'error') return <div className="page"><ErrorBox>{state.message}</ErrorBox></div>;
   if (state.status === 'private') return <PrivateProfile username={state.user.username} avatarUrl={state.user.avatarUrl} relation={state.relation} />;
-  return <ProfileView profile={state.data} own={state.data.access === 'self'} items={inline ? items : null} canOpen={!!user} />;
+  return <ProfileView profile={state.data} own={state.data.access === 'self'} listEndpoint={inline ? `/api/profiles/${encodeURIComponent(ctx.username)}/library` : null} canOpen={!!user} />;
 }
 
 /** /perfil/<usuario>/lista */
 export function ProfileListPage() {
   const ctx = useProfileCtx()!;
   const { user } = useAuth();
-  const [data, setData] = useState<{ user: PublicUser; items: LibraryItem[] } | null>(null);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    setData(null); setError('');
-    api.get<{ user: PublicUser; items: LibraryItem[] }>(`/api/profiles/${encodeURIComponent(ctx.username)}/library`)
-      .then(setData).catch((e) => setError(errorText(e)));
-  }, [ctx.username, user?.id]);
-
   return (
     <div className="page">
-      <h1 className="h1">Lista de {data?.user.username ?? ctx.username}</h1>
-      {error && <ErrorBox>{error}</ErrorBox>}
-      {data ? <ListGrid items={data.items} readOnly noLinks={!user} empty="Todavía no ha añadido nada." /> : !error && <Spinner />}
+      <h1 className="h1">Lista de {ctx.username}</h1>
+      <ListGrid key={ctx.username + (user?.id ?? '')} endpoint={`/api/profiles/${encodeURIComponent(ctx.username)}/library`} readOnly noLinks={!user} empty="Todavía no ha añadido nada." />
     </div>
   );
 }

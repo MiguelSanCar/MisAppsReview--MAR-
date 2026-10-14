@@ -10,7 +10,7 @@ import {
   applyEpisodes, applyFavorite, applyStatus, CONTENT_TYPES, ItemState, STATUSES,
 } from '../domain/rules';
 import {
-  assertCanFavorite, getState, listLibrary, removeState, saveState,
+  assertCanFavorite, getState, libraryCounts, pageLibrary, removeState, saveState,
 } from '../library';
 
 export const searchRouter = Router();
@@ -82,14 +82,14 @@ libraryRouter.get('/', (req, res) => {
   if (status && !STATUSES.includes(status as any)) throw new HttpError(400, 'Estado no válido');
   const type = req.query.type ? String(req.query.type) : undefined;
   if (type && !CONTENT_TYPES.includes(type as any)) throw new HttpError(400, 'Tipo no válido');
-  res.json({
-    items: listLibrary(uid(req), {
-      status: status as any,
-      type,
-      favorite: req.query.favorite === '1',
-      q: req.query.q ? String(req.query.q).slice(0, 100) : undefined,
-    }),
-  });
+  const cursor = req.query.cursor ? String(req.query.cursor) : null;
+  const page = pageLibrary(
+    uid(req),
+    { status: status as any, type, favorite: req.query.favorite === '1', q: req.query.q ? String(req.query.q).slice(0, 100) : undefined },
+    { limit: req.query.limit ? Number(req.query.limit) : undefined, cursor },
+  );
+  // Los contadores de las pestañas solo se piden en el primer lote.
+  res.json({ ...page, ...(cursor ? {} : { counts: libraryCounts(uid(req)) }) });
 });
 
 const current = (userId: number, contentId: number) => {

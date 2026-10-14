@@ -401,3 +401,7 @@ a, button, .chip, .tab, label.file-btn { touch-action: manipulation; } /* sin re
   .public.fit .auth-card { padding: 14px 16px; }
   .public.fit .field { gap: 4px; }
 }
+
+/* Lista larga (scroll infinito): las tarjetas fuera de pantalla no se pintan ni se maquetan */
+.grid > .pcard { content-visibility: auto; contain-intrinsic-size: auto 320px; }
+.list-more { display: grid; place-items: center; min-height: 64px; margin: 16px 0 8px; }

@@ -1399,38 +1399,38 @@
             {
               "id": "18.2",
               "title": "Decisión técnica: paginación en el servidor + carga de más tarjetas al llegar al final (IntersectionObserver), sin virtualización completa; se documenta por qué es lo más ligero para móviles",
-              "status": "pendiente",
-              "eta": "2026-10-15"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.3",
               "title": "API: /api/library con límite y desplazamiento (lotes de 24), total y contadores por estado",
-              "status": "pendiente",
-              "eta": "2026-10-15"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.4",
               "title": "«Mi lista» con scroll infinito: al llegar al final se añaden 24 tarjetas más; indicador de carga; los filtros y pestañas reinician la lista",
-              "status": "pendiente",
-              "eta": "2026-10-15"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.5",
               "title": "Mismo comportamiento en la lista de otros perfiles",
-              "status": "pendiente",
-              "eta": "2026-10-15"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.6",
               "title": "Rendimiento: content-visibility en las tarjetas, imágenes diferidas y medición con 300 contenidos en un móvil emulado",
-              "status": "pendiente",
-              "eta": "2026-10-15"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.7",
               "title": "Tests de paginación (orden estable, filtros, último lote) y comprobación en navegador",
-              "status": "pendiente",
-              "eta": "2026-10-15"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
