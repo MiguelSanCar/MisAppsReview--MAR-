@@ -1857,6 +1857,6 @@
       ]
     }
   ],
-  "release": "1.9.3",
+  "release": "1.9.4",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

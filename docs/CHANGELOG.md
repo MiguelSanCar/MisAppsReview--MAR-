@@ -2,6 +2,10 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.9.4 · 2026-10-14 · Gesto del menú desde más lejos del borde
+- **Gesto del menú desde más lejos del borde:** la zona donde puede empezar el deslizamiento para abrir el menú pasa del 35 % al **40 % del ancho** de la pantalla (156 px en un móvil de 390 px), y **ahora también funciona si el dedo empieza sobre un campo de texto sin foco** (p. ej. el buscador de inicio o el filtro de «Mi lista», que ocupan todo el ancho). Con el campo enfocado el gesto no actúa, porque se usa para seleccionar texto.
+- Comprobado con toques reales en Edge: abre empezando al 5, 15, 30 y 38 % del ancho y no al 45 ni al 60 %; sobre un campo sin foco abre y con foco no; el resto de reglas (vertical, corto, lento, filas con scroll, diálogos, escritorio) sigue igual.
+
 ## 1.9.3 · 2026-10-14 · Búsqueda Filtrada y cierre de pendientes
 - **Nombre de la pestaña:** la entrada del menú lateral y el título de la página pasan de «Búsqueda» a **«Búsqueda Filtrada»**, para distinguirla del buscador de la pantalla de inicio. La ruta (`/search`) no cambia.
 - **Cierre de pendientes del roadmap:** probada la app instalada en **Android e iPhone** (17.19, funciona correctamente); el **APK queda descartado** (17.20; la PWA cubre ambos sistemas) y los filtros de la búsqueda se dan por suficientes (18.30). El envío de correo (12.10 y 12.12) sigue en espera.

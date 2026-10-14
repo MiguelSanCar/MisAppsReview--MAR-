@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 const MIN_DX = 70; // distancia mínima (px) del gesto
 const MAX_MS = 900; // duración máxima
 /** El gesto de abrir solo empieza en esta parte izquierda de la pantalla. */
-const OPEN_ZONE = 0.35;
+const OPEN_ZONE = 0.4;
 
 interface Scroller { el: Element; /** true = el elemento se reserva siempre el gesto (data-no-swipe). */ hard: boolean }
 
@@ -23,7 +23,8 @@ function sideScroller(el: Element | null): Scroller | null {
  *  - el scroll vertical (un gesto casi vertical se descarta),
  *  - las filas o tiras que se desplazan de lado: si el dedo empieza sobre una, el gesto es suyo; solo si ya está en su
  *    inicio y se desliza hacia la derecha (no puede ir a ningún sitio) se abre el menú,
- *  - los campos de texto, el recorte de foto (canvas) ni los diálogos abiertos.
+ *  - el recorte de foto (canvas), un campo de texto que tenga el foco (se usa para seleccionar) ni los diálogos abiertos.
+ *    Sobre un campo sin foco (p. ej. el buscador de inicio, que ocupa todo el ancho) el gesto sí funciona.
  */
 export function useSwipeMenu(open: boolean, setOpen: (v: boolean) => void, enabled = true) {
   useEffect(() => {
@@ -36,7 +37,9 @@ export function useSwipeMenu(open: boolean, setOpen: (v: boolean) => void, enabl
       if (e.touches.length !== 1 || !mobile() || document.querySelector('.modal-wrap')) return;
       const t = e.touches[0];
       const target = e.target as Element | null;
-      if (target?.closest('input, textarea, select, canvas, [contenteditable]')) return;
+      if (target?.closest('canvas, [contenteditable]')) return;
+      const field = target?.closest('input, textarea, select');
+      if (field && field === document.activeElement) return;
       if (!open && t.clientX > window.innerWidth * OPEN_ZONE) return;
       const sc = sideScroller(target);
       if (sc?.hard) return;
