@@ -1301,16 +1301,16 @@
             {
               "id": "17.19",
               "title": "Prueba en móviles reales: instalar en Android (Chrome) y en iPhone (Safari), sesión, sin conexión y actualizaciones",
-              "status": "pendiente",
-              "eta": null,
-              "etaNote": "Depende de ti: necesita tus móviles y los de tus amigos. Unos 30 min con mi guía"
+              "status": "hecho",
+              "eta": "2026-10-14",
+              "note": "Probado por el autor en Android e iPhone: funciona correctamente"
             },
             {
               "id": "17.20",
               "title": "APK opcional empaquetando la PWA (PWABuilder/Bubblewrap) y assetlinks.json en el servidor",
-              "status": "pendiente",
-              "eta": null,
-              "etaNote": "Opcional y depende de ti: confirmar que lo quieres. Unas 3 h; sin permisos de administrador"
+              "status": "hecho",
+              "eta": "2026-10-14",
+              "note": "Descartada por decisión del autor: no se hará el APK; la PWA instalable cubre Android e iPhone"
             }
           ]
         },
@@ -1608,9 +1608,9 @@
             {
               "id": "18.30",
               "title": "Otros filtros de tu petición: el texto llegó cortado tras «estud…»",
-              "status": "pendiente",
-              "eta": null,
-              "etaNote": "Depende de ti: pásame el resto de la línea. Cada filtro extra son unas 2 h"
+              "status": "hecho",
+              "eta": "2026-10-14",
+              "note": "Cerrada por decisión del autor: los filtros actuales son suficientes"
             }
           ]
         },
@@ -1857,6 +1857,6 @@
       ]
     }
   ],
-  "release": "1.9.2",
+  "release": "1.9.3",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

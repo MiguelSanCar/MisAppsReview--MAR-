@@ -2,6 +2,10 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.9.3 · 2026-10-14 · Búsqueda Filtrada y cierre de pendientes
+- **Nombre de la pestaña:** la entrada del menú lateral y el título de la página pasan de «Búsqueda» a **«Búsqueda Filtrada»**, para distinguirla del buscador de la pantalla de inicio. La ruta (`/search`) no cambia.
+- **Cierre de pendientes del roadmap:** probada la app instalada en **Android e iPhone** (17.19, funciona correctamente); el **APK queda descartado** (17.20; la PWA cubre ambos sistemas) y los filtros de la búsqueda se dan por suficientes (18.30). El envío de correo (12.10 y 12.12) sigue en espera.
+
 ## 1.9.2 · 2026-10-14 · Roadmap en orden inverso
 - **Roadmap en orden inverso (21.1):** la página `/roadmap` muestra ahora **lo más reciente primero**: las columnas van de la última fase (la que se está haciendo) a la primera, las tarjetas de cada fase de la última a la primera y las tareas de cada tarjeta también, de modo que lo que está en marcha o pendiente se ve antes que lo ya hecho (en el móvil, donde las columnas pasan a vertical, la primera es la más reciente). Los filtros por estado y el refresco automático no cambian. Solo cambia la presentación: `roadmap.json` conserva su orden natural.
 - Comprobado en Edge real: 22 fases de la «Fase 21» a la «Fase 0», tareas invertidas dentro de una tarjeta, filtros y móvil.

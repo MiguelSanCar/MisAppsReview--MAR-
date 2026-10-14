@@ -129,7 +129,7 @@ export default function Layout() {
               </>
             ) : (
               <>
-                <Item to="/search"><Emoji name="lupa" className="nav-emoji" />Búsqueda</Item>
+                <Item to="/search"><Emoji name="lupa" className="nav-emoji" />Búsqueda Filtrada</Item>
                 <Item to={`/perfil/${encodeURIComponent(user.username)}`} end>Mi perfil</Item>
                 <Item to="/list"><Emoji name="notas" className="nav-emoji" />Mi lista</Item>
                 <div className="nav-sub">

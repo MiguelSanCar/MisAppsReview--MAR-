@@ -169,7 +169,7 @@ export default function AdvancedSearchPage() {
 
   return (
     <div className="page adv">
-      <h1 className="h1">Búsqueda</h1>
+      <h1 className="h1">Búsqueda Filtrada</h1>
 
       <div className="adv-bar">
         <div className="chips" role="group" aria-label="Tipo de contenido" style={{ width: 'auto' }}>
