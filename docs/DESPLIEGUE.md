@@ -1,6 +1,24 @@
 # Despliegue de MAR
 
-Estado: **preparado, sin publicar** (hace falta una cuenta de hosting tuya). Todo lo siguiente está listo en el repo; lo que no se ha podido probar aquí (Docker está instalado en este equipo pero su motor no estaba en marcha, así que la imagen no se ha podido construir) está marcado.
+Estado: **publicado en Fly.io** → https://mar-miguel.fly.dev (app `mar-miguel`, región `cdg`, 1 máquina de 512 MB, volumen `data` de 1 GB en `/data`). Render queda como alternativa (`render.yaml`).
+
+## Operar Fly.io desde Claude Code (Windows, sin administrador, red corporativa)
+`flyctl` está en `tools/fly.exe` (ignorado por git). Se descargó el `.zip` de https://github.com/superfly/flyctl/releases porque `iwr ... | iex` no funciona en el PowerShell restringido.
+```bash
+tools/fly.exe auth login                    # una vez; si el navegador es de otra sesión: auth login --code <código>
+# Desplegar (Netskope: hace falta el CA corporativo y el builder sin Depot):
+SSL_CERT_FILE="$(pwd -W)/certs/corporate-ca.pem" tools/fly.exe deploy --app mar-miguel --depot=false --remote-only
+tools/fly.exe status --app mar-miguel
+tools/fly.exe logs --app mar-miguel
+tools/fly.exe secrets set CLAVE=valor --app mar-miguel
+tools/fly.exe ssh sftp shell --app mar-miguel   # copiar /data/mar.db
+```
+- Con Depot (el builder por defecto) el despliegue falla con `x509: certificate signed by unknown authority`; `--depot=false` lo evita.
+- El aviso «DNS verification failed ... 8.8.8.8» es de la red corporativa; la app responde igualmente.
+- Cada `fly deploy` reconstruye la imagen con lo que haya en el directorio (respeta `.dockerignore`/`.gitignore` de forma parcial: no pongas ahí nada sensible).
+- Nunca imprimir ni versionar los secretos: se cargan con `fly secrets import` desde un fichero temporal borrado después.
+
+Lo siguiente es la preparación original, válida para cualquier hosting.
 
 ## Qué necesita el hosting
 - Ejecutar un contenedor Docker o `npm start` con **Node 16 o superior**.

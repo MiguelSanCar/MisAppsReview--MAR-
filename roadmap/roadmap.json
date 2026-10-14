@@ -326,10 +326,9 @@
             {
               "id": "5.1",
               "title": "Elegir hosting",
-              "status": "pendiente",
-              "note": "Pospuesto; mientras tanto, pruebas por túnel",
-              "eta": null,
-              "etaNote": "Depende de ti: elegir hosting (Render o Fly.io). Decidirlo lleva unos minutos"
+              "status": "hecho",
+              "note": "Fly.io (volumen de 1 GB, una máquina de 512 MB en París)",
+              "eta": "2026-10-14"
             },
             {
               "id": "5.2",
@@ -341,10 +340,16 @@
             {
               "id": "5.3",
               "title": "Despliegue",
-              "status": "pendiente",
-              "note": "Requiere cuenta de hosting",
-              "eta": null,
-              "etaNote": "Depende de ti: cuenta de hosting. Unas 4 h de trabajo una vez disponible"
+              "status": "hecho",
+              "note": "https://mar-miguel.fly.dev (fly.toml)",
+              "eta": "2026-10-14"
+            },
+            {
+              "id": "5.8",
+              "title": "Operar el hosting desde Claude Code (flyctl)",
+              "status": "hecho",
+              "note": "tools/fly.exe, sin administrador; usa el CA corporativo y --depot=false",
+              "eta": "2026-10-14"
             },
             {
               "id": "5.6",
@@ -810,7 +815,7 @@
               "id": "12.10",
               "title": "Aviso por correo 15 días antes del borrado",
               "status": "pendiente",
-              "note": "Prioridad baja; depende de conectar el correo (12.12)",
+              "note": "En espera por decisión del usuario (2026-10-14); depende de conectar el correo (12.12)",
               "eta": null,
               "etaNote": "Depende de 12.12. Unas 2 h una vez conectado el correo"
             },
@@ -825,7 +830,7 @@
               "id": "12.12",
               "title": "Conectar el envío de correos (recuperar contraseña, verificar correo y avisos)",
               "status": "pendiente",
-              "note": "Prioridad baja",
+              "note": "En espera por decisión del usuario (2026-10-14): app de uso personal, el correo es opcional",
               "eta": null,
               "etaNote": "Depende de ti: un servicio SMTP. Aprox. 1 día de trabajo; prioridad baja"
             }

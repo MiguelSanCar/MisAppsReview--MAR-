@@ -1,0 +1,34 @@
+# MAR en Fly.io. Despliegue: `tools/fly.exe deploy` (ver docs/DESPLIEGUE.md).
+app = "mar-miguel"
+primary_region = "cdg"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3001"
+  DB_FILE = "/data/mar.db"
+
+# SQLite = un solo proceso escribiendo: una única máquina, sin parar por inactividad.
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    method = "GET"
+    path = "/api/health"
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "20s"
+
+[[mounts]]
+  source = "data"
+  destination = "/data"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
