@@ -12,6 +12,7 @@ import { profilesRouter } from './routes/profiles';
 import { invitesRouter } from './routes/invites';
 import { contentRouter, libraryRouter, searchRouter } from './routes/library';
 import { listsRouter } from './routes/lists';
+import { discoverRouter } from './routes/discover';
 import { recoRouter } from './routes/recommendations';
 import { roadmapRouter } from './roadmap';
 
@@ -51,6 +52,7 @@ export function createApp() {
   app.use('/api/content', contentRouter);
   app.use('/api/library', libraryRouter);
   app.use('/api/recommendations', recoRouter);
+  app.use('/api/discover', discoverRouter);
   app.use('/api/friends', friendsRouter);
   app.use('/api/invites', invitesRouter);
   app.use('/api/profiles', profilesRouter);

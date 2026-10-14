@@ -116,3 +116,14 @@
 | **Anime queda fuera por ahora** | Jikan no aporta géneros en nuestra consulta y no responde desde la red de desarrollo. |
 | **Cuota de mercado cacheada 24 h; consultas por género 6 h** | Pocas peticiones a TMDB (3 + 3 por usuario y día como mucho). |
 | **El endpoint devuelve también los géneros y sus números** | Para poder explicar y depurar de dónde salen las recomendaciones. |
+
+## Búsqueda avanzada (fase 18)
+
+| Decisión | Motivo |
+|---|---|
+| **`/discover` de TMDB con filtros en la propia API** | TMDB ya filtra por plataforma (`with_watch_providers` + `watch_region`), género, productora, fechas y nota; no hay que traer todo y filtrar aquí. |
+| **Región de las plataformas configurable (`TMDB_REGION`, `ES` por defecto)** | La disponibilidad en Netflix, HBO… cambia por país. |
+| **Filtros en la URL (`useSearchParams`)** | Se comparten, funcionan con «atrás» y sobreviven a una recarga; no hay estado oculto. |
+| **Solo series y películas** | Jikan (anime) no ofrece plataformas, estudios por id ni filtros equivalentes de forma fiable. |
+| **Nota mínima ⇒ ≥ 150 votos** | Sin un mínimo de votos, ordenar por nota devuelve títulos desconocidos con un único 10. |
+| **Años se aplican al escribir 4 cifras válidas, nunca inválidos** | Evita peticiones con 1, 2 o 3 cifras mientras se teclea y deja el error visible sin tocar el servidor. |

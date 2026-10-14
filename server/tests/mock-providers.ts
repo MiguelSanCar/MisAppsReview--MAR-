@@ -65,7 +65,40 @@ export function startMockProviders(): Promise<{ base: string; close: () => Promi
       };
       const gl = /^\/tmdb\/genre\/(tv|movie)\/list$/.exec(p);
       if (gl) return send(200, { genres: Object.entries(GENRES[gl[1]]).map(([id, name]) => ({ id: Number(id), name })) });
+      const pv = /^\/tmdb\/watch\/providers\/(tv|movie)$/.exec(p);
+      if (pv) {
+        if (url.searchParams.get('watch_region') !== 'ES') return send(400, { status_message: 'region' });
+        return send(200, { results: [
+          { provider_id: 119, provider_name: 'Amazon Prime Video', display_priority: 3 },
+          { provider_id: 8, provider_name: 'Netflix', display_priority: 1 },
+          { provider_id: 384, provider_name: 'HBO Max', display_priority: 2 },
+        ] });
+      }
+      if (p === '/tmdb/search/company') {
+        const q = (url.searchParams.get('query') ?? '').toLowerCase();
+        return send(200, { results: [{ id: 420, name: 'Marvel Studios' }, { id: 2, name: 'Walt Disney Pictures' }, { id: 3, name: 'Pixar' }].filter((c) => c.name.toLowerCase().includes(q)) });
+      }
       const dc = /^\/tmdb\/discover\/(tv|movie)$/.exec(p);
+      if (dc && url.searchParams.has('watch_region')) {
+        // búsqueda avanzada: 25 resultados repartidos en 3 páginas; el resumen repite los filtros recibidos
+        const kind = dc[1];
+        const page = Number(url.searchParams.get('page') ?? 1);
+        const echo = Object.fromEntries([...url.searchParams.entries()].filter(([k]) => !['api_key', 'language'].includes(k)));
+        const total = 25;
+        // ids distintos para cada combinación de filtros y de página (mismos parámetros → mismos ids)
+        const hash = [...JSON.stringify(echo)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 100000, 7);
+        const idBase = 100000 + hash * 100;
+        const per = 10;
+        const out = [];
+        for (let i = (page - 1) * per; i < Math.min(page * per, total); i++) {
+          const base: any = { id: idBase + i, poster_path: '/a.jpg', original_language: 'en', vote_average: 7 + (i % 3), genre_ids: url.searchParams.get('with_genres') ? [Number(url.searchParams.get('with_genres'))] : [18], overview: JSON.stringify(echo) };
+          if (kind === 'tv') Object.assign(base, { name: `Resultado ${i}`, first_air_date: '2020-05-05' });
+          else Object.assign(base, { title: `Resultado ${i}`, release_date: '2020-05-05' });
+          out.push(base);
+        }
+        if (page === 1 && kind === 'tv') out.push({ id: 8999, name: 'Anime en la búsqueda', original_language: 'ja', genre_ids: [16] });
+        return send(200, { page, total_pages: 3, total_results: total, results: out });
+      }
       if (dc) {
         const kind = dc[1];
         const wg = url.searchParams.get('with_genres');

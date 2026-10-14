@@ -1375,8 +1375,8 @@
     {
       "id": "f18",
       "name": "Fase 18 · Descubrir y personalizar",
-      "release": "1.1.0",
-      "summary": "Lista infinita, comparar perfiles, tema claro/oscuro, recomendaciones y búsqueda avanzada",
+      "release": "1.6.0",
+      "summary": "Lista infinita, comparar perfiles, tema claro/oscuro, recomendaciones y búsqueda avanzada (versiones 1.0.1 a 1.6.0)",
       "features": [
         {
           "id": "f18-icono",
@@ -1578,32 +1578,32 @@
             {
               "id": "18.25",
               "title": "Nueva entrada «Búsqueda» en el menú lateral, con una tabulación más, justo debajo de «Inicio»",
-              "status": "pendiente",
-              "eta": "2026-10-26"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.26",
               "title": "API de descubrimiento con filtros: tipo (series/películas), plataforma (HBO, Netflix, Prime… según la región ES de TMDB), género, estudio/productora, años, puntuación mínima y orden",
-              "status": "pendiente",
-              "eta": "2026-10-26"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.27",
               "title": "Endpoints auxiliares (plataformas, géneros y búsqueda de estudio) con caché",
-              "status": "pendiente",
-              "eta": "2026-10-26"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.28",
               "title": "Página de búsqueda con filtros plegables en móvil y resultados con scroll infinito y los botones de estado de las tarjetas",
-              "status": "pendiente",
-              "eta": "2026-10-26"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.29",
               "title": "Tests con proveedor simulado y comprobación en navegador",
-              "status": "pendiente",
-              "eta": "2026-10-26"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.30",
@@ -1632,7 +1632,7 @@
     {
       "id": "f19",
       "name": "Fase 19 · Temporadas y pulido móvil",
-      "release": "1.2.0",
+      "release": "1.x",
       "summary": "Gesto para abrir el menú, episodios por temporadas, temporadas vistas en el perfil y retoques de «Mi lista» y del menú en el móvil",
       "features": [
         {
@@ -1746,17 +1746,88 @@
     },
     {
       "id": "f20",
-      "name": "Fase 20 · Retoques menores",
-      "release": "1.3.0",
+      "name": "Fase 20 · Portada, README y versiones",
+      "release": "1.x",
+      "summary": "Política de versiones, recomendaciones en vertical con carga continua y documentación orientada a GitHub",
+      "features": [
+        {
+          "id": "f20-versiones",
+          "title": "Versiones",
+          "category": "Infra",
+          "tasks": [
+            {
+              "id": "20.1",
+              "title": "Política de versiones (semver): cambio pequeño = 0.0.x, funcionalidad nueva = 0.x, la major solo cuando lo indique el autor; la versión se actualiza en package.json, roadmap y pie de página en cada publicación. Aplicada con 1.0.1 → 1.6.0 en la fase 18",
+              "status": "hecho",
+              "eta": "2026-10-14"
+            }
+          ]
+        },
+        {
+          "id": "f20-portada",
+          "title": "Portada: recomendaciones en vertical",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "20.2",
+              "title": "Portada: solo «Series del momento» (y las películas / el anime según el filtro) con scroll lateral; «Series que has podido ver» vuelve a ser una rejilla con scroll vertical",
+              "status": "pendiente",
+              "eta": "2026-10-31"
+            },
+            {
+              "id": "20.3",
+              "title": "API de recomendaciones paginada: cada página pide más candidatos de tus géneros con más afinidad, sin repetir los ya mostrados",
+              "status": "pendiente",
+              "eta": "2026-10-31"
+            },
+            {
+              "id": "20.4",
+              "title": "Al llegar al final de la rejilla de recomendaciones se cargan más automáticamente (con botón «Cargar más» de reserva); tests y comprobación en navegador",
+              "status": "pendiente",
+              "eta": "2026-10-31"
+            }
+          ]
+        },
+        {
+          "id": "f20-docs",
+          "title": "Documentación para GitHub",
+          "category": "Infra",
+          "tasks": [
+            {
+              "id": "20.5",
+              "title": "README profesional orientado a GitHub: qué es MAR, funcionalidades, pila tecnológica, arquitectura, puesta en marcha, configuración, scripts, pruebas, despliegue, hoja de ruta, licencias y créditos; sin dirigirse al autor ni mencionar su entorno",
+              "status": "pendiente",
+              "eta": "2026-11-01"
+            },
+            {
+              "id": "20.6",
+              "title": "Documentación complementaria en docs/: arquitectura, referencia de la API, guía de desarrollo y pruebas, y notas de entorno separadas del README",
+              "status": "pendiente",
+              "eta": "2026-11-01"
+            },
+            {
+              "id": "20.7",
+              "title": "Cierre: versión, CHANGELOG, roadmap y despliegue comprobado en https://mar.fly.dev",
+              "status": "pendiente",
+              "eta": "2026-11-01"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f21",
+      "name": "Fase 21 · Retoques menores",
+      "release": "1.x",
       "summary": "Mejoras de baja prioridad",
       "features": [
         {
-          "id": "f20-roadmap",
+          "id": "f21-roadmap",
           "title": "Roadmap con lo actual primero",
           "category": "Frontend",
           "tasks": [
             {
-              "id": "20.1",
+              "id": "21.1",
               "title": "Roadmap: orden inverso (lo que se está haciendo o falta por hacer primero y lo ya hecho al final), también en las columnas y en las tareas de cada tarjeta",
               "status": "pendiente",
               "note": "Prioridad baja; se hace al terminar las fases 18 y 19",
@@ -1767,6 +1838,6 @@
       ]
     }
   ],
-  "release": "1.0.0",
+  "release": "1.6.0",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

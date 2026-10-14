@@ -26,6 +26,8 @@ export const config = {
   omdbKey: env.OMDB_API_KEY || '',
   tmdbBase: env.TMDB_BASE_URL || 'https://api.themoviedb.org/3',
   tmdbImageBase: env.TMDB_IMAGE_BASE_URL || 'https://image.tmdb.org/t/p/w342',
+  // Región para saber en qué plataformas (Netflix, HBO…) está disponible cada título.
+  tmdbRegion: (env.TMDB_REGION || 'ES').toUpperCase(),
   jikanBase: env.JIKAN_BASE_URL || 'https://api.jikan.moe/v4',
   omdbBase: env.OMDB_BASE_URL || 'https://www.omdbapi.com',
   providerTimeoutMs: Number(env.PROVIDER_TIMEOUT_MS) || 8000,

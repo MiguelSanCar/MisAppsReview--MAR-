@@ -108,3 +108,63 @@ export async function genreNamesTmdb(kind: TmdbKind): Promise<Record<number, str
   const data = await cached(`tmdb:genres:${kind}`, 30 * 86400, () => call(`/genre/${kind}/list`));
   return Object.fromEntries((data.genres ?? []).map((g: any) => [g.id, g.name]));
 }
+
+export type DiscoverSort = 'popularity' | 'rating' | 'date';
+export interface DiscoverFilters {
+  kind: TmdbKind;
+  page: number;
+  sort: DiscoverSort;
+  genre?: number;
+  /** Id de plataforma de streaming de TMDB (p. ej. 8 = Netflix). */
+  platform?: number;
+  /** Id de productora/estudio de TMDB. */
+  studio?: number;
+  yearFrom?: number;
+  yearTo?: number;
+  minRating?: number;
+}
+export interface DiscoverPage { items: ProviderItem[]; page: number; totalPages: number }
+
+/** Búsqueda avanzada: descubrimiento de TMDB con filtros combinables. */
+export async function discoverFiltered(f: DiscoverFilters): Promise<DiscoverPage> {
+  const movie = f.kind === 'movie';
+  const dateField = movie ? 'primary_release_date' : 'first_air_date';
+  const sortField = f.sort === 'rating' ? 'vote_average' : f.sort === 'date' ? dateField : 'popularity';
+  const params: Record<string, string> = {
+    sort_by: `${sortField}.desc`, include_adult: 'false', page: String(f.page),
+    watch_region: config.tmdbRegion, // siempre: acota las plataformas a tu país
+  };
+  if (f.genre) params.with_genres = String(f.genre);
+  if (f.platform) { params.with_watch_providers = String(f.platform); params.with_watch_monetization_types = 'flatrate|free|ads'; }
+  if (f.studio) params.with_companies = String(f.studio);
+  if (f.yearFrom) params[`${dateField}.gte`] = `${f.yearFrom}-01-01`;
+  if (f.yearTo) params[`${dateField}.lte`] = `${f.yearTo}-12-31`;
+  if (f.minRating) params['vote_average.gte'] = String(f.minRating);
+  // Ordenar por nota sin exigir votos mínimos llena de títulos con un solo voto
+  if (f.sort === 'rating' || f.minRating) params['vote_count.gte'] = '150';
+  // Por fecha, que no aparezcan estrenos futuros sin datos
+  if (f.sort === 'date' && !f.yearTo) params[`${dateField}.lte`] = new Date().toISOString().slice(0, 10);
+  const data = await memCached(`tmdb:advanced:${f.kind}:${JSON.stringify(params)}`, 1800, () => call(`/discover/${f.kind}`, params));
+  return {
+    items: (data.results ?? []).map((r: any) => mapResult(r, movie)).filter(Boolean) as ProviderItem[],
+    page: Number(data.page) || f.page,
+    totalPages: Math.min(Number(data.total_pages) || 1, 500), // TMDB no sirve más de 500 páginas
+  };
+}
+
+export interface NamedId { id: number; name: string }
+
+/** Plataformas de streaming disponibles en la región, por orden de importancia (caché de 24 h). */
+export async function providersTmdb(kind: TmdbKind): Promise<NamedId[]> {
+  const data = await cached(`tmdb:providers:${kind}:${config.tmdbRegion}`, 86400, () => call(`/watch/providers/${kind}`, { watch_region: config.tmdbRegion }));
+  return (data.results ?? [])
+    .sort((a: any, b: any) => (a.display_priority ?? 999) - (b.display_priority ?? 999))
+    .slice(0, 40)
+    .map((p: any) => ({ id: p.provider_id, name: p.provider_name }));
+}
+
+/** Productoras/estudios cuyo nombre contiene el texto (para el filtro «estudio»). */
+export async function searchCompaniesTmdb(q: string): Promise<NamedId[]> {
+  const data = await memCached(`tmdb:company:${q.toLowerCase()}`, 3600, () => call('/search/company', { query: q, page: '1' }));
+  return (data.results ?? []).slice(0, 8).map((c: any) => ({ id: c.id, name: c.name }));
+}

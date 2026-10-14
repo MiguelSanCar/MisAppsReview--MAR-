@@ -56,7 +56,7 @@ npm run mail:test -w server -- tu@correo.com   # comprueba SMTP (base lista, aú
 
  - `roadmap/roadmap.json` es la fuente de verdad (fases > funcionalidades > tareas; estados `pendiente` | `en_progreso` | `hecho`); la página pública `/roadmap` lo lee y es solo lectura. Actualízalo al terminar cada tarea y al recibir cambios.
  - **Fechas**: cada tarea lleva `eta` (AAAA-MM-DD): la estimada mientras esté pendiente y la real al terminarla; si depende de algo externo, `eta: null` y `etaNote` con el motivo y el esfuerzo. Al crear tareas pon su fecha estimada y al cerrarlas actualiza `eta` a la fecha real. La página `/roadmap` las muestra por tarea, tarjeta y columna.
- - Versión 0.x: fase N completada = `0.(N+1).0` (`package.json` y `roadmap.json`); la fase 17 (PWA) cerró la **1.0.0**. A partir de ahí, semver: mejoras `1.x.0`, arreglos `1.0.x`. Al cerrar una fase: CHANGELOG, DECISIONES si hay decisión nueva, README si cambia algo visible, y subir a GitHub.
+ - **Versiones (semver)**: cambio pequeño (arreglo, ajuste visual) = `x.y.Z`; funcionalidad nueva = `x.Y.0`; la major (`X.0.0`) solo cuando el autor lo diga. En cada publicación: `package.json`, `roadmap.json` (`release` y la fase) y CHANGELOG con su versión; el pie de la app la muestra. Versión actual: 1.6.0. Al cerrar una fase: CHANGELOG, DECISIONES si hay decisión nueva, README si cambia algo visible, y subir a GitHub.
  - Pendiente conocido: correo (12.10, 12.12), en espera por decisión del usuario. Hosting: Fly.io (`mar`), se opera con `tools/fly.exe` (ver `docs/DESPLIEGUE.md`).
 
 ## Pruebas

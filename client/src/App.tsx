@@ -23,6 +23,7 @@ const ProfileComparePage = lazy(() => import('./pages/ProfilePages').then((m) =>
 const ProfileShell = lazy(() => import('./profile/ProfileShell'));
 const RoadmapPage = lazy(() => import('./pages/RoadmapPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const AdvancedSearchPage = lazy(() => import('./pages/AdvancedSearch'));
 const SharedListGate = lazy(() => import('./pages/SharedListGate'));
 
 function RequireAuth({ children }: { children: JSX.Element }) {
@@ -61,6 +62,7 @@ export default function App() {
 
       <Route element={<RequireAuth><Layout /></RequireAuth>}>
         <Route path="/home" element={<HomePage />} />
+        <Route path="/search" element={<AdvancedSearchPage />} />
         <Route path="/profile" element={<MyProfileRedirect />} />
         <Route path="/list" element={<MyListPage />} />
         <Route path="/friends" element={<FriendsPage />} />
