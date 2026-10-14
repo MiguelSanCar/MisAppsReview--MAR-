@@ -476,3 +476,18 @@ a, button, .chip, .tab, label.file-btn { touch-action: manipulation; } /* sin re
 :root[data-theme="light"] .toast, :root[data-theme="light"] .update-banner { box-shadow: 0 6px 20px rgba(20, 28, 45, .18); }
 :root[data-theme="light"] .seg-del { color: #c4303f; }
 :root[data-theme="light"] .poster-ph { background: linear-gradient(160deg, #e3e9f5, #cdd7ea); color: var(--muted); }
+
+/* ---------- filas con scroll lateral (portada) ---------- */
+.hrow-wrap { position: relative; }
+.hrow { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity; padding: 4px 2px 14px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+.hrow:focus-visible { outline-offset: 2px; border-radius: 12px; }
+.hrow-item { flex: 0 0 150px; scroll-snap-align: start; min-width: 0; }
+@media (max-width: 720px) { .hrow { gap: 12px; } .hrow-item { flex-basis: 154px; } } /* tres botones de 44 px caben sin pisarse */
+.hrow-arrow { display: none; position: absolute; top: 38%; transform: translateY(-50%); z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); color: var(--text); font-size: 1.5rem; line-height: 1; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 0, 0, .25); }
+.hrow-arrow.prev { left: -8px; }
+.hrow-arrow.next { right: -8px; }
+.hrow-arrow:disabled { opacity: 0; pointer-events: none; }
+@media (hover: hover) and (pointer: fine) { .hrow-arrow { display: grid; place-items: center; } .hrow-arrow[hidden] { display: none; } }
+.reco-card { display: grid; gap: 4px; }
+.reco-why { line-height: 1.25; }
+.hrow-wrap .pcard { content-visibility: visible; }

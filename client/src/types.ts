@@ -110,6 +110,17 @@ export interface CompareData {
   summary: { me: number; them: number; ties: number };
 }
 
+export interface RecoGenre { id: number; name: string; score: number; lift: number; userShare: number; marketShare: number; weight: number }
+export interface Recommendations {
+  kind: 'serie' | 'pelicula' | 'anime';
+  title: string;
+  reason: 'sin_tmdb' | 'sin_datos' | 'anime' | null;
+  items: (Content & { why: string | null })[];
+  genres: RecoGenre[];
+  states: Record<number, UserState | null | undefined>;
+  warnings: string[];
+}
+
 export interface ListMember extends PublicUser { left: boolean }
 export interface Inactivity { lastActivityAt: string; deleteAt: string; daysLeft: number; warning: boolean }
 export interface ListSummary {

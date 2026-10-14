@@ -1553,20 +1553,20 @@
             {
               "id": "18.22",
               "title": "Inicio: «Series del momento» con scroll lateral y justo debajo «Series que has podido ver» (las recomendaciones)",
-              "status": "pendiente",
-              "eta": "2026-10-22"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.23",
               "title": "Los filtros Todo / Series / Películas / Anime afectan a ambas filas; estado vacío que invita a marcar contenidos si aún no hay datos",
-              "status": "pendiente",
-              "eta": "2026-10-22"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.24",
               "title": "Capturas en móvil y ordenador, claro y oscuro",
-              "status": "pendiente",
-              "eta": "2026-10-22"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
