@@ -181,4 +181,12 @@ export const MIGRATIONS: { version: number; name: string; sql: string }[] = [
       ALTER TABLE users ADD COLUMN theme TEXT NOT NULL DEFAULT 'dark';
     `,
   },
+  {
+    version: 11,
+    name: 'géneros',
+    sql: `
+      -- genres: JSON con los ids de género de TMDB (p. ej. [18,80]); NULL = aún no consultado. Alimenta las recomendaciones.
+      ALTER TABLE content ADD COLUMN genres TEXT;
+    `,
+  },
 ];

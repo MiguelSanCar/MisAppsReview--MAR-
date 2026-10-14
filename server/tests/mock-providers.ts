@@ -47,6 +47,7 @@ export function startMockProviders(): Promise<{ base: string; close: () => Promi
         return send(200, {
           title: `Pelicula ${Number(m[1]) - 100}`, overview: 'Detalle', runtime: 100, imdb_id: `tt00${m[1]}`,
           release_date: '2010-01-01', poster_path: '/p.jpg', production_companies: [{ name: 'Studio X' }],
+          genres: [{ id: 28, name: 'Acción' }],
         });
       }
       m = /^\/tmdb\/tv\/1396$/.exec(p);
@@ -55,7 +56,36 @@ export function startMockProviders(): Promise<{ base: string; close: () => Promi
           name: 'Breaking Bad', overview: 'Detalle serie', number_of_episodes: 62, episode_run_time: [47],
           first_air_date: '2008-01-20', poster_path: '/bb.jpg', production_companies: [{ name: 'Sony' }],
           networks: [{ name: 'AMC' }], external_ids: { imdb_id: 'tt0903747' },
+          genres: [{ id: 18, name: 'Drama' }, { id: 80, name: 'Crimen' }],
         });
+      }
+      const GENRES: Record<string, Record<number, string>> = {
+        tv: { 18: 'Drama', 35: 'Comedia', 80: 'Crimen', 9648: 'Misterio', 10759: 'Action & Adventure', 10765: 'Sci-Fi & Fantasy' },
+        movie: { 28: 'Acción', 35: 'Comedia', 18: 'Drama', 27: 'Terror', 878: 'Ciencia ficción', 14: 'Fantasía' },
+      };
+      const gl = /^\/tmdb\/genre\/(tv|movie)\/list$/.exec(p);
+      if (gl) return send(200, { genres: Object.entries(GENRES[gl[1]]).map(([id, name]) => ({ id: Number(id), name })) });
+      const dc = /^\/tmdb\/discover\/(tv|movie)$/.exec(p);
+      if (dc) {
+        const kind = dc[1];
+        const wg = url.searchParams.get('with_genres');
+        const page = Number(url.searchParams.get('page') ?? 1);
+        const titleKey = kind === 'tv' ? 'name' : 'title';
+        const dateKey = kind === 'tv' ? 'first_air_date' : 'release_date';
+        if (!wg) {
+          // «el mercado»: los títulos más populares; el Drama (series) o la Acción (películas) domina
+          const market = kind === 'tv' ? [[18], [18, 80], [18], [18, 9648], [18], [35], [35], [80], [10759], [10765]] : [[28], [28], [28], [35], [35], [18], [18], [27], [878], [14]];
+          if (page > 1) return send(200, { results: [] });
+          return send(200, { results: market.map((g, i) => ({ id: 7000 + i, [titleKey]: `Popular ${i}`, [dateKey]: '2024-01-01', original_language: 'en', genre_ids: g, vote_average: 7.5 })) });
+        }
+        const out: any[] = [];
+        for (const id of wg.split('|').map(Number)) {
+          for (let i = 0; i < 6; i++) {
+            out.push({ id: id * 10 + i, [titleKey]: `${GENRES[kind][id] ?? 'Género ' + id} ${kind === 'tv' ? 'serie' : 'película'} ${i}`, poster_path: '/d.jpg', [dateKey]: '2022-02-02', original_language: 'en', genre_ids: i === 0 ? [id, 18] : [id], vote_average: 6.5 + i * 0.4 });
+          }
+        }
+        if (kind === 'tv' && wg.split('|').includes('18')) out.unshift({ id: 1396, name: 'Breaking Bad', poster_path: '/bb.jpg', first_air_date: '2008-01-20', original_language: 'en', genre_ids: [18, 80], vote_average: 9.5 });
+        return send(200, { results: out });
       }
       return send(404, {});
     }

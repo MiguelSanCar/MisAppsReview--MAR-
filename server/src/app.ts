@@ -12,6 +12,7 @@ import { profilesRouter } from './routes/profiles';
 import { invitesRouter } from './routes/invites';
 import { contentRouter, libraryRouter, searchRouter } from './routes/library';
 import { listsRouter } from './routes/lists';
+import { recoRouter } from './routes/recommendations';
 import { roadmapRouter } from './roadmap';
 
 export function createApp() {
@@ -49,6 +50,7 @@ export function createApp() {
   app.use('/api/search', searchRouter);
   app.use('/api/content', contentRouter);
   app.use('/api/library', libraryRouter);
+  app.use('/api/recommendations', recoRouter);
   app.use('/api/friends', friendsRouter);
   app.use('/api/invites', invitesRouter);
   app.use('/api/profiles', profilesRouter);

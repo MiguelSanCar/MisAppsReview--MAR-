@@ -1516,32 +1516,32 @@
             {
               "id": "18.17",
               "title": "Géneros de cada contenido (migración 11: content.genres; TMDB ya los da) con relleno perezoso de lo ya guardado",
-              "status": "pendiente",
-              "eta": "2026-10-21"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.18",
               "title": "Presencia de cada género en el mercado: cuota en lo más popular de TMDB (caché de 24 h)",
-              "status": "pendiente",
-              "eta": "2026-10-21"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.19",
               "title": "Afinidad por género: cada contenido suma 1 (más si es favorito o finalizado, menos si está por ver o dejado), se compara la cuota del género en tu lista con su cuota en el mercado y se suaviza con pocos datos; fórmula pura y documentada en DECISIONES",
-              "status": "pendiente",
-              "eta": "2026-10-21"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.20",
               "title": "API /api/recommendations (series y películas): descubre en TMDB por tus géneros con mayor afinidad, excluye lo que ya tienes y ordena por afinidad y puntuación. Anime queda fuera (Jikan no responde en esta red)",
-              "status": "pendiente",
-              "eta": "2026-10-21"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "18.21",
               "title": "Tests de la fórmula y del endpoint con proveedor simulado",
-              "status": "pendiente",
-              "eta": "2026-10-21"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },

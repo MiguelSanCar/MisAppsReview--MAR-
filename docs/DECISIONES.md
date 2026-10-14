@@ -95,3 +95,24 @@
 | **Interruptor `role="switch"` con luna y sol de contorno blanco** | Accesible (estado en `aria-checked`) y legible en los dos temas, porque el fondo del interruptor es de color en ambos (`--switch-track`). |
 | **Paleta clara comprobada con un medidor de contraste WCAG** | En el navegador se midió cada texto visible en 5 pantallas y 2 temas: todo ≥ 4,5 (3 en texto grande). Salieron 4 pares justo por debajo y se ajustaron (`--accent`, `--done`, `--todo`, texto de `.seg-btn.on`). |
 | **Los botones sobre carátulas no cambian de tema** | Van sobre imágenes, así que siguen siendo oscuros translúcidos con iconos blancos en ambos temas. |
+
+## Recomendaciones (fase 18)
+
+**¿Lo da ya TMDB?** TMDB solo ofrece «similares» y «recomendados» *de un título concreto*, no «según todo lo que ha visto esta persona»; y esa lista se basa en sus usuarios, no en los tuyos. Por eso la afinidad se calcula aquí y TMDB se usa para (a) saber a qué géneros pertenece cada título, (b) medir cuánto pesa cada género en el mercado y (c) descubrir títulos candidatos por género (`/discover`).
+
+**Fórmula** (`server/src/domain/recommend.ts`, reglas puras y con tests):
+
+1. **Peso de cada contenido** = peso del estado × 2 si es favorito. «Vista» vale 1: Finalizado 1 · Viendo 0,8 · Por ver 0,4 · Dejado 0,15.
+2. **Presencia propia** del género = suma de pesos de tus contenidos de ese género ÷ suma total de pesos.
+3. **Presencia en el mercado** = qué parte de los ~60 títulos más populares de TMDB (series o películas) tienen ese género; se calcula una vez al día. Mínimo 0,03 para que un género casi inexistente no dispare la cuenta.
+4. **Lift** = presencia propia suavizada ÷ presencia en el mercado. La suavización `(peso + 3·mercado) / (total + 3)` acerca el resultado a la media del mercado cuando hay pocos datos (con un solo contenido no se concluye que «le encanta» ese género).
+5. **Puntuación del género** = `log2(1 + lift) × log2(1 + peso)`. El primer factor corrige el efecto «hay más Drama que Terror»; el segundo premia la cantidad (con rendimientos decrecientes).
+6. Se toman los **3 géneros con más puntuación**, se piden a TMDB títulos de cada uno (nota ≥ 6,5 y ≥ 200 votos), se **excluye lo que ya tienes** y se ordenan por `suma de afinidad de sus géneros × (0,6 + 0,4 × calidad)`, con la popularidad como desempate. Cada recomendación indica el género que la motiva.
+
+| Decisión | Motivo |
+|---|---|
+| **Géneros guardados en `content.genres` (migración 11)** | Se rellenan al buscar (TMDB los da en los resultados) y al abrir la ficha; lo guardado antes se completa de 8 en 8 en cada petición, sin bloquear. |
+| **Series y películas comparten gustos** | Los catálogos de TMDB difieren (p. ej. «Acción y Aventura» de las series ↔ «Acción» + «Aventura» de las películas); `mapGenres` traduce los que equivalen y conserva los que coinciden. |
+| **Anime queda fuera por ahora** | Jikan no aporta géneros en nuestra consulta y no responde desde la red de desarrollo. |
+| **Cuota de mercado cacheada 24 h; consultas por género 6 h** | Pocas peticiones a TMDB (3 + 3 por usuario y día como mucho). |
+| **El endpoint devuelve también los géneros y sus números** | Para poder explicar y depurar de dónde salen las recomendaciones. |

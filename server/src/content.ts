@@ -24,6 +24,8 @@ export interface ContentRow {
   detailed_at: string | null;
   ratings_at: string | null;
   ratings_try_at: string | null;
+  /** JSON con ids de género de TMDB; null = sin consultar. */
+  genres: string | null;
 }
 
 export interface ContentDto {
@@ -76,13 +78,14 @@ export function upsertFromProvider(i: ProviderItem): ContentRow {
     ex.title === i.title &&
     !((!ex.poster_url && i.posterUrl) || (!ex.synopsis && i.synopsis) || (!ex.year && i.year) ||
       (ex.total_episodes == null && i.totalEpisodes != null) || (ex.studio == null && i.studio) ||
-      (ex.runtime_minutes == null && i.runtimeMinutes != null) || (!ex.ratings && malText(i.malScore)))
+      (ex.runtime_minutes == null && i.runtimeMinutes != null) || (!ex.ratings && malText(i.malScore)) ||
+      (ex.genres == null && i.genres?.length))
   ) {
     return ex;
   }
   run(
-    `INSERT INTO content (source, external_id, type, title, poster_url, synopsis, year, total_episodes, runtime_minutes, studio, imdb_id)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `INSERT INTO content (source, external_id, type, title, poster_url, synopsis, year, total_episodes, runtime_minutes, studio, imdb_id, genres)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(source, external_id) DO UPDATE SET
        title = excluded.title,
        poster_url = COALESCE(excluded.poster_url, content.poster_url),
@@ -90,8 +93,9 @@ export function upsertFromProvider(i: ProviderItem): ContentRow {
        year = COALESCE(excluded.year, content.year),
        total_episodes = COALESCE(content.total_episodes, excluded.total_episodes),
        runtime_minutes = COALESCE(content.runtime_minutes, excluded.runtime_minutes),
-       studio = COALESCE(content.studio, excluded.studio)`,
-    [i.source, i.externalId, i.type, i.title, i.posterUrl, i.synopsis, i.year, i.totalEpisodes, i.runtimeMinutes, i.studio, i.imdbId ?? null],
+       studio = COALESCE(content.studio, excluded.studio),
+       genres = COALESCE(content.genres, excluded.genres)`,
+    [i.source, i.externalId, i.type, i.title, i.posterUrl, i.synopsis, i.year, i.totalEpisodes, i.runtimeMinutes, i.studio, i.imdbId ?? null, i.genres?.length ? JSON.stringify(i.genres) : null],
   );
   const row = get<ContentRow>('SELECT * FROM content WHERE source = ? AND external_id = ?', [i.source, i.externalId])!;
   const mal = malText(i.malScore);
@@ -109,8 +113,8 @@ export async function ensureCore(row: ContentRow): Promise<ContentRow> {
   run(
     `UPDATE content SET title = ?, poster_url = COALESCE(?, poster_url), synopsis = COALESCE(?, synopsis),
        year = COALESCE(?, year), total_episodes = ?, runtime_minutes = ?, studio = ?, imdb_id = COALESCE(?, imdb_id),
-       detailed_at = ? WHERE id = ?`,
-    [d.title, d.posterUrl, d.synopsis, d.year, d.totalEpisodes, d.runtimeMinutes, d.studio, d.imdbId ?? null, nowIso(), row.id],
+       genres = COALESCE(?, genres), detailed_at = ? WHERE id = ?`,
+    [d.title, d.posterUrl, d.synopsis, d.year, d.totalEpisodes, d.runtimeMinutes, d.studio, d.imdbId ?? null, d.genres?.length ? JSON.stringify(d.genres) : null, nowIso(), row.id],
   );
   const mal = malText(d.malScore);
   if (mal) run('UPDATE content SET ratings = ?, ratings_at = ? WHERE id = ?', [JSON.stringify({ mal }), nowIso(), row.id]);

@@ -36,6 +36,8 @@ function mapResult(r: any, isMovie: boolean): ProviderItem | null {
     totalEpisodes: isMovie ? 1 : null,
     runtimeMinutes: null,
     studio: null,
+    genres: Array.isArray(r.genre_ids) ? r.genre_ids : undefined,
+    voteAverage: typeof r.vote_average === 'number' ? r.vote_average : null,
   };
 }
 
@@ -85,5 +87,24 @@ export async function detailTmdb(externalId: string): Promise<ProviderItem> {
     runtimeMinutes: runtime > 0 ? runtime : null,
     studio,
     imdbId: (isMovie ? r.imdb_id : r.external_ids?.imdb_id) || null,
+    genres: Array.isArray(r.genres) ? r.genres.map((g: any) => g.id).filter((n: any) => Number.isInteger(n)) : undefined,
   };
+}
+
+export type TmdbKind = 'tv' | 'movie';
+
+/** Descubrimiento de TMDB: por popularidad, o filtrado por géneros (con buena nota y votos suficientes). */
+export async function discoverTmdb(kind: TmdbKind, opts: { genres?: number[]; page?: number; quality?: boolean } = {}): Promise<ProviderItem[]> {
+  const params: Record<string, string> = { sort_by: 'popularity.desc', include_adult: 'false', page: String(opts.page ?? 1) };
+  if (opts.genres?.length) params.with_genres = opts.genres.join('|'); // «|» = cualquiera de ellos
+  if (opts.quality) { params['vote_count.gte'] = '200'; params['vote_average.gte'] = '6.5'; }
+  const key = `tmdb:discover:${kind}:${JSON.stringify(params)}`;
+  const data = await memCached(key, 6 * 3600, () => call(`/discover/${kind}`, params));
+  return (data.results ?? []).map((r: any) => mapResult(r, kind === 'movie')).filter(Boolean) as ProviderItem[];
+}
+
+/** Nombres de género en español (id → nombre). Cambian muy poco: caché persistente de 30 días. */
+export async function genreNamesTmdb(kind: TmdbKind): Promise<Record<number, string>> {
+  const data = await cached(`tmdb:genres:${kind}`, 30 * 86400, () => call(`/genre/${kind}/list`));
+  return Object.fromEntries((data.genres ?? []).map((g: any) => [g.id, g.name]));
 }

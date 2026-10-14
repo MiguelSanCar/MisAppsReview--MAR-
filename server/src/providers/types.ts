@@ -16,6 +16,10 @@ export interface ProviderItem {
   studio: string | null;
   imdbId?: string | null;
   malScore?: number | null;
+  /** Ids de género de TMDB (series y películas; Jikan no los aporta). */
+  genres?: number[];
+  /** Nota media de TMDB (0-10) en resultados de descubrimiento. */
+  voteAverage?: number | null;
 }
 
 export interface Ratings {
