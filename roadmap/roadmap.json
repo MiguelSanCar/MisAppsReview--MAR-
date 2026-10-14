@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-13",
+  "updatedAt": "2026-10-14",
   "title": "MAR · Mis Apps Review",
   "subtitle": "Registro personal de series, películas y anime",
   "phases": [
@@ -1146,6 +1146,190 @@
               "title": "Licencia (ISC) y su documentación",
               "status": "hecho",
               "eta": "2026-10-13"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f17",
+      "name": "Fase 17 · Versión móvil (PWA)",
+      "release": "1.0.0",
+      "summary": "MAR instalable en Android e iPhone como PWA, con logotipo propio y favicon; cierra la versión 1.0",
+      "features": [
+        {
+          "id": "f17-identidad",
+          "title": "Identidad visual",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "17.1",
+              "title": "Logotipo propio «MAR» en SVG: letras de bloque gruesas y geométricas, inspiradas en Lock Block (solo referencia; sin copiar glifos por su licencia de uso personal)",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            },
+            {
+              "id": "17.2",
+              "title": "Favicon de la pestaña del navegador (favicon.svg y favicon.ico de 32×32) desde el mismo logotipo, legible a 16 px",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            },
+            {
+              "id": "17.3",
+              "title": "Logotipo en los menús y la cabecera en lugar del texto «MAR» (SVG con currentColor y aria-label, válido en tema claro y oscuro)",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            },
+            {
+              "id": "17.4",
+              "title": "Comprobación visual con capturas en Edge headless a 16, 32 y 180 px",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            }
+          ]
+        },
+        {
+          "id": "f17-instalable",
+          "title": "App instalable",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "17.5",
+              "title": "Iconos de la PWA (192, 512, maskable y apple-touch-icon de 180) generados desde el logotipo",
+              "status": "pendiente",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "17.6",
+              "title": "manifest.webmanifest (nombre, display standalone, colores, idioma e iconos)",
+              "status": "pendiente",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "17.7",
+              "title": "index.html: enlace al manifiesto, theme-color, metaetiquetas de iOS y viewport-fit=cover",
+              "status": "pendiente",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "17.8",
+              "title": "Servidor: CSP de helmet y tipo MIME del manifiesto, con test en server/tests",
+              "status": "pendiente",
+              "eta": "2026-10-16"
+            }
+          ]
+        },
+        {
+          "id": "f17-sw",
+          "title": "Service worker y caché",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "17.9",
+              "title": "Service worker que cachea la cáscara de la app y las carátulas (con límite); /api nunca se cachea",
+              "status": "pendiente",
+              "eta": "2026-10-19"
+            },
+            {
+              "id": "17.10",
+              "title": "Pantalla «Sin conexión» con reintento",
+              "status": "pendiente",
+              "eta": "2026-10-19"
+            },
+            {
+              "id": "17.11",
+              "title": "Aviso «Hay una versión nueva · Actualizar» al desplegar",
+              "status": "pendiente",
+              "eta": "2026-10-19"
+            },
+            {
+              "id": "17.12",
+              "title": "Cabeceras de caché: sw.js e index.html sin caché; assets con hash en caché larga",
+              "status": "pendiente",
+              "eta": "2026-10-19"
+            }
+          ]
+        },
+        {
+          "id": "f17-movil",
+          "title": "Diseño móvil",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "17.13",
+              "title": "Auditoría con capturas a 360–430 px de todas las pantallas (portada, búsqueda, ficha, Mi lista, amigos, listas conjuntas, perfil, ajustes y roadmap)",
+              "status": "pendiente",
+              "eta": "2026-10-21"
+            },
+            {
+              "id": "17.14",
+              "title": "Navegación adaptada al móvil (barra inferior o menú desplegable; se decide con capturas)",
+              "status": "pendiente",
+              "eta": "2026-10-21"
+            },
+            {
+              "id": "17.15",
+              "title": "Táctil: objetivos de 44 px y sin dependencias del ratón (hover, tooltips, temblor del modo «Eliminar»)",
+              "status": "pendiente",
+              "eta": "2026-10-21"
+            },
+            {
+              "id": "17.16",
+              "title": "Zonas seguras (safe-area) para el notch y la barra del iPhone, y altura al abrir el teclado",
+              "status": "pendiente",
+              "eta": "2026-10-21"
+            },
+            {
+              "id": "17.17",
+              "title": "Rendimiento: tamaño del paquete y carga diferida de pantallas pesadas",
+              "status": "pendiente",
+              "eta": "2026-10-21"
+            }
+          ]
+        },
+        {
+          "id": "f17-pruebas",
+          "title": "Pruebas y APK",
+          "category": "Infra",
+          "tasks": [
+            {
+              "id": "17.18",
+              "title": "Tests automáticos del manifiesto y las cabeceras; auditoría Lighthouse si funciona con Node 16",
+              "status": "pendiente",
+              "eta": "2026-10-22"
+            },
+            {
+              "id": "17.19",
+              "title": "Prueba en móviles reales: instalar en Android (Chrome) y en iPhone (Safari), sesión, sin conexión y actualizaciones",
+              "status": "pendiente",
+              "eta": null,
+              "etaNote": "Depende de ti: necesita tus móviles y los de tus amigos. Unos 30 min con mi guía"
+            },
+            {
+              "id": "17.20",
+              "title": "APK opcional empaquetando la PWA (PWABuilder/Bubblewrap) y assetlinks.json en el servidor",
+              "status": "pendiente",
+              "eta": null,
+              "etaNote": "Opcional y depende de ti: confirmar que lo quieres. Unas 3 h; sin permisos de administrador"
+            }
+          ]
+        },
+        {
+          "id": "f17-cierre",
+          "title": "Cierre de la versión 1.0",
+          "category": "Infra",
+          "tasks": [
+            {
+              "id": "17.21",
+              "title": "Documentación: README (instalar en el móvil), CHANGELOG, DECISIONES (por qué PWA y no Capacitor ni nativo) y DESPLIEGUE",
+              "status": "pendiente",
+              "eta": "2026-10-23"
+            },
+            {
+              "id": "17.22",
+              "title": "Versión 1.0.0 (package.json y roadmap.json) y despliegue en Fly.io comprobado en https://mar.fly.dev",
+              "status": "pendiente",
+              "eta": "2026-10-23"
             }
           ]
         }
