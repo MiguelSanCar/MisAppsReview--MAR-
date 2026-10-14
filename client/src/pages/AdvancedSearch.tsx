@@ -68,6 +68,8 @@ export default function AdvancedSearchPage() {
   const [studioText, setStudioText] = useState('');
   const dStudio = useDebounced(studioText.trim(), 300);
   const [suggestions, setSuggestions] = useState<Named[]>([]);
+  // Las sugerencias solo se ven mientras el cuadro tiene el foco (clic fuera, tabulador o Escape las cierran)
+  const [showSug, setShowSug] = useState(false);
   useEffect(() => {
     if (dStudio.length < 2) { setSuggestions([]); return; }
     const c = new AbortController();
@@ -213,18 +215,18 @@ export default function AdvancedSearchPage() {
           <label className="field">Año hasta
             <input type="text" inputMode="numeric" maxLength={4} placeholder={String(thisYear)} value={yt} onChange={(e) => setYt(e.target.value.replace(/\D/g, ''))} onBlur={() => !coherent && setShowYearError(true)} aria-invalid={toBad} aria-describedby={yearsError ? 'adv-year-error' : undefined} />
           </label>
-          <div className="field adv-studio">
+          <div className="field adv-studio" onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setShowSug(false); }}>
             <label htmlFor="adv-studio-in">Estudio o productora</label>
             {studio ? (
               <span className="adv-tag">{studioName || `Estudio ${studio}`}<button type="button" aria-label="Quitar el estudio" onClick={() => set({ studio: undefined, studioName: undefined })}>×</button></span>
             ) : (
               <>
-                <input id="adv-studio-in" type="search" autoComplete="off" placeholder="Escribe: Marvel, Pixar…" value={studioText} onChange={(e) => setStudioText(e.target.value)} />
-                {suggestions.length > 0 && (
-                  <ul className="adv-suggest" role="listbox" aria-label="Estudios encontrados">
+                <input id="adv-studio-in" type="search" autoComplete="off" placeholder="Escribe: Marvel, Pixar…" value={studioText} onFocus={() => setShowSug(true)} onChange={(e) => { setStudioText(e.target.value); setShowSug(true); }} onKeyDown={(e) => { if (e.key === 'Escape') { e.preventDefault(); setShowSug(false); } }} /* Escape cierra la lista sin borrar lo escrito (en type=search borraría el texto) */ role="combobox" aria-expanded={showSug && suggestions.length > 0} aria-controls="adv-studio-list" aria-autocomplete="list" />
+                {showSug && suggestions.length > 0 && (
+                  <ul id="adv-studio-list" className="adv-suggest" role="listbox" aria-label="Estudios encontrados">
                     {suggestions.map((s) => (
                       <li key={s.id} role="option" aria-selected={false}>
-                        <button type="button" onClick={() => { set({ studio: String(s.id), studioName: s.name }); setStudioText(''); setSuggestions([]); }}>{s.name}</button>
+                        <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => { set({ studio: String(s.id), studioName: s.name }); setStudioText(''); setSuggestions([]); setShowSug(false); }}>{s.name}</button>
                       </li>
                     ))}
                   </ul>

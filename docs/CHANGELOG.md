@@ -2,6 +2,10 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.6.3 · 2026-10-14 · Sugerencias que se cierran al perder el foco
+- **Sugerencias que se cierran al perder el foco (20.9):** en el cuadro «Estudio o productora» de la búsqueda avanzada, la lista de sugerencias **desaparece en cuanto el cuadro deja de tener el foco** (clic fuera, paso a otro campo o tabulador fuera de la lista) y también con **Escape**, que cierra la lista sin borrar lo escrito (en un campo de búsqueda el navegador lo borraría). Vuelve a abrirse al poner de nuevo el foco o al seguir escribiendo. Con el teclado, el tabulador mueve el foco a la lista (se puede elegir sin ratón) y se cierra al salir de ella; elegir una sugerencia con el ratón o con el dedo sigue funcionando. Accesibilidad: el cuadro es un `combobox` con `aria-expanded` y `aria-controls`.
+- Comprobado en Edge real: 13 comprobaciones (clic fuera, Escape, tabulador, otro campo, volver al cuadro, elegir sugerencia, sin errores de JavaScript).
+
 ## 1.6.2 · 2026-10-14 · Búsqueda: error de años sin interrumpir al escribir
 - **Filtro de años de la búsqueda avanzada (20.8):** ya no salta el error mientras se escribe (antes aparecía al teclear la primera cifra de «Año desde»). Ahora no se avisa ni se busca con un año a medias; la búsqueda se lanza sola en cuanto el rango es coherente (cuatro cifras válidas o vacío, y el inicial no mayor que el final). El error aparece solo **al salir del campo** o al pulsar el nuevo botón **«Buscar»** (o Intro) con datos incoherentes, y desaparece al corregirlos. Se marca únicamente el campo que falla, y el aviso queda separado de los campos del formulario. «Buscar» con datos coherentes los aplica al momento y, en el móvil, pliega los filtros para ver los resultados.
 - Comprobado en Edge real: 22 comprobaciones (escritura progresiva sin error ni petición, aviso al salir del campo, separación de 18 px, «Buscar» e Intro con rango incoherente sin llamar al servidor, corrección que limpia el error y busca, sin errores de JavaScript).
