@@ -342,3 +342,41 @@ a.fcard:hover, .lcard:hover { border-color: var(--accent); background: var(--pan
   background: var(--panel-2); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 8px 30px rgba(0, 0, 0, .45);
 }
 .update-banner span { white-space: nowrap; }
+
+/* ===== Móvil / PWA (fase 17) ===== */
+html { -webkit-text-size-adjust: 100%; }
+body { -webkit-tap-highlight-color: transparent; }
+a, button, .chip, .tab, label.file-btn { touch-action: manipulation; } /* sin retardo de doble toque */
+/* Altura dinámica: en el móvil 100vh incluye la barra del navegador y provoca scroll de más */
+.shell, .public { min-height: 100vh; min-height: 100dvh; }
+.main { min-height: calc(100vh - 53px); min-height: calc(100dvh - 53px); }
+/* Zonas seguras (notch, esquinas redondeadas, barra de inicio del iPhone) */
+.topbar { padding-top: calc(8px + env(safe-area-inset-top, 0px)); padding-left: calc(16px + env(safe-area-inset-left, 0px)); padding-right: calc(16px + env(safe-area-inset-right, 0px)); }
+.content, .pub-body { padding-left: max(14px, env(safe-area-inset-left, 0px)); padding-right: max(14px, env(safe-area-inset-right, 0px)); }
+.footer { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+.sidebar { padding-top: calc(24px + env(safe-area-inset-top, 0px)); padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); padding-left: calc(16px + env(safe-area-inset-left, 0px)); }
+.toasts { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+/* Táctil: objetivos de al menos 44 px y 16 px en los campos (iOS hace zoom al enfocar si es menos) */
+@media (pointer: coarse) {
+  input:not([type=checkbox]):not([type=radio]), select, textarea { font-size: 16px; min-height: 44px; }
+  .btn { min-height: 44px; }
+  .icon-btn { min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
+  .tab { min-height: 44px; }
+  .chip { min-height: 44px; padding: 10px 16px; display: inline-flex; align-items: center; }
+  .pw-toggle { min-height: 44px; min-width: 44px; }
+  .seg-btn, .filters button, .side-name-btn { min-height: 44px; }
+  .brand, .back { min-height: 44px; padding-left: 8px; padding-right: 8px; margin-left: -8px; display: inline-flex; align-items: center; }
+  .pub-nav > a, .side-foot a, .rm-back { display: inline-flex; align-items: center; min-height: 44px; }
+  .poster-btn, .poster-trash { width: 44px; height: 44px; }
+  .poster-btn.mid { left: calc(50% - 22px); }
+}
+@media (max-width: 720px) {
+  /* Las pestañas de «Mi lista» en una sola fila desplazable, en vez de tres filas */
+  .tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { flex: none; white-space: nowrap; }
+}
+/* La cabecera es más alta en táctil (botones de 44 px): el contenido ocupa el resto en vez de restar una altura fija */
+.shell { display: flex; flex-direction: column; }
+.main { flex: 1; min-height: 0; }
+@media (pointer: coarse) { .pcard .poster > .badge { max-width: calc(100% - 68px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }

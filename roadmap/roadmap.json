@@ -1258,32 +1258,32 @@
             {
               "id": "17.13",
               "title": "Auditoría con capturas a 360–430 px de todas las pantallas (portada, búsqueda, ficha, Mi lista, amigos, listas conjuntas, perfil, ajustes y roadmap)",
-              "status": "pendiente",
-              "eta": "2026-10-21"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.14",
               "title": "Navegación adaptada al móvil (barra inferior o menú desplegable; se decide con capturas)",
-              "status": "pendiente",
-              "eta": "2026-10-21"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.15",
               "title": "Táctil: objetivos de 44 px y sin dependencias del ratón (hover, tooltips, temblor del modo «Eliminar»)",
-              "status": "pendiente",
-              "eta": "2026-10-21"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.16",
               "title": "Zonas seguras (safe-area) para el notch y la barra del iPhone, y altura al abrir el teclado",
-              "status": "pendiente",
-              "eta": "2026-10-21"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.17",
               "title": "Rendimiento: tamaño del paquete y carga diferida de pantallas pesadas",
-              "status": "pendiente",
-              "eta": "2026-10-21"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
@@ -1315,18 +1315,55 @@
           ]
         },
         {
+          "id": "f17-revision",
+          "title": "Ajustes tras la primera revisión",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "17.21",
+              "title": "Roadmap: arriba a la izquierda, el logotipo completo (en lugar del texto «MAR») para volver a la página",
+              "status": "pendiente",
+              "eta": "2026-10-22"
+            },
+            {
+              "id": "17.22",
+              "title": "Páginas públicas (inicio de sesión y registro) a la altura exacta del móvil (100dvh), sin desplazamiento vertical",
+              "status": "pendiente",
+              "eta": "2026-10-22"
+            },
+            {
+              "id": "17.23",
+              "title": "Logotipo con las letras exactas de la fuente Lock Block (glifos M, A y R convertidos a trazados SVG), en lugar de una interpretación; licencia de uso personal anotada en docs/THIRD_PARTY_LICENSES.md",
+              "status": "pendiente",
+              "eta": "2026-10-22"
+            },
+            {
+              "id": "17.24",
+              "title": "La «M» del icono de la app (favicon e iconos de la PWA) es la M de esa misma fuente",
+              "status": "pendiente",
+              "eta": "2026-10-22"
+            },
+            {
+              "id": "17.25",
+              "title": "Comprobación visual con capturas (cabecera, roadmap, login a 360×640, favicon a 16 y 32 px) y despliegue",
+              "status": "pendiente",
+              "eta": "2026-10-22"
+            }
+          ]
+        },
+        {
           "id": "f17-cierre",
           "title": "Cierre de la versión 1.0",
           "category": "Infra",
           "tasks": [
             {
-              "id": "17.21",
+              "id": "17.26",
               "title": "Documentación: README (instalar en el móvil), CHANGELOG, DECISIONES (por qué PWA y no Capacitor ni nativo) y DESPLIEGUE",
               "status": "pendiente",
               "eta": "2026-10-23"
             },
             {
-              "id": "17.22",
+              "id": "17.27",
               "title": "Versión 1.0.0 (package.json y roadmap.json) y despliegue en Fly.io comprobado en https://mar.fly.dev",
               "status": "pendiente",
               "eta": "2026-10-23"

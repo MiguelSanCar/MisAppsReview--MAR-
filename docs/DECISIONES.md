@@ -59,3 +59,16 @@
 | **Botones de estado en la búsqueda (📝 👁️ ✔️)** | Sustituyen a ♥ y ↪ solo en las tarjetas de búsqueda y portada. 👁️ y ✔️ fijan el estado (no son interruptores: deshacer es desde «Mi lista» o la ficha); 📝 sigue siendo un interruptor como el antiguo «ver más adelante». ✔️ usa el mismo cálculo que «Finalizado» en la ficha (marca todos los episodios). |
 | **Iconos de línea con Lucide en lugar de emojis** | Se pidió contorno blanco y transparente por dentro. Los emojis del sistema (y los de color como Twemoji, que se probó primero) son figuras rellenas y distintas en cada equipo. `lucide-react` (ISC) da SVG con trazo `currentColor` y sin relleno, se importan solo 8 iconos y se centran en su caja (medido). |
 | **Botón «Eliminar» de la ficha dentro del selector de estados** | Es el último elemento de la fila; `canDelete = hay estado`, así se activa en los cuatro estados y se desactiva cuando no está en la lista. Reutiliza `DELETE /api/library/:id` y el `ConfirmDialog`. |
+
+## Móvil y PWA (fase 17)
+
+| Decisión | Motivo |
+|---|---|
+| **PWA en vez de Capacitor o app nativa** | El funcionamiento es el mismo y sirve para Android e iPhone con una sola base de código. En iPhone no se puede instalar un `.ipa` sin cuenta de desarrollador de pago (99 USD/año) ni sin un Mac; la PWA se instala desde Safari. |
+| **Service worker escrito a mano** (sin `vite-plugin-pwa`) | Pocas reglas y sin dependencias nuevas compatibles con Node 16. Se sella con un identificador por compilación (`vite.config.ts`) para detectar versiones nuevas. |
+| **`/api` nunca pasa por el service worker** | Son datos personales y en vivo: cachearlos mostraría listas viejas o de otra sesión. |
+| **Carátulas fuera del service worker** | Su CSP (`connect-src 'self'`) no le deja pedirlas y las respuestas opacas ocupan mucha cuota. Las cachea el navegador con las cabeceras de TMDB. |
+| **Se mantiene el menú lateral (no barra inferior)** | Ya es el patrón móvil habitual (botón ☰ y panel), la jerarquía «Inicio → Mi… → Mis listas conjuntas» cabe mejor en un panel que en 4–5 iconos, y evita reescribir la navegación. |
+| **Objetivos táctiles de 44 px solo con `pointer: coarse`** | En ordenador la interfaz no cambia; en móvil se cumple la recomendación de Apple/Google. Los campos usan 16 px para que iOS no haga zoom al enfocar. |
+| **Pestañas de «Mi lista» en una fila con desplazamiento** | Ocupaban tres filas en 390 px. |
+| **Carga diferida de pantallas poco frecuentes** | El paquete inicial baja de 248 a 217 kB (de 76,9 a 69,5 kB comprimido). |

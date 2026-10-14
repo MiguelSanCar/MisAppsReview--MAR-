@@ -1,22 +1,28 @@
+import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useAuth } from './auth/AuthContext';
 import Layout from './components/Layout';
 import { Spinner } from './components/ui';
 import ContentPage from './pages/ContentPage';
-import { FriendsPage } from './pages/FriendsPages';
 import HomePage from './pages/HomePage';
-import InvitePage from './pages/InvitePage';
 import { MyListPage } from './pages/ListViews';
-import { ListDetailPage, ListsPage } from './pages/ListsPages';
 import { LegacyFriendRedirect, LegacyShareRedirect, MyProfileRedirect } from './pages/LegacyRedirects';
-import { ProfileFriendsPage, ProfileHomePage, ProfileListPage } from './pages/ProfilePages';
-import ProfileShell from './profile/ProfileShell';
 import {
   ForgotPage, Landing, LoginPage, PublicLayout, RegisterPage, ResetPage, VerifyPage,
 } from './pages/PublicPages';
-import RoadmapPage from './pages/RoadmapPage';
-import SettingsPage from './pages/SettingsPage';
-import SharedListGate from './pages/SharedListGate';
+
+// Pantallas menos frecuentes: se descargan al entrar en ellas (el paquete inicial pesa menos en el móvil).
+const FriendsPage = lazy(() => import('./pages/FriendsPages').then((m) => ({ default: m.FriendsPage })));
+const InvitePage = lazy(() => import('./pages/InvitePage'));
+const ListsPage = lazy(() => import('./pages/ListsPages').then((m) => ({ default: m.ListsPage })));
+const ListDetailPage = lazy(() => import('./pages/ListsPages').then((m) => ({ default: m.ListDetailPage })));
+const ProfileHomePage = lazy(() => import('./pages/ProfilePages').then((m) => ({ default: m.ProfileHomePage })));
+const ProfileListPage = lazy(() => import('./pages/ProfilePages').then((m) => ({ default: m.ProfileListPage })));
+const ProfileFriendsPage = lazy(() => import('./pages/ProfilePages').then((m) => ({ default: m.ProfileFriendsPage })));
+const ProfileShell = lazy(() => import('./profile/ProfileShell'));
+const RoadmapPage = lazy(() => import('./pages/RoadmapPage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+const SharedListGate = lazy(() => import('./pages/SharedListGate'));
 
 function RequireAuth({ children }: { children: JSX.Element }) {
   const { user, loading } = useAuth();
@@ -28,6 +34,7 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 
 export default function App() {
   return (
+    <Suspense fallback={<Spinner />}>
     <Routes>
       <Route path="/roadmap" element={<RoadmapPage />} />
 
@@ -64,5 +71,6 @@ export default function App() {
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </Suspense>
   );
 }
