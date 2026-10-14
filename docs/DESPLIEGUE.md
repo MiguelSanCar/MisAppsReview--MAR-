@@ -16,6 +16,11 @@ tools/fly.exe ssh sftp shell --app mar   # copiar /data/mar.db
 - Nunca imprimir ni versionar los secretos: se cargan con `fly secrets import` desde un fichero temporal que se borra después.
 - Región: Madrid (`mad`) ya no existe en Fly; se usa París (`cdg`).
 
+### Tras cada despliegue (PWA)
+- `vite.config.ts` sella `dist/sw.js` con un identificador nuevo en cada compilación: los móviles que ya tienen la app instalada detectan la versión nueva y muestran «Hay una versión nueva · Actualizar» (también al volver a abrirla).
+- `sw.js`, `index.html`, `offline.html` y el manifiesto se sirven con `Cache-Control: no-cache`; los ficheros de `/assets` son inmutables. No hace falta purgar nada.
+- Comprobación rápida: `/manifest.webmanifest`, `/sw.js` y `/offline.html` responden 200.
+
 ### Según el equipo desde el que trabajes
 - **Equipo con acceso directo a Internet (casa):** los comandos de arriba funcionan tal cual; no hace falta nada más.
 - **Equipo con proxy que re-firma HTTPS (empresa):** `flyctl` (escrito en Go) no usa el almacén de Windows y falla con `x509: certificate signed by unknown authority`. Pásale el PEM de la empresa (el mismo `certs/corporate-ca.pem` del README, ignorado por git) con `SSL_CERT_FILE=<ruta al PEM>`, y si el builder por defecto (Depot) sigue fallando, añade `--depot=false --remote-only`. Nunca se desactiva la verificación TLS. Un aviso «DNS verification failed» al final del despliegue puede ser solo de esa red.

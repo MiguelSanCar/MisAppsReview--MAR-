@@ -27,7 +27,7 @@ Estado, decisiones y cómo levantarlo: `README.md`, `docs/CHANGELOG.md`, `docs/D
 ```bash
 npm run dev                       # API :3001 (también sirve client/dist) + Vite :5173 con proxy /api
 npm run share                     # túnel Cloudflare a :3001 (requiere `npm run dev` y tools/cloudflared); se niega con el JWT_SECRET por defecto
-npm test                          # Vitest del servidor (146 tests)
+npm test                          # Vitest del servidor (161 tests)
 npm run build                     # client/dist y server/dist
 npm run dev:mock -w server        # app con TMDB/Jikan/OMDb simulados en :3101 (necesita build del cliente); JOINT_INACTIVITY_DAYS / JOINT_WARNING_DAYS cortos para probar avisos
 npm run mail:test -w server -- tu@correo.com   # comprueba SMTP (base lista, aún sin usar)
@@ -56,7 +56,7 @@ npm run mail:test -w server -- tu@correo.com   # comprueba SMTP (base lista, aú
 
  - `roadmap/roadmap.json` es la fuente de verdad (fases > funcionalidades > tareas; estados `pendiente` | `en_progreso` | `hecho`); la página pública `/roadmap` lo lee y es solo lectura. Actualízalo al terminar cada tarea y al recibir cambios.
  - **Fechas**: cada tarea lleva `eta` (AAAA-MM-DD): la estimada mientras esté pendiente y la real al terminarla; si depende de algo externo, `eta: null` y `etaNote` con el motivo y el esfuerzo. Al crear tareas pon su fecha estimada y al cerrarlas actualiza `eta` a la fecha real. La página `/roadmap` las muestra por tarea, tarjeta y columna.
- - Versión 0.x: fase N completada = `0.(N+1).0` (`package.json` y `roadmap.json`). Al cerrar una fase: CHANGELOG, DECISIONES si hay decisión nueva, README si cambia algo visible, y subir a GitHub.
+ - Versión 0.x: fase N completada = `0.(N+1).0` (`package.json` y `roadmap.json`); la fase 17 (PWA) cerró la **1.0.0**. A partir de ahí, semver: mejoras `1.x.0`, arreglos `1.0.x`. Al cerrar una fase: CHANGELOG, DECISIONES si hay decisión nueva, README si cambia algo visible, y subir a GitHub.
  - Pendiente conocido: correo (12.10, 12.12), en espera por decisión del usuario. Hosting: Fly.io (`mar`), se opera con `tools/fly.exe` (ver `docs/DESPLIEGUE.md`).
 
 ## Pruebas
@@ -65,6 +65,9 @@ npm run mail:test -w server -- tu@correo.com   # comprueba SMTP (base lista, aú
  - Las APIs reales se probaron a mano con las claves del `.env` (TMDB y OMDb); Jikan no se ha podido probar desde esta red.
 
 ## Trampas conocidas
+
+ - PWA: `client/public/sw.js` lleva `__BUILD__`, que sustituye `vite.config.ts` al compilar; no lo quites. `/api` no debe pasar nunca por el service worker. En pruebas con `puppeteer-core` + Edge usa `headless: true` (`'new'` se cuelga) y rutas absolutas en `--screenshot`.
+ - Tras cada cambio del cliente o del servidor: `npm run build` y, para publicar, despliegue en Fly (comando en `CLAUDE.local.md` / `docs/DESPLIEGUE.md`).
 
  - Comandos de shell largos con muchas comillas fallan ("unexpected EOF"): escribe el script en un fichero (Write/Edit) y ejecútalo. Cuidado con `\d`, `\/` en cadenas de TypeScript/JS.
  - Si `vite.config.ts` cambia con `npm run dev` en marcha, Vite se reinicia y pierde el proxy `/api`: reinicia `npm run dev`.

@@ -2,7 +2,7 @@
 
 Aplicación para la gestión de series, películas o animes que ha visto una persona, con conexión para varios usuarios y algunas otras funcionalidades. Se ha creado con Claude Code como prueba.
 
-> **Versión 0.17.0** · Las versiones 0.x siguen el [roadmap](#roadmap): cada fase completada sube un número (fase 0 = 0.1, fase 1 = 0.2 … fase 16 = 0.17). La 1.0 se reserva para cuando el despliegue esté publicado y revisado.
+> **Versión 1.0.0** · Hasta la 0.17 cada fase completada subía un número (fase 0 = 0.1 … fase 16 = 0.17); la fase 17 (versión móvil) cierra la 1.0, con la app publicada en https://mar.fly.dev.
 
 ## Qué hace
 - **Pantalla inicial**: las series más vistas del momento (o películas / anime según el filtro).
@@ -16,6 +16,13 @@ Aplicación para la gestión de series, películas o animes que ha visto una per
 - En la **ficha**, el botón rojo **«Eliminar»** (al final de los estados) quita el contenido de tu lista; solo está activo si lo tienes en ella.
 - En **Mi lista**, la flecha de cada tarjeta pasa el contenido a la siguiente fase (Por ver → Viendo → Finalizado) y, en «Finalizado», lo devuelve a «Por ver» para **volver a verlo** (se muestra como «Reviendo»; tus estadísticas conservan lo ya visto). Cada tarjeta tiene una **papelera** y el botón rojo **«Eliminar»** activa el borrado múltiple (con confirmación); borrar un contenido resta sus episodios y minutos de tu perfil.
 - **Roadmap público** en `/roadmap`, en vivo.
+
+## Instalar en el móvil (PWA)
+MAR es una PWA: se instala sin tienda de aplicaciones y funciona igual en el móvil que en el ordenador (necesita Internet para cargar tus listas; sin conexión muestra una pantalla de «Reintentar»).
+- **Android (Chrome):** abre https://mar.fly.dev → menú ⋮ → **Instalar aplicación** (o «Añadir a pantalla de inicio»).
+- **iPhone (Safari):** abre https://mar.fly.dev → botón Compartir → **Añadir a pantalla de inicio**. En iOS debe ser Safari; no hay botón de «Instalar».
+- **Actualizaciones:** cuando hay una versión nueva aparece «Hay una versión nueva · Actualizar».
+- Un APK para Android es opcional (tarea 17.20 del roadmap): se empaquetaría esta misma PWA.
 
 ## Levantar en local
 
@@ -116,7 +123,7 @@ Dockerfile, render.yaml   despliegue (ver docs/DESPLIEGUE.md)
 En local, además, aparece un **buzón de ideas** (solo desde `localhost`, no en producción): se guardan en `roadmap/ideas.json`.
 
 ## Estado
-Todo el roadmap está implementado y probado **salvo lo que está en espera**: conectar el envío de correos (12.10 y 12.12). La app está publicada en Fly.io (https://mar.fly.dev); cómo operarla en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
+Todo el roadmap está implementado y probado **salvo lo que está en espera o depende de ti**: conectar el envío de correos (12.10 y 12.12, en espera), la prueba en móviles reales (17.19) y el APK opcional (17.20). La app está publicada en Fly.io (https://mar.fly.dev); cómo operarla en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
 
 Limitaciones conocidas:
 - La duración por episodio es fija (serie 50 min, película 90, anime 23) salvo que actives `USE_REAL_RUNTIME=true` (usa la duración media de las APIs).

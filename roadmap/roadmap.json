@@ -1071,7 +1071,7 @@
     {
       "id": "f16",
       "name": "Fase 16 · Ficha y botones",
-      "release": "0.17.0",
+      "release": "1.0.0",
       "summary": "Eliminar desde la ficha e iconos de línea en los botones",
       "features": [
         {
@@ -1359,14 +1359,14 @@
             {
               "id": "17.26",
               "title": "Documentación: README (instalar en el móvil), CHANGELOG, DECISIONES (por qué PWA y no Capacitor ni nativo) y DESPLIEGUE",
-              "status": "pendiente",
-              "eta": "2026-10-23"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.27",
               "title": "Versión 1.0.0 (package.json y roadmap.json) y despliegue en Fly.io comprobado en https://mar.fly.dev",
-              "status": "pendiente",
-              "eta": "2026-10-23"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         }

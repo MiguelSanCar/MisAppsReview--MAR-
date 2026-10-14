@@ -1,7 +1,7 @@
 {
   "name": "mar",
   "private": true,
-  "version": "0.17.0",
+  "version": "1.0.0",
   "description": "Mis Apps Review (MAR)",
   "workspaces": [
     "client",

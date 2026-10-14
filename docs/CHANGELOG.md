@@ -2,7 +2,9 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
-## Fase 17 (en curso) · Versión móvil (PWA)
+## 1.0.0 · 2026-10-14 · Fase 17 · Versión móvil (PWA)
+Primera versión estable: MAR se instala en Android e iPhone como PWA, con logotipo y favicon propios. Pendiente de ti (fuera de la 1.0): probar en móviles reales (17.19) y, si quieres, el APK (17.20).
+
 - **Identidad visual (17.1–17.4):** logotipo propio «MAR» en SVG (`client/src/components/Logo.tsx`): letras de bloque gruesas y geométricas dibujadas desde cero sobre una cuadrícula de 40×50, inspiradas en el estilo de Lock Block pero sin copiar sus glifos (esa fuente es solo de uso personal). Es un trazado, no texto: no depende de ninguna fuente, hereda el color (`currentColor`) y lleva `aria-label="MAR"`. Sustituye al texto «MAR» en la cabecera de la app y en la de las páginas públicas.
 - **Favicon:** `favicon.svg` (monograma «M» blanco sobre ficha azul, legible a 16 px) y `favicon.ico` con 16 y 32 px, enlazados en `index.html`.
 - **App instalable (17.5–17.8):** iconos PNG generados desde el logotipo (`client/public/icons/`: 192 y 512 «any», 512 «maskable» con la M dentro de la zona segura y `apple-touch-icon` de 180, opaco); `manifest.webmanifest` (`standalone`, `lang: es`, colores `#0b0f1a`); `index.html` con enlace al manifiesto, `theme-color`, metaetiquetas de iOS (barra de estado opaca) y `viewport-fit=cover`. La CSP de `helmet` no necesita cambios (manifiesto e iconos caen en `'self'`). Test `server/tests/pwa.test.ts`: valida el manifiesto, el tamaño real de los PNG, el enlace en `index.html` y, con el cliente compilado, el tipo MIME `application/manifest+json`, los iconos y la CSP.
