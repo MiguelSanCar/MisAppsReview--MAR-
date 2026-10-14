@@ -1981,8 +1981,41 @@
           ]
         }
       ]
+    },
+    {
+      "id": "f23",
+      "name": "Fase 23 · Revisiones",
+      "release": "1.11.0",
+      "summary": "Contador de visionados en la ficha y estadística de revisiones (horas, episodios y contenidos revistos) en el perfil",
+      "features": [
+        {
+          "id": "f23-rev",
+          "title": "Revisiones",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "23.1",
+              "title": "Ficha: tarjeta «Visionado n.º N» con las revisiones y los episodios de visionados anteriores",
+              "status": "hecho",
+              "eta": "2026-10-14"
+            },
+            {
+              "id": "23.2",
+              "title": "Estadísticas: nueva tarjeta «Revisiones» (veces, contenidos revistos, episodios y horas); episodios y horas vistas se mantienen",
+              "status": "hecho",
+              "eta": "2026-10-14"
+            },
+            {
+              "id": "23.3",
+              "title": "Pruebas, documentación, versión 1.11.0 y despliegue",
+              "status": "hecho",
+              "eta": "2026-10-14"
+            }
+          ]
+        }
+      ]
     }
   ],
-  "release": "1.10.0",
+  "release": "1.11.0",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

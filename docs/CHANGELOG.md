@@ -2,6 +2,11 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.11.0 · 2026-10-14 · Revisiones
+### Añadido
+- Perfil: nueva estadística **Revisiones** con las veces que se ha vuelto a ver algo, los contenidos revistos, los episodios y las horas de las revisiones (sin contar el primer visionado). «Tiempo visto» y episodios siguen contando todos los visionados.
+- Ficha: la nota de revisionado pasa a ser una tarjeta «Visionado n.º N» con el número de revisiones y los episodios de visionados anteriores.
+
 ## 1.10.0 · 2026-10-14 · Notificaciones de novedades
 ### Añadido
 - **Campana de notificaciones** arriba a la derecha, a la izquierda del interruptor de tema. Avisa de novedades de los contenidos de la lista: temporadas anunciadas o ya disponibles y películas relacionadas (secuelas de una saga o spin-offs de una serie). Un clic lleva a la ficha del contenido y nada más.

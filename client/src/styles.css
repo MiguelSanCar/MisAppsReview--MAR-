@@ -308,7 +308,7 @@ a.fcard:hover, .lcard:hover { border-color: var(--accent); background: var(--pan
 
 /* ---------- revisionado ---------- */
 .poster-btn.advance.again { background: rgba(94, 181, 255, .92); }
-.rewatch-note { margin: 10px 0 0; padding: 8px 12px; border: 1px solid var(--later); border-radius: 10px; background: rgba(94, 181, 255, .08); font-size: 0.88rem; max-width: 60ch; }
+.rewatch-note { display: flex; flex-direction: column; gap: 2px; margin: 10px 0 0; padding: 8px 12px; border: 1px solid var(--later); border-radius: 10px; background: rgba(94, 181, 255, .08); font-size: 0.88rem; max-width: 60ch; }
 
 /* ---------- búsqueda: 📝 Por ver · 👁️ Viendo · ✔️ Finalizado ---------- */
 .poster-btn.st-btn { font-size: 1.15rem; line-height: 1; color: #fff; border: 2px solid transparent; }

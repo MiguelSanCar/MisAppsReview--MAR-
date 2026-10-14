@@ -40,7 +40,7 @@
 - **Campana de notificaciones** con las novedades de lo que hay en la lista: nuevas temporadas (anunciadas o ya disponibles) y películas relacionadas (secuelas de una saga o spin-offs de una serie). Se calcula en segundo plano, sin ralentizar la aplicación; puede limitarse a los favoritos.
 
 **Estadísticas y social**
-- Perfil con tiempo total visto (horas → días → semanas → meses → años), episodios, **temporadas vistas**, contadores por estado y top 10 de favoritas.
+- Perfil con tiempo total visto (horas → días → semanas → meses → años), episodios, **temporadas vistas**, **revisiones** (veces que se ha vuelto a ver algo, con sus horas y episodios), contadores por estado y top 10 de favoritas.
 - Perfiles con URL propia (`/perfil/<usuario>`): visibles solo para amigos o públicos; la lista, opcional.
 - Amigos mediante solicitudes o **enlaces de amistad**; **comparación de perfiles** (verde quien tiene más, rojo quien tiene menos).
 - **Listas conjuntas** por pareja de amigos, editables por ambos, con historial y *rollback*.

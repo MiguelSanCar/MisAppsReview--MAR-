@@ -94,7 +94,11 @@ export default function ContentPage() {
             canDelete={!!state}
           />
           {!!state?.rewatch && (
-            <p className="rewatch-note"><Emoji name="repetir" size={15} className="in-text" /> Visionado n.º {state.rewatch + 1}. Los episodios de tus visionados anteriores ({state.previousEpisodes}) siguen contando en tus estadísticas.</p>
+            <div className="rewatch-note">
+              <strong><Emoji name="repetir" size={15} className="in-text" /> Visionado n.º {state.rewatch + 1}</strong>
+              <span>Llevas {state.rewatch} {state.rewatch === 1 ? 'revisión' : 'revisiones'} de este contenido.</span>
+              <span>Episodios de visionados anteriores: {state.previousEpisodes} (siguen contando en tus estadísticas).</span>
+            </div>
           )}
 
           <EpisodeCounter value={state?.watched ?? 0} total={c.totalEpisodes} disabled={busy} onSet={(n) => update('episodes', { watched: n })} />

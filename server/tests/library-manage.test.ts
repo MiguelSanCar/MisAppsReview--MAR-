@@ -51,6 +51,7 @@ describe('revisionado: volver a ver algo finalizado', () => {
     expect(s.totalMinutes).toBe(62 * 50);      // y los minutos
     expect(s.byStatus.POR_VER).toBe(1);
     expect(s.finishedByType.serie).toBe(1);    // sigue contando como terminada
+    expect(s.rewatches).toMatchObject({ contents: 1, times: 1, episodes: 0, totalMinutes: 0 }); // aún no se ha visto nada de la revisión
     // la ficha ve el estado para mostrar «Reviendo»
     const c = await ana.get(`/api/content/${tv.id}`);
     expect(c.body.state).toMatchObject({ status: 'POR_VER', watched: 0, rewatch: 1 });
@@ -69,6 +70,7 @@ describe('revisionado: volver a ver algo finalizado', () => {
     const r = await put(ana, `/api/library/${tv.id}/episodes`, { watched: 10 });
     expect(r.body.state).toMatchObject({ status: 'VIENDO', watched: 10, rewatch: 1, previousEpisodes: 62 });
     expect((await profile()).episodes).toBe(72);
+    expect((await profile()).rewatches).toMatchObject({ episodes: 10, totalMinutes: 500 });
     expect((await profile()).totalMinutes).toBe(72 * 50);
   });
 
@@ -84,10 +86,12 @@ describe('revisionado: volver a ver algo finalizado', () => {
     const r = await put(ana, `/api/library/${tv.id}/episodes`, { watched: 9999 });
     expect(r.body.state).toMatchObject({ status: 'FINALIZADO', watched: 62, rewatch: 1, previousEpisodes: 62 });
     expect((await profile()).episodes).toBe(124);
+    expect((await profile()).rewatches).toMatchObject({ contents: 1, times: 1, episodes: 62, totalMinutes: 62 * 50 });
     // y se puede volver a ver otra vez: las dos pasadas anteriores se conservan
     const again = await ana.post(`/api/library/${tv.id}/rewatch`);
     expect(again.body.state).toMatchObject({ rewatch: 2, previousEpisodes: 124, watched: 0 });
     expect((await profile()).episodes).toBe(124);
+    expect((await profile()).rewatches).toMatchObject({ times: 2, episodes: 62 }); // el 1.º no cuenta; el 2.º (62) sí; el 3.º acaba de empezar
   });
 
   it('un perfil ajeno ve lo mismo que el propio (las estadísticas son públicas con el perfil)', async () => {

@@ -74,6 +74,8 @@ export interface Profile {
     episodes: number;
     /** Temporadas completas vistas. */
     seasonsWatched: number;
+    /** Revisiones: contenidos vueltos a ver, veces, episodios y tiempo (sin contar el primer visionado). */
+    rewatches: { contents: number; times: number; episodes: number; totalMinutes: number; watchTime: WatchTime };
     byStatus: Record<Status, number>;
     finishedByType: Record<ContentType, number>;
   };

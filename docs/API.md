@@ -28,7 +28,7 @@ API JSON bajo `/api`. Todas las respuestas de error tienen la forma `{ "error": 
 
 | Método y ruta | Descripción |
 |---|---|
-| `GET /profile` | Mi perfil: `user`, `stats` (`totalMinutes`, `watchTime`, `episodes`, `seasonsWatched`, `byStatus`, `finishedByType`) y `favorites` |
+| `GET /profile` | Mi perfil: `user`, `stats` (`totalMinutes`, `watchTime`, `episodes`, `seasonsWatched`, `rewatches` (`contents`, `times`, `episodes`, `totalMinutes`, `watchTime`), `byStatus`, `finishedByType`) y `favorites` |
 | `PUT /avatar` · `DELETE /avatar` | `{ dataUrl }` (imagen recortada) · quitar la foto. `GET /api/avatar/:id` la sirve |
 | `PUT /visibility` | `{ isPublic, showList }` |
 | `PUT /theme` | `{ theme: "dark" \| "light" }` — preferencia guardada en la cuenta |

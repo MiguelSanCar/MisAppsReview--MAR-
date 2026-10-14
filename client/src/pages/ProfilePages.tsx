@@ -67,6 +67,15 @@ export function ProfileView({
           <strong>{stats.seasonsWatched ?? 0}</strong>
         </div>
         <div className="stat">
+          <span className="muted">Revisiones</span>
+          <strong>{stats.rewatches?.times ?? 0}</strong>
+          <ul className="mini-list">
+            <li><b>{stats.rewatches?.contents ?? 0}</b> contenidos revistos</li>
+            <li><b>{stats.rewatches?.episodes ?? 0}</b> episodios</li>
+            <li><b>{hoursText(stats.rewatches?.totalMinutes ?? 0).replace(' vistas', '').replace(' vista', '')}</b></li>
+          </ul>
+        </div>
+        <div className="stat">
           <span className="muted">Terminadas</span>
           <ul className="mini-list">
             <li><b>{stats.finishedByType.serie}</b> series</li>
