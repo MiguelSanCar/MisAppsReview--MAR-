@@ -1985,7 +1985,7 @@
     {
       "id": "f23",
       "name": "Fase 23 · Revisiones",
-      "release": "1.11.0",
+      "release": "1.11.1",
       "summary": "Contador de visionados en la ficha y estadística de revisiones (horas, episodios y contenidos revistos) en el perfil",
       "features": [
         {
@@ -2012,10 +2012,23 @@
               "eta": "2026-10-14"
             }
           ]
+        },
+        {
+          "id": "f23-fix",
+          "title": "Recomendaciones al día",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "23.4",
+              "title": "Búsqueda inicial: «Series/Películas que has podido ver» se recalcula al añadir o cambiar contenidos",
+              "status": "hecho",
+              "eta": "2026-10-14"
+            }
+          ]
         }
       ]
     }
   ],
-  "release": "1.11.0",
+  "release": "1.11.1",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

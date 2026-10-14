@@ -89,10 +89,24 @@ export default function HomePage() {
     api.get<{ items: LibraryItem[] }>('/api/library?status=VIENDO&limit=8').then((r) => setWatching(r.items.slice(0, 8))).catch(() => {});
   }, []);
 
+  // Al añadir o cambiar algo, las recomendaciones se recalculan (sin parpadeo) cuando se deja de tocar durante un momento
+  const refreshTimer = useRef<number>();
+  const scheduleRecoRefresh = () => {
+    window.clearTimeout(refreshTimer.current);
+    refreshTimer.current = window.setTimeout(() => {
+      const my = recoGen.current;
+      api.get<Recommendations>(`/api/recommendations?type=${recoType}`)
+        .then((r) => { if (my === recoGen.current) setReco(r); })
+        .catch(() => {});
+    }, 2500);
+  };
+  useEffect(() => () => window.clearTimeout(refreshTimer.current), []);
+
   const onState = (id: number, state: UserState | null) => {
     search.setData((d) => (d ? { ...d, states: { ...d.states, [id]: state } } : d));
     setTrend((t) => (t ? { ...t, states: { ...t.states, [id]: state } } : t));
     setReco((r) => (r ? { ...r, states: { ...r.states, [id]: state } } : r));
+    scheduleRecoRefresh();
   };
 
   const searching = !!(search.data || search.loading || search.error);

@@ -2,6 +2,10 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.11.1 · 2026-10-14 · Recomendaciones al día
+### Corregido
+- Búsqueda inicial: «Series que has podido ver» (y películas) no cambiaba al añadir contenidos; ahora se recalcula unos segundos después del último cambio, sin parpadeo.
+
 ## 1.11.0 · 2026-10-14 · Revisiones
 ### Añadido
 - Perfil: nueva estadística **Revisiones** con las veces que se ha vuelto a ver algo, los contenidos revistos, los episodios y las horas de las revisiones (sin contar el primer visionado). «Tiempo visto» y episodios siguen contando todos los visionados.
