@@ -2,6 +2,9 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## Fase 18 (en curso) · Descubrir y personalizar
+- **Icono de la pestaña (18.1):** `favicon.svg` pasa a ser la «M» de Lock Block sola, más grande y sin ficha (se lee en pestañas claras y oscuras), y `favicon.ico` se regenera. Los enlaces llevan `?v=2` para que el navegador abandone el icono antiguo que tuviera en caché. Los iconos de la app instalada (PWA) conservan la ficha azul.
+
 ## 1.0.0 · 2026-10-14 · Fase 17 · Versión móvil (PWA)
 Primera versión estable: MAR se instala en Android e iPhone como PWA, con logotipo y favicon propios. Pendiente de ti (fuera de la 1.0): probar en móviles reales (17.19) y, si quieres, el APK (17.20).
 

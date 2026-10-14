@@ -1371,6 +1371,257 @@
           ]
         }
       ]
+    },
+    {
+      "id": "f18",
+      "name": "Fase 18 · Descubrir y personalizar",
+      "release": "1.1.0",
+      "summary": "Lista infinita, comparar perfiles, tema claro/oscuro, recomendaciones y búsqueda avanzada",
+      "features": [
+        {
+          "id": "f18-icono",
+          "title": "Icono de la pestaña",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "18.1",
+              "title": "Favicon de la pestaña: la «M» nueva (glifo de Lock Block) sola y más grande, sin ficha; enlaces con versión (?v=2) para saltarse la caché del navegador",
+              "status": "hecho",
+              "eta": "2026-10-14"
+            }
+          ]
+        },
+        {
+          "id": "f18-lista",
+          "title": "Lista infinita",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "18.2",
+              "title": "Decisión técnica: paginación en el servidor + carga de más tarjetas al llegar al final (IntersectionObserver), sin virtualización completa; se documenta por qué es lo más ligero para móviles",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            },
+            {
+              "id": "18.3",
+              "title": "API: /api/library con límite y desplazamiento (lotes de 24), total y contadores por estado",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            },
+            {
+              "id": "18.4",
+              "title": "«Mi lista» con scroll infinito: al llegar al final se añaden 24 tarjetas más; indicador de carga; los filtros y pestañas reinician la lista",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            },
+            {
+              "id": "18.5",
+              "title": "Mismo comportamiento en la lista de otros perfiles",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            },
+            {
+              "id": "18.6",
+              "title": "Rendimiento: content-visibility en las tarjetas, imágenes diferidas y medición con 300 contenidos en un móvil emulado",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            },
+            {
+              "id": "18.7",
+              "title": "Tests de paginación (orden estable, filtros, último lote) y comprobación en navegador",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            }
+          ]
+        },
+        {
+          "id": "f18-comparar",
+          "title": "Comparar perfiles",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "18.8",
+              "title": "API de comparación (mismas reglas de acceso que el perfil: amigo o público)",
+              "status": "pendiente",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "18.9",
+              "title": "Opción «Comparar perfil» en el menú lateral cuando estás dentro del perfil de otra persona",
+              "status": "pendiente",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "18.10",
+              "title": "Pantalla con las estadísticas de cada uno a un lado: en verde quien tiene más y en rojo quien tiene menos (empate neutro; también con icono y texto, no solo color)",
+              "status": "pendiente",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "18.11",
+              "title": "Tests de permisos (amigo, público, privado, uno mismo) y de la comparación",
+              "status": "pendiente",
+              "eta": "2026-10-16"
+            }
+          ]
+        },
+        {
+          "id": "f18-tema",
+          "title": "Tema claro y oscuro",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "18.12",
+              "title": "Paleta clara con variables CSS; el oscuro sigue siendo el tema por defecto",
+              "status": "pendiente",
+              "eta": "2026-10-19"
+            },
+            {
+              "id": "18.13",
+              "title": "Interruptor arriba a la derecha de la cabecera con luna y sol (iconos de contorno blanco)",
+              "status": "pendiente",
+              "eta": "2026-10-19"
+            },
+            {
+              "id": "18.14",
+              "title": "Preferencia guardada por usuario (migración 10 y ajuste en Ajustes) y aplicada al volver a entrar",
+              "status": "pendiente",
+              "eta": "2026-10-19"
+            },
+            {
+              "id": "18.15",
+              "title": "Sin parpadeo al cargar (script externo mínimo) y color de la barra del navegador según el tema; antes de iniciar sesión se recuerda en el navegador",
+              "status": "pendiente",
+              "eta": "2026-10-19"
+            },
+            {
+              "id": "18.16",
+              "title": "Tests y capturas en ambos temas (móvil y ordenador)",
+              "status": "pendiente",
+              "eta": "2026-10-19"
+            }
+          ]
+        },
+        {
+          "id": "f18-reco",
+          "title": "Recomendaciones",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "18.17",
+              "title": "Géneros de cada contenido (migración 10: content.genres; TMDB ya los da) con relleno perezoso de lo ya guardado",
+              "status": "pendiente",
+              "eta": "2026-10-21"
+            },
+            {
+              "id": "18.18",
+              "title": "Presencia de cada género en el mercado: cuota en lo más popular de TMDB (caché de 24 h)",
+              "status": "pendiente",
+              "eta": "2026-10-21"
+            },
+            {
+              "id": "18.19",
+              "title": "Afinidad por género: cada contenido suma 1 (más si es favorito o finalizado, menos si está por ver o dejado), se compara la cuota del género en tu lista con su cuota en el mercado y se suaviza con pocos datos; fórmula pura y documentada en DECISIONES",
+              "status": "pendiente",
+              "eta": "2026-10-21"
+            },
+            {
+              "id": "18.20",
+              "title": "API /api/recommendations (series y películas): descubre en TMDB por tus géneros con mayor afinidad, excluye lo que ya tienes y ordena por afinidad y puntuación. Anime queda fuera (Jikan no responde en esta red)",
+              "status": "pendiente",
+              "eta": "2026-10-21"
+            },
+            {
+              "id": "18.21",
+              "title": "Tests de la fórmula y del endpoint con proveedor simulado",
+              "status": "pendiente",
+              "eta": "2026-10-21"
+            }
+          ]
+        },
+        {
+          "id": "f18-inicio",
+          "title": "Inicio con dos filas",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "18.22",
+              "title": "Inicio: «Series del momento» con scroll lateral y justo debajo «Series que has podido ver» (las recomendaciones)",
+              "status": "pendiente",
+              "eta": "2026-10-22"
+            },
+            {
+              "id": "18.23",
+              "title": "Los filtros Todo / Series / Películas / Anime afectan a ambas filas; estado vacío que invita a marcar contenidos si aún no hay datos",
+              "status": "pendiente",
+              "eta": "2026-10-22"
+            },
+            {
+              "id": "18.24",
+              "title": "Capturas en móvil y ordenador, claro y oscuro",
+              "status": "pendiente",
+              "eta": "2026-10-22"
+            }
+          ]
+        },
+        {
+          "id": "f18-busqueda",
+          "title": "Búsqueda avanzada",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "18.25",
+              "title": "Nueva entrada «Búsqueda» en el menú lateral, con una tabulación más, justo debajo de «Inicio»",
+              "status": "pendiente",
+              "eta": "2026-10-26"
+            },
+            {
+              "id": "18.26",
+              "title": "API de descubrimiento con filtros: tipo (series/películas), plataforma (HBO, Netflix, Prime… según la región ES de TMDB), género, estudio/productora, años, puntuación mínima y orden",
+              "status": "pendiente",
+              "eta": "2026-10-26"
+            },
+            {
+              "id": "18.27",
+              "title": "Endpoints auxiliares (plataformas, géneros y búsqueda de estudio) con caché",
+              "status": "pendiente",
+              "eta": "2026-10-26"
+            },
+            {
+              "id": "18.28",
+              "title": "Página de búsqueda con filtros plegables en móvil y resultados con scroll infinito y los botones de estado de las tarjetas",
+              "status": "pendiente",
+              "eta": "2026-10-26"
+            },
+            {
+              "id": "18.29",
+              "title": "Tests con proveedor simulado y comprobación en navegador",
+              "status": "pendiente",
+              "eta": "2026-10-26"
+            },
+            {
+              "id": "18.30",
+              "title": "Otros filtros de tu petición: el texto llegó cortado tras «estud…»",
+              "status": "pendiente",
+              "eta": null,
+              "etaNote": "Depende de ti: pásame el resto de la línea. Cada filtro extra son unas 2 h"
+            }
+          ]
+        },
+        {
+          "id": "f18-cierre",
+          "title": "Cierre de la versión 1.1.0",
+          "category": "Infra",
+          "tasks": [
+            {
+              "id": "18.31",
+              "title": "Documentación (README, CHANGELOG, DECISIONES, DESPLIEGUE), versión 1.1.0 y despliegue comprobado en https://mar.fly.dev",
+              "status": "pendiente",
+              "eta": "2026-10-27"
+            }
+          ]
+        }
+      ]
     }
   ],
   "release": "1.0.0",
