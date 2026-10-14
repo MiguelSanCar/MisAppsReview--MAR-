@@ -1,140 +1,182 @@
-# MisAppsReview (MAR)
+# MAR · Mis Apps Review
 
-Aplicación para la gestión de series, películas o animes que ha visto una persona, con conexión para varios usuarios y algunas otras funcionalidades. Se ha creado con Claude Code como prueba.
+**Registro personal de series, películas y anime**: qué se ha visto, qué se está viendo y qué queda pendiente, con estadísticas, amigos, listas compartidas y recomendaciones. Aplicación web instalable (PWA) que funciona igual en el móvil y en el ordenador.
 
-> **Versión 1.0.0** · Hasta la 0.17 cada fase completada subía un número (fase 0 = 0.1 … fase 16 = 0.17); la fase 17 (versión móvil) cierra la 1.0, con la app publicada en https://mar.fly.dev.
+![Versión](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FMiguelSanCar%2FMisAppsReview--MAR-%2Fmain%2Fpackage.json&query=%24.version&label=versi%C3%B3n&color=blue)
+![Node](https://img.shields.io/badge/node-16-339933?logo=node.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)
+![SQLite](https://img.shields.io/badge/SQLite-sql.js-003B57?logo=sqlite&logoColor=white)
 
-## Qué hace
-- **Pantalla inicial**: las series más vistas del momento (o películas / anime según el filtro).
-- **Buscar y marcar** (Inicio): un buscador único cuyos resultados van apareciendo **mientras escribes** (series y películas con TMDB, anime con MyAnimeList/Jikan); cada tarjeta indica año, categoría y plataforma de origen. Sobre cada póster hay tres botones de estado, semitransparentes y con iconos de línea blancos: **lista (izquierda)** = añadir a «Por ver», **ojo (centro, verde)** = «Viendo» y **marca ✔ (derecha, morado)** = «Finalizado». El favorito (♥, máximo 10) está en la ficha y en «Mi lista».
-- **Ficha del contenido**: sinopsis, estudio, puntuaciones (IMDb y Rotten Tomatoes; MyAnimeList en anime), estado (Por ver → Viendo → Finalizado / Dejado) y contador de episodios con − / + (al pulsar el número se escribe a mano; si se supera el total se fija el máximo y pasa a Finalizado).
-- **Perfil**: avatar redondo, tiempo total visto (horas → días → semanas → meses → años), contadores por estado y top 10 de favoritas.
-- **Perfiles con URL propia** (`/perfil/<usuario>`): solo para amigos (por defecto) o públicos, con la lista opcional.
-- **Enlaces de amistad**: pulsa tu nombre en el menú lateral para copiar un enlace que añade como amigo a quien lo abra; en el perfil de un amigo, el enlace envía una solicitud a esa persona. Pulsa tu foto para verla o cambiarla.
-- **Amigos**: solicitudes, tarjetas, y perfil/lista/amigos de cada amigo con el menú lateral adaptado ("Su perfil", "Su lista"…).
-- **Listas conjuntas** («Vuestra lista» en el perfil de un amigo): una por pareja, que cualquiera de los dos puede crear; ambos la editan y cada modificación queda en un historial con **Rollback**. Se puede **salir sin borrarla** y volver a unirse; se borra tras 2 meses sin actividad (con aviso 15 días antes en la app).
-- En la **ficha**, el botón rojo **«Eliminar»** (al final de los estados) quita el contenido de tu lista; solo está activo si lo tienes en ella.
-- En **Mi lista**, la flecha de cada tarjeta pasa el contenido a la siguiente fase (Por ver → Viendo → Finalizado) y, en «Finalizado», lo devuelve a «Por ver» para **volver a verlo** (se muestra como «Reviendo»; tus estadísticas conservan lo ya visto). Cada tarjeta tiene una **papelera** y el botón rojo **«Eliminar»** activa el borrado múltiple (con confirmación); borrar un contenido resta sus episodios y minutos de tu perfil.
-- **Roadmap público** en `/roadmap`, en vivo.
+**Demostración en vivo:** https://mar.fly.dev · **Hoja de ruta pública:** https://mar.fly.dev/roadmap
 
-## Instalar en el móvil (PWA)
-MAR es una PWA: se instala sin tienda de aplicaciones y funciona igual en el móvil que en el ordenador (necesita Internet para cargar tus listas; sin conexión muestra una pantalla de «Reintentar»).
-- **Android (Chrome):** abre https://mar.fly.dev → menú ⋮ → **Instalar aplicación** (o «Añadir a pantalla de inicio»).
-- **iPhone (Safari):** abre https://mar.fly.dev → botón Compartir → **Añadir a pantalla de inicio**. En iOS debe ser Safari; no hay botón de «Instalar».
-- **Actualizaciones:** cuando hay una versión nueva aparece «Hay una versión nueva · Actualizar».
-- Un APK para Android es opcional (tarea 17.20 del roadmap): se empaquetaría esta misma PWA.
+<p align="center">
+  <img src="docs/img/inicio-movil.png" alt="Pantalla de inicio en el móvil" width="190">
+  <img src="docs/img/mi-lista-movil.png" alt="Mi lista con los estados" width="190">
+  <img src="docs/img/ficha-temporadas-movil.png" alt="Ficha de una serie con sus temporadas" width="190">
+  <img src="docs/img/comparar-movil.png" alt="Comparación de perfiles" width="190">
+</p>
+<p align="center">
+  <img src="docs/img/inicio-escritorio.png" alt="Inicio en el escritorio (tema oscuro)" width="420">
+  <img src="docs/img/busqueda-escritorio-claro.png" alt="Búsqueda avanzada (tema claro)" width="420">
+</p>
 
-## Levantar en local
+> Las capturas usan datos ficticios y carátulas generadas (servidor simulado en modo demo).
 
-Requisitos: **Node.js 16.20.2** (las dependencias están fijadas para esta versión) y npm 8. No hace falta compilar nada nativo.
+## Qué ofrece
 
-```bash
-npm install      # instala cliente y servidor (npm workspaces)
-npm run dev      # levanta servidor (3001) y cliente (5173) a la vez
-```
+**Seguimiento**
+- Busca series y películas (TMDB) y anime (MyAnimeList) desde un único buscador que responde mientras se escribe.
+- Cuatro estados: *Por ver*, *Viendo*, *Finalizado* y *Dejado*, con botones directos sobre cada carátula, favoritos (máximo 10) y **revisionado** («Reviendo») sin perder lo ya visto.
+- **Episodios por temporadas**: contador con − / + y la lista de episodios de cada temporada; pulsar uno fija el progreso.
+- Fichas con sinopsis, estudio y puntuaciones de IMDb y Rotten Tomatoes.
+- «Mi lista» con filtros por estado, tipo y título, y **scroll infinito** (carga por lotes, pensado para listas de cientos de contenidos).
 
-| Qué | URL |
+**Descubrir**
+- **Recomendaciones** según los géneros con más afinidad: combinan la presencia del género en el mercado, en la lista de la persona y la cantidad de contenidos (los favoritos pesan más).
+- **Búsqueda avanzada** con filtros combinables: plataforma (Netflix, HBO, Prime…), género, estudio, años, puntuación mínima y orden.
+
+**Estadísticas y social**
+- Perfil con tiempo total visto (horas → días → semanas → meses → años), episodios, **temporadas vistas**, contadores por estado y top 10 de favoritas.
+- Perfiles con URL propia (`/perfil/<usuario>`): visibles solo para amigos o públicos; la lista, opcional.
+- Amigos mediante solicitudes o **enlaces de amistad**; **comparación de perfiles** (verde quien tiene más, rojo quien tiene menos).
+- **Listas conjuntas** por pareja de amigos, editables por ambos, con historial y *rollback*.
+
+**Experiencia**
+- **Tema claro y oscuro**, guardado en la cuenta.
+- **PWA instalable** en Android e iPhone, con página sin conexión y aviso de versión nueva; menú lateral con gesto de deslizar en el móvil.
+- Accesible: contraste AA en ambos temas, objetivos táctiles de 44 px, etiquetas para lectores de pantalla.
+- Hoja de ruta pública en `/roadmap`, generada desde `roadmap/roadmap.json`.
+
+### Instalar en el móvil
+
+- **Android (Chrome):** abrir la aplicación → menú ⋮ → *Instalar aplicación*.
+- **iPhone (Safari):** botón Compartir → *Añadir a pantalla de inicio* (debe ser Safari).
+
+## Pila tecnológica
+
+| Capa | Tecnología |
 |---|---|
-| App | http://localhost:5173/ |
-| Roadmap | http://localhost:5173/roadmap |
-| API (salud) | http://localhost:3001/api/health |
+| Cliente | React 18, React Router 6, TypeScript, Vite 4, Lucide (iconos) |
+| Servidor | Node.js 16, Express 4, TypeScript, zod (validación), helmet, bcrypt, JWT en cookie `httpOnly` |
+| Datos | SQLite con `sql.js` (WebAssembly; sin dependencias nativas) y migraciones numeradas |
+| Fuentes externas | TMDB (series y películas), Jikan / MyAnimeList (anime), OMDb (IMDb y Rotten Tomatoes) |
+| Pruebas | Vitest (reglas de dominio, API completa con proveedores simulados, migraciones) |
+| Despliegue | Docker (imagen única) en Fly.io, con volumen persistente |
+| Monorepo | npm workspaces (`client` y `server`) |
 
-Para parar: `Ctrl + C` en la terminal. La base de datos se crea sola en `data/mar.db` (ignorada por git).
+## Arquitectura
 
-### Claves de las APIs (para buscar series y películas)
-Copia `.env.example` a `.env` en la raíz y rellena:
+```mermaid
+flowchart LR
+    SPA["Cliente React<br/>PWA"] -- "/api (JSON)" --> API["Servidor Express"]
+    API --> DB[("SQLite")]
+    API -- "solo desde el servidor" --> EXT["TMDB · Jikan · OMDb"]
+```
 
-| Variable | Para qué | Dónde se consigue (gratis) |
+El servidor es la única pieza que habla con los proveedores externos (con cachés, tiempos límite y corte automático de proveedores caídos), valida toda entrada y decide los permisos de perfiles y listas. Más detalle en [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md).
+
+## Puesta en marcha
+
+Requisitos: **Node.js 16.20.x** y npm 8. No hay que compilar nada nativo.
+
+```bash
+git clone https://github.com/MiguelSanCar/MisAppsReview--MAR-.git
+cd MisAppsReview--MAR-
+npm install
+cp .env.example .env      # añadir las claves de TMDB y OMDb
+npm run dev
+```
+
+| URL | Qué |
+|---|---|
+| http://localhost:5173/ | Aplicación |
+| http://localhost:5173/roadmap | Hoja de ruta |
+| http://localhost:3001/api/health | Salud de la API |
+
+Claves gratuitas: [TMDB](https://www.themoviedb.org/settings/api) (series y películas) y [OMDb](https://www.omdbapi.com/apikey.aspx) (puntuaciones). Sin ellas la aplicación arranca igualmente y lo indica; el anime funciona sin clave.
+
+Para probar la interfaz sin claves ni Internet existe un **servidor simulado** (`npm run build && npm run dev:mock -w server`, en el puerto 3101). Ver la [guía de desarrollo](docs/DESARROLLO.md).
+
+## Configuración
+
+Variables de entorno principales (todas en `.env.example`):
+
+| Variable | Descripción | Por defecto |
 |---|---|---|
-| `TMDB_API_KEY` | Buscar series y películas | https://www.themoviedb.org/settings/api |
-| `OMDB_API_KEY` | Puntuaciones IMDb y Rotten Tomatoes | https://www.omdbapi.com/apikey.aspx |
+| `TMDB_API_KEY`, `OMDB_API_KEY` | Claves de las APIs | — |
+| `JWT_SECRET` | Firma de sesiones (**obligatoria en producción**) | secreto de desarrollo |
+| `PUBLIC_URL`, `CLIENT_ORIGIN` | URL pública y origen permitido (CORS) | `http://localhost:5173` |
+| `DB_FILE` | Fichero SQLite | `data/mar.db` |
+| `TMDB_REGION` | País para la disponibilidad en plataformas | `ES` |
+| `JIKAN_ENABLED` | `false` desactiva el anime (útil si la red lo bloquea) | `true` |
+| `USE_REAL_RUNTIME` | Usar la duración real de las fuentes en lugar de 50 / 90 / 23 min | `false` |
 
-Tras pegar las claves, **reinicia** `npm run dev` (el servidor lee `.env` solo al arrancar).
+La lista completa está en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
 
-Sin claves la app arranca igual: avisa en pantalla y en la consola. **El anime funciona sin clave** (Jikan). Reinicia `npm run dev` tras editar `.env`.
+## Scripts
 
-### Avisos «tarda más de lo normal» / «no responde ahora mismo»
-No son errores de la app: la búsqueda espera como máximo 6 s a TMDB y 2 s a Jikan y devuelve lo que ya tiene. Si una fuente no responde, se omite un rato (1 min, luego 2, 4… hasta 15) y se vuelve a probar sola. **Jikan (MyAnimeList) suele estar bloqueado en redes corporativas**; si es tu caso, desactívalo y desaparecen los avisos y las esperas:
-```
-JIKAN_ENABLED=false     # en .env; reinicia npm run dev (el anime dejará de buscarse)
-```
-Otros ajustes: `TMDB_SOFT_MS`, `JIKAN_SOFT_MS`, `PROVIDER_DOWN_MS`, `PROVIDER_DOWN_MAX_MS`.
+| Comando | Qué hace |
+|---|---|
+| `npm run dev` | Servidor (3001) y cliente (5173) en desarrollo |
+| `npm run build` | Compila cliente y servidor |
+| `npm start` | Producción local (requiere `build`) |
+| `npm test` | Pruebas del servidor |
+| `npm run dev:mock -w server` | Aplicación con proveedores simulados |
+| `npm run share` | Túnel temporal para enseñar el entorno de desarrollo |
 
-### Red corporativa que inspecciona HTTPS (error "self signed certificate in certificate chain")
-Si TMDB falla con ese error es que tu red (p. ej. un proxy de empresa) re-firma el tráfico con su propio certificado: Windows y el navegador lo aceptan, pero Node no usa el almacén de Windows. Solución, sin desactivar ninguna verificación:
-1. Exporta el certificado raíz de la empresa y los intermedios a un PEM en `certs/corporate-ca.pem` (carpeta ignorada por git). Con PowerShell: `Export-Certificate -Cert <cert> -FilePath x.cer` y conviértelos a PEM (base64 entre `-----BEGIN CERTIFICATE-----` y `-----END CERTIFICATE-----`).
-2. `npm run dev` y `npm run share` lo detectan solos (`scripts/ca.js`) y lo pasan a Node como `NODE_EXTRA_CA_CERTS`. También puedes apuntar a otro fichero con `EXTRA_CA_CERTS=ruta` en `.env`.
+## Pruebas
 
-> Si un proveedor (p. ej. Jikan/MyAnimeList) está bloqueado por la red, la búsqueda lo omite un rato (con retroceso progresivo) y avisa en pantalla; el resto sigue funcionando. Ver «Avisos» más arriba.
-
-### Probar desde otras máquinas (sin hosting)
-Una sola app y **una sola base de datos** (`data/mar.db`): el modo compartido no arranca otro servidor, expone el de desarrollo.
 ```bash
-npm run dev      # terminal 1 (el servidor de la API en :3001 también sirve el cliente compilado)
-npm run share    # terminal 2: compila el cliente y abre el túnel
-```
-Imprime:
-- **Misma red** (oficina/Wi-Fi): `http://TU-IP:3001/`. Si Windows pregunta por el firewall, permite redes privadas.
-- **Otras redes**: una URL HTTPS temporal (`https://xxxx.trycloudflare.com`) mediante un túnel de Cloudflare. Hace falta `cloudflared.exe` en `tools/cloudflared/` (ignorado por git):
-  ```bash
-  mkdir -p tools/cloudflared
-  curl -L -o tools/cloudflared/cloudflared.exe https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe
-  ```
-
-Seguridad y detalles:
-- Usa el `JWT_SECRET` de `.env` (se genera solo la primera vez). **Si el servidor corre con el secreto por defecto (público), `npm run share` se niega a abrir el túnel**; reinicia `npm run dev` tras generarlo.
-- La URL cambia cada vez; mientras esté abierta, cualquiera que la conozca puede registrarse **y llegar a tu entorno de desarrollo**. `Ctrl + C` cierra solo el túnel.
-- Detrás del túnel la cookie de sesión es `Secure` (el servidor confía en proxies del propio equipo, `trust proxy = loopback`).
-- Si cambias el cliente, vuelve a lanzar `npm run share` (recompila `client/dist`). Los cambios del servidor se recargan solos.
-
-### Búsqueda al escribir
-Se lanza 300 ms después de la última letra y la pantalla muestra cuánto tardó (servidor y total). Si resultara lenta, pon `LIVE_SEARCH = false` en `client/src/config.ts`: vuelve a buscarse solo con Enter o con el botón .
-
-### Correo (SMTP): base lista, sin usar todavía
-Existe un módulo de envío (`server/src/mailer.ts`) pero la app aún no lo usa: recuperar contraseña y verificar correo escriben el enlace en la consola. Para dejarlo preparado, define en `.env` `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS` y `MAIL_FROM` (ver `.env.example`) y comprueba la conexión con:
-```bash
-npm run mail:test -w server -- tu@correo.com
+npm test
 ```
 
-### Comandos útiles
-```bash
-npm test                          # 146 tests (dominio + API completa con proveedores simulados)
-npm run build                     # compila cliente (client/dist) y servidor (server/dist)
-npm start                         # producción local: sirve API + cliente en el puerto 3001 (requiere build)
-npm run dev:mock -w server        # app completa con TMDB/Jikan/OMDb SIMULADOS (títulos falsos) en el puerto 3101
-```
-`dev:mock` sirve `client/dist`, así que haz `npm run build` antes. Sirve para probar la interfaz sin claves ni internet; los datos son ficticios y se pierden al pararlo.
+Más de 200 pruebas con Vitest: reglas de dominio puras, la API completa contra proveedores simulados con base de datos en memoria, permisos de perfiles y listas, migraciones, recomendaciones, búsqueda avanzada, comparación, temporadas, tema y PWA. Los cambios de interfaz se verifican además en un navegador real (ver la [guía de desarrollo](docs/DESARROLLO.md)).
 
-## Estructura
+## Despliegue
+
+Imagen Docker única (API + cliente compilado) con un volumen en `/data` para la base de datos. Hay configuración lista para [Fly.io](https://fly.io) (`fly.toml`) y [Render](https://render.com) (`render.yaml`). Pasos, variables y operación en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
+
+## Estructura del repositorio
 
 ```
-client/    React 18 + TypeScript + Vite 4 (interfaz)
-server/    Node + Express 4 + TypeScript (API /api), SQLite (sql.js) y tests (Vitest)
-roadmap/   roadmap.json: fuente de verdad del roadmap (ideas.json: buzón local, ignorado)
-scripts/   dev.js: arranque conjunto en local
-docs/      CHANGELOG, DECISIONES, DESPLIEGUE, prompt y roadmap original
-Dockerfile, render.yaml   despliegue (ver docs/DESPLIEGUE.md)
+client/    Interfaz: React + TypeScript + Vite (PWA)
+server/    API, reglas de negocio, SQLite y pruebas
+roadmap/   roadmap.json: fuente de verdad de la hoja de ruta pública
+scripts/   Arranque conjunto (dev), túnel (share) y capturas
+docs/      Documentación (ver abajo)
+Dockerfile, fly.toml, render.yaml   Despliegue
 ```
-
-## Roadmap
-
-`/roadmap` es público y de solo lectura. Lee `roadmap/roadmap.json` y se refresca solo cada pocos segundos. Formato: `phases[] > features[] > tasks[]`; cada tarea tiene `status` (`pendiente`, `en_progreso`, `hecho`) y el de cada tarjeta se calcula a partir de sus tareas. Cada tarea lleva su **fecha de entrega** (`eta`: la real si está hecha, la estimada si no) y, si no puede tener fecha por depender de algo externo, `etaNote` con el motivo y el esfuerzo; las tarjetas y columnas muestran la de su última tarea pendiente. El roadmap lo mantiene Claude: si se pide algo que choca con el plan, se reestructura el JSON y se anota en el CHANGELOG.
-
-En local, además, aparece un **buzón de ideas** (solo desde `localhost`, no en producción): se guardan en `roadmap/ideas.json`.
-
-## Estado
-Todo el roadmap está implementado y probado **salvo lo que está en espera o depende de ti**: conectar el envío de correos (12.10 y 12.12, en espera), la prueba en móviles reales (17.19) y el APK opcional (17.20). La app está publicada en Fly.io (https://mar.fly.dev); cómo operarla en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
-
-Limitaciones conocidas:
-- La duración por episodio es fija (serie 50 min, película 90, anime 23) salvo que actives `USE_REAL_RUNTIME=true` (usa la duración media de las APIs).
-- Series con varias temporadas cuentan como un único total de episodios.
-- El correo no sale: "recuperar contraseña" y "verificar correo" escriben el enlace en la consola del servidor (y lo muestran en pantalla en local). El aviso por correo del borrado de listas conjuntas aún no existe (solo el aviso en la app).
-- Las APIs externas solo se han probado contra servidores simulados; la primera búsqueda real con tus claves es la prueba definitiva.
 
 ## Documentación
-- [docs/CHANGELOG.md](docs/CHANGELOG.md): cambios realizados
-- [docs/DECISIONES.md](docs/DECISIONES.md): por qué se eligió cada tecnología
-- [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md): publicar la app
-- [docs/PROMPT_CLAUDE_CODE.md](docs/PROMPT_CLAUDE_CODE.md): prompt de desarrollo
-- [docs/ROADMAP_PROPUESTO.md](docs/ROADMAP_PROPUESTO.md): desglose original de fases
-- [docs/THIRD_PARTY_LICENSES.md](docs/THIRD_PARTY_LICENSES.md): licencias de terceros (iconos Lucide, datos)
+
+| Documento | Contenido |
+|---|---|
+| [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md) | Componentes, datos, reglas de negocio, seguridad |
+| [docs/API.md](docs/API.md) | Referencia de endpoints |
+| [docs/DESARROLLO.md](docs/DESARROLLO.md) | Entorno, pruebas, convenciones y solución de problemas |
+| [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md) | Publicación y operación |
+| [docs/DECISIONES.md](docs/DECISIONES.md) | Decisiones técnicas y su motivo |
+| [docs/CHANGELOG.md](docs/CHANGELOG.md) | Historial de versiones |
+| [docs/THIRD_PARTY_LICENSES.md](docs/THIRD_PARTY_LICENSES.md) | Licencias y atribuciones de terceros |
+
+## Versiones y hoja de ruta
+
+Versionado semántico: arreglos `x.y.Z`, funcionalidades nuevas `x.Y.0`, cambios incompatibles `X.0.0`. Cada versión está descrita en el [CHANGELOG](docs/CHANGELOG.md) y el trabajo pendiente y hecho, por fases, en la [hoja de ruta](https://mar.fly.dev/roadmap).
+
+Limitaciones conocidas:
+- La duración por episodio es fija (serie 50 min, película 90, anime 23) salvo con `USE_REAL_RUNTIME=true`.
+- El anime no tiene estructura de temporadas ni recomendaciones (MyAnimeList no ofrece esos datos de forma fiable).
+- El envío de correo está preparado pero no activo: «recuperar contraseña» y «verificar correo» escriben el enlace en el registro del servidor.
+
+## Créditos y atribuciones
+
+- Datos de series y películas: [TMDB](https://www.themoviedb.org). *This product uses the TMDB API but is not endorsed or certified by TMDB.*
+- Puntuaciones: [OMDb API](https://www.omdbapi.com). Anime: [Jikan](https://jikan.moe) / [MyAnimeList](https://myanimelist.net).
+- Iconos: [Lucide](https://lucide.dev) (licencia ISC).
+- El logotipo usa los glifos de la fuente *Lock Block* de Sronstudio, de uso personal: ver [docs/THIRD_PARTY_LICENSES.md](docs/THIRD_PARTY_LICENSES.md) antes de cualquier uso comercial.
+- Desarrollado con la asistencia de [Claude Code](https://claude.com/claude-code).
+
+## Licencia
+
+Este repositorio no declara una licencia de código abierto: se aplican los derechos de autor por defecto. Los componentes de terceros conservan sus propias licencias.

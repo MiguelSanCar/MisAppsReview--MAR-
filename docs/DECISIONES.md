@@ -138,3 +138,13 @@
 | **Anime y series sin datos: una sola sección «Episodios»** | Jikan no aporta temporadas; es mejor una lista única que inventarlas. |
 | **«Temporadas vistas» = temporadas completas** | Se cuenta una temporada cuando todos sus episodios están vistos. En un revisionado se usa el mayor entre el visionado actual y los anteriores (ya se vio todo una vez), no se suman dos veces. Sin estructura, una serie o anime terminado cuenta como 1; las películas, 0. |
 | **Temporadas plegables, abierta la que toca ver** | Series largas tienen cientos de episodios: solo se pintan los botones de las secciones abiertas. |
+
+## Documentación (fase 20)
+
+| Decisión | Motivo |
+|---|---|
+| **README orientado a GitHub y en tercera persona** | Quien llega al repositorio debe entender qué es MAR, verlo y ponerlo en marcha sin conocer su historia. Lo personal o específico de un equipo (rutas, red, permisos) no se publica: vive en notas locales no versionadas. |
+| **El detalle pasa a `docs/`** | README breve y con enlaces; arquitectura, API, desarrollo y despliegue en documentos propios que se pueden mantener por separado. |
+| **Capturas con un modo demo del servidor simulado** | Reproducibles (`scripts/capturas.js`), sin datos reales ni imágenes con derechos de autor: las carátulas son SVG generadas a partir del título. |
+| **Insignia de versión leída de `package.json`** | El README no se desactualiza en cada publicación. |
+| **Documentos de origen en `docs/historico/`** | El encargo inicial y el borrador de roadmap se conservan como contexto, claramente separados de la documentación vigente. |

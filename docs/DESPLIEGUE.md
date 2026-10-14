@@ -2,7 +2,7 @@
 
 Estado: **publicado en Fly.io** → https://mar.fly.dev (app `mar`, región `cdg`, 1 máquina de 512 MB, volumen `data` de 1 GB en `/data`). Render queda como alternativa (`render.yaml`).
 
-## Operar Fly.io desde Claude Code
+## Operar Fly.io con `flyctl`
 `flyctl` va en `tools/fly.exe` (ignorado por git). Instalación: el script oficial (`iwr https://fly.io/install.ps1 -useb | iex`) o, si PowerShell está restringido o no hay administrador, el `.zip` de https://github.com/superfly/flyctl/releases (extraer `flyctl.exe` y renombrarlo a `fly.exe`; no necesita administrador).
 ```bash
 tools/fly.exe auth login                    # una vez; si el navegador es de otra sesión: auth login --code <código>
@@ -40,6 +40,7 @@ Lo siguiente es la preparación original, válida para cualquier hosting.
 | `JWT_SECRET` | Sí (si falta, el servidor no arranca) | Firma de sesiones. Una cadena larga aleatoria |
 | `PUBLIC_URL` | Sí | URL pública (`https://...`), para enlaces de correo |
 | `CLIENT_ORIGIN` | Sí | El mismo valor que `PUBLIC_URL` (CORS) |
+| `TMDB_REGION` | No (`ES`) | País para saber en qué plataformas (Netflix, HBO…) está disponible cada título |
 | `TMDB_API_KEY` | Para series/películas | https://www.themoviedb.org/settings/api (gratis) |
 | `OMDB_API_KEY` | Para IMDb + Rotten Tomatoes | https://www.omdbapi.com/apikey.aspx (gratis, 1.000/día) |
 | `DB_FILE` | No (`/data/mar.db` en Docker) | Ruta del fichero SQLite |

@@ -1622,8 +1622,8 @@
             {
               "id": "18.31",
               "title": "Documentación (README, CHANGELOG, DECISIONES, DESPLIEGUE), versión 1.1.0 y despliegue comprobado en https://mar.fly.dev",
-              "status": "pendiente",
-              "eta": "2026-10-27"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         }
@@ -1747,8 +1747,8 @@
     {
       "id": "f20",
       "name": "Fase 20 · Portada, README y versiones",
-      "release": "1.x",
-      "summary": "Política de versiones, recomendaciones en vertical con carga continua y documentación orientada a GitHub",
+      "release": "1.9.1",
+      "summary": "Política de versiones, recomendaciones en vertical con carga continua y documentación orientada a GitHub (versiones 1.6.1 a 1.9.1)",
       "features": [
         {
           "id": "f20-versiones",
@@ -1796,20 +1796,20 @@
             {
               "id": "20.5",
               "title": "README profesional orientado a GitHub: qué es MAR, funcionalidades, pila tecnológica, arquitectura, puesta en marcha, configuración, scripts, pruebas, despliegue, hoja de ruta, licencias y créditos; sin dirigirse al autor ni mencionar su entorno",
-              "status": "pendiente",
-              "eta": "2026-11-01"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "20.6",
               "title": "Documentación complementaria en docs/: arquitectura, referencia de la API, guía de desarrollo y pruebas, y notas de entorno separadas del README",
-              "status": "pendiente",
-              "eta": "2026-11-01"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "20.7",
               "title": "Cierre: versión, CHANGELOG, roadmap y despliegue comprobado en https://mar.fly.dev",
-              "status": "pendiente",
-              "eta": "2026-11-01"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
@@ -1857,6 +1857,6 @@
       ]
     }
   ],
-  "release": "1.9.0",
+  "release": "1.9.1",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

@@ -1,8 +1,9 @@
 import http from 'http';
 import type { AddressInfo } from 'net';
+import { demoTmdb } from './demo-data';
 
 /** Servidor local que imita TMDB, Jikan y OMDb (no hay acceso a las APIs reales en los tests). */
-export function startMockProviders(): Promise<{ base: string; close: () => Promise<void>; calls: string[] }> {
+export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ base: string; close: () => Promise<void>; calls: string[] }> {
   const calls: string[] = [];
   const movies = Array.from({ length: 12 }, (_, i) => ({
     id: 101 + i, media_type: 'movie', title: `Pelicula ${i + 1}`, poster_path: '/p.jpg',
@@ -20,6 +21,7 @@ export function startMockProviders(): Promise<{ base: string; close: () => Promi
 
     if (p.startsWith('/tmdb/')) {
       if (url.searchParams.get('api_key') !== 'tmdb-key') return send(401, { status_message: 'Invalid API key' });
+      if (opts.demo) { const d = demoTmdb(p, url.searchParams); if (d) return send(200, d); }
       if (p === '/tmdb/trending/tv/week') {
         return send(200, {
           results: [
@@ -61,8 +63,8 @@ export function startMockProviders(): Promise<{ base: string; close: () => Promi
         });
       }
       const GENRES: Record<string, Record<number, string>> = {
-        tv: { 18: 'Drama', 35: 'Comedia', 80: 'Crimen', 9648: 'Misterio', 10759: 'Action & Adventure', 10765: 'Sci-Fi & Fantasy' },
-        movie: { 28: 'Acción', 35: 'Comedia', 18: 'Drama', 27: 'Terror', 878: 'Ciencia ficción', 14: 'Fantasía' },
+        tv: { 18: 'Drama', 35: 'Comedia', 80: 'Crimen', 9648: 'Misterio', 10759: 'Acción y aventura', 10765: 'Ciencia ficción y fantasía', 10768: 'Bélica y política', 16: 'Animación' },
+        movie: { 28: 'Acción', 35: 'Comedia', 18: 'Drama', 27: 'Terror', 878: 'Ciencia ficción', 14: 'Fantasía', 12: 'Aventura', 36: 'Historia', 16: 'Animación', 80: 'Crimen' },
       };
       const gl = /^\/tmdb\/genre\/(tv|movie)\/list$/.exec(p);
       if (gl) return send(200, { genres: Object.entries(GENRES[gl[1]]).map(([id, name]) => ({ id: Number(id), name })) });

@@ -12,7 +12,7 @@
 
 MAR (Mis Apps Review): app web personal para registrar series, películas y anime (vistos, en curso, pendientes), con perfil, amigos, listas conjuntas y un roadmap público. Hecha con Claude Code como prueba. Todo en español (interfaz, mensajes de error, documentación y respuestas); código y nombres técnicos en inglés/español según el contexto del fichero.
 
-Estado, decisiones y cómo levantarlo: `README.md`, `docs/CHANGELOG.md`, `docs/DECISIONES.md`, `docs/DESPLIEGUE.md`. Este fichero solo recoge lo que no está allí.
+Visión general: `README.md` (orientado a GitHub: no se dirige al autor ni menciona su entorno). Detalle: `docs/ARQUITECTURA.md`, `docs/API.md`, `docs/DESARROLLO.md`, `docs/DESPLIEGUE.md`, `docs/DECISIONES.md`, `docs/CHANGELOG.md`. Este fichero solo recoge lo que no está allí. Si cambia algo visible o un endpoint, actualizar README y/o `docs/API.md`.
 
 ## Entorno (restricciones)
 
@@ -29,7 +29,7 @@ npm run dev                       # API :3001 (también sirve client/dist) + Vit
 npm run share                     # túnel Cloudflare a :3001 (requiere `npm run dev` y tools/cloudflared); se niega con el JWT_SECRET por defecto
 npm test                          # Vitest del servidor (161 tests)
 npm run build                     # client/dist y server/dist
-npm run dev:mock -w server        # app con TMDB/Jikan/OMDb simulados en :3101 (necesita build del cliente); JOINT_INACTIVITY_DAYS / JOINT_WARNING_DAYS cortos para probar avisos
+npm run dev:mock -w server        # app con TMDB/Jikan/OMDb simulados en :3101 (necesita build del cliente; `MOCK_SEED=300` crea el usuario «carga», `MOCK_DEMO=1 MOCK_PORT=3102` el modo demostración para `scripts/capturas.js`); JOINT_INACTIVITY_DAYS / JOINT_WARNING_DAYS cortos para probar avisos
 npm run mail:test -w server -- tu@correo.com   # comprueba SMTP (base lista, aún sin usar)
 ```
 

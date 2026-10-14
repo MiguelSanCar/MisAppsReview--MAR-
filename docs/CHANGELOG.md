@@ -2,6 +2,12 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.9.1 · 2026-10-14 · Documentación para GitHub
+- **README profesional para GitHub (20.5):** reescrito en tercera persona (sin dirigirse al autor ni mencionar su entorno): qué es MAR, enlace a la demostración y a la hoja de ruta, **capturas** (móvil y escritorio, oscuro y claro), funcionalidades agrupadas, pila tecnológica, diagrama de arquitectura (Mermaid), puesta en marcha, configuración, scripts, pruebas, despliegue, estructura del repositorio, índice de documentación, versiones y limitaciones conocidas, créditos y atribuciones (incluida la de TMDB) y nota de licencia. La insignia de versión se lee de `package.json`.
+- **Documentación complementaria (20.6):** `docs/ARQUITECTURA.md` (componentes, datos, proveedores y resiliencia, reglas de negocio, seguridad, cliente), `docs/API.md` (referencia de todos los endpoints con parámetros y ejemplos), `docs/DESARROLLO.md` (requisitos, scripts, pruebas, servidor simulado, convenciones, solución de problemas y trampas conocidas; recoge lo que antes estaba en el README) y `docs/historico/` para el encargo inicial y el borrador de roadmap. `.env.example` y `docs/DESPLIEGUE.md` incluyen `TMDB_REGION`.
+- **Capturas reproducibles:** el servidor simulado tiene un **modo demo** (`MOCK_DEMO=1`): títulos conocidos con carátulas SVG generadas (sin imágenes con derechos) y los usuarios `demo` y `lucia`; `scripts/capturas.js` genera `docs/img/*.png`.
+- Cierre de la fase 18 (18.31) con toda la documentación al día.
+
 ## 1.9.0 · 2026-10-14 · Temporadas vistas en el perfil
 - **Temporadas vistas en el perfil (19.7):** nueva estadística **«Temporadas vistas»** en el perfil (propio y de otras personas) con el número de temporadas completas que ha visto la persona; en un revisionado no se cuentan dos veces; sin estructura, una serie o anime terminado cuenta como 1 y las películas, 0. También es una fila nueva de **«Comparar perfil»** (`seasons`) y viaja en `stats.seasonsWatched` de la API.
 - Ver DECISIONES (Temporadas) para las reglas de cálculo.
