@@ -27,7 +27,7 @@ export function CardRow({ label, children }: { label: string; children: ReactNod
 
   return (
     <div className="hrow-wrap">
-      <div className="hrow" ref={ref} onScroll={update} role="region" aria-label={label} tabIndex={0} data-no-swipe>
+      <div className="hrow" ref={ref} onScroll={update} role="region" aria-label={label} tabIndex={0}>
         {Children.map(children, (c) => <div className="hrow-item">{c}</div>)}
       </div>
       <button type="button" className="hrow-arrow prev" aria-label="Ver anteriores" onClick={() => go(-1)} disabled={edge.start} hidden={edge.start && edge.end}>‹</button>

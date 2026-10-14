@@ -9,6 +9,7 @@ import { Emoji } from './Emoji';
 import { Logo } from './Logo';
 import { ThemeSwitch } from './ThemeSwitch';
 import { useToast } from './Toast';
+import { useSwipeMenu } from '../hooks/useSwipeMenu';
 import { Avatar, Icon } from './ui';
 
 /** Pie con la atribución que exige TMDB. */
@@ -43,6 +44,9 @@ export default function Layout() {
   useEffect(() => {
     if (!window.matchMedia('(min-width: 900px)').matches) setOpen(false);
   }, [loc.pathname]);
+
+  // Gesto táctil: de izquierda a derecha abre el menú; hacia la izquierda lo cierra (solo móvil)
+  useSwipeMenu(open, setOpen);
 
   if (!user) return null;
 

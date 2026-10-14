@@ -1643,14 +1643,14 @@
             {
               "id": "19.1",
               "title": "En el móvil, deslizar el dedo de izquierda a derecha (empezando en el tercio izquierdo de la pantalla) abre el menú lateral; deslizar hacia la izquierda lo cierra",
-              "status": "pendiente",
-              "eta": "2026-10-28"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "19.2",
               "title": "El gesto no interfiere con el desplazamiento horizontal de otros elementos (carruseles, recorte de foto) ni con el scroll vertical; prueba con toques simulados en Edge",
-              "status": "pendiente",
-              "eta": "2026-10-28"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
@@ -1857,6 +1857,6 @@
       ]
     }
   ],
-  "release": "1.6.4",
+  "release": "1.7.0",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

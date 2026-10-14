@@ -2,6 +2,12 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.7.0 · 2026-10-14 · Menú con gesto táctil
+- **Gesto para abrir el menú (19.1):** en el móvil, **deslizar el dedo de izquierda a derecha** empezando en el tercio izquierdo de la pantalla **abre el menú lateral**, y **deslizar hacia la izquierda lo cierra** (también desde la zona oscura de la derecha). Hook `client/src/hooks/useSwipeMenu.ts`, activo solo cuando el menú es un cajón (< 900 px).
+- **Sin interferencias (19.2):** el gesto se descarta si es sobre todo vertical (scroll), corto (< 70 px) o lento (> 0,9 s); no actúa sobre campos de texto, el recorte de foto ni con un diálogo abierto; y respeta las filas con scroll lateral: si el dedo empieza sobre una que puede desplazarse, el gesto es suyo; solo si ya está en su inicio y se desliza hacia la derecha (no puede ir a ningún sitio) se abre el menú. En pantallas anchas (menú fijo) no hace nada.
+- **Sin «atrás» accidental:** la prueba con toques reales detectó que el navegador interpretaba el gesto como «volver a la página anterior» (ni `overscroll-behavior-x` ni `touch-action` lo evitaban). El hook cancela el movimiento horizontal que reconoce como suyo (`touchmove` no pasivo + `preventDefault`).
+- Probado en Edge real con toques (`Input.dispatchTouchEvent`): 20 comprobaciones (abrir, cerrar, fuera de la zona, corto, vertical, lento, fila desplazada y en su inicio, diálogo, campo de texto, navegación y escritorio).
+
 ## 1.6.4 · 2026-10-14 · Mi lista y menú en el móvil
 - **Menú lateral más alto (19.3):** en el móvil y en la app instalada, cada botón del menú (y los del pie: «Roadmap», «Cerrar sesión») mide **≥ 52 px**, para pulsarlos con facilidad.
 - **Estados de «Mi lista» sin scroll lateral (19.8):** Todos, Por ver, Viendo, Finalizado, Dejado y Favoritos aparecen **siempre a la vista**; los que no caben pasan a la línea siguiente (en 390 px: dos líneas de tres).
