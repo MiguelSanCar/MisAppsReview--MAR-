@@ -28,6 +28,15 @@ export const config = {
   tmdbImageBase: env.TMDB_IMAGE_BASE_URL || 'https://image.tmdb.org/t/p/w342',
   // Región para saber en qué plataformas (Netflix, HBO…) está disponible cada título.
   tmdbRegion: (env.TMDB_REGION || 'ES').toUpperCase(),
+  // Novedades (notificaciones): todo el cálculo va en segundo plano y con límites, para no perjudicar al resto de la app.
+  newsTtlActiveMs: Number(env.NEWS_TTL_ACTIVE_MS ?? 12 * 3600_000), // series en emisión o previstas
+  newsTtlIdleMs: Number(env.NEWS_TTL_IDLE_MS ?? 7 * 86400_000), //     series terminadas y películas
+  newsRelatedTtlMs: Number(env.NEWS_RELATED_TTL_MS ?? 7 * 86400_000), // búsqueda de películas relacionadas de una serie
+  newsBudget: Number(env.NEWS_BUDGET ?? 30), //       contenidos que se consultan por ronda
+  newsConcurrency: Number(env.NEWS_CONCURRENCY ?? 3), // peticiones simultáneas a TMDB (global)
+  newsRoundDelayMs: Number(env.NEWS_ROUND_DELAY_MS ?? 4000), // pausa entre rondas de una misma persona
+  newsUserIntervalMs: Number(env.NEWS_USER_INTERVAL_MS ?? 30 * 60_000), // cada cuánto se programa un refresco por persona
+  newsRetryMs: Number(env.NEWS_RETRY_MS ?? 15 * 60_000), // espera antes de reintentar un contenido que falló
   jikanBase: env.JIKAN_BASE_URL || 'https://api.jikan.moe/v4',
   omdbBase: env.OMDB_BASE_URL || 'https://www.omdbapi.com',
   providerTimeoutMs: Number(env.PROVIDER_TIMEOUT_MS) || 8000,

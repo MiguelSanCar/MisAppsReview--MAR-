@@ -5,6 +5,7 @@ import { copyText } from '../clipboard';
 import { AvatarCropper } from '../components/AvatarCropper';
 import { useToast } from '../components/Toast';
 import { Avatar } from '../components/ui';
+import { useNotifications } from '../notifications/NotificationsContext';
 import { useTheme } from '../theme/ThemeContext';
 import type { Me } from '../types';
 import { profileUrl } from './ProfilePages';
@@ -13,6 +14,7 @@ export default function SettingsPage() {
   const { user, setUser } = useAuth();
   const toast = useToast();
   const { theme, setTheme } = useTheme();
+  const notif = useNotifications();
   const [file, setFile] = useState<File | null>(null);
   const [devLink, setDevLink] = useState<string | undefined>();
   if (!user) return null;
@@ -77,6 +79,20 @@ export default function SettingsPage() {
           <button type="button" role="radio" aria-checked={theme === 'dark'} className={`seg-btn ${theme === 'dark' ? 'on' : ''}`} onClick={() => setTheme('dark')}>Oscuro (predeterminado)</button>
           <button type="button" role="radio" aria-checked={theme === 'light'} className={`seg-btn ${theme === 'light' ? 'on' : ''}`} onClick={() => setTheme('light')}>Claro</button>
         </div>
+      </section>
+
+      <section className="panel">
+        <h2 className="h2">Notificaciones</h2>
+        <p className="note">La campana avisa de las novedades de lo que tienes en tu lista: nuevas temporadas y películas relacionadas.</p>
+        <label className="check">
+          <input
+            type="checkbox"
+            checked={user.notifFavoritesOnly}
+            onChange={(e) => notif.savePrefs({ favoritesOnly: e.target.checked }).catch((err) => toast(errorText(err)))}
+          />
+          Avisarme solo de mis contenidos favoritos
+        </label>
+        <p className="muted small">Útil si tu lista es larga y llegan demasiados avisos.</p>
       </section>
 
       <section className="panel">

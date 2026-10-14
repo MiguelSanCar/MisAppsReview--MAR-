@@ -1,6 +1,7 @@
 import { config } from '../config';
 import { cached, memCached } from '../cache';
 import { getJson, guarded, HttpError } from '../http';
+import { isRelatedMovie, MovieSnap, RelMovie, TvSnap } from '../domain/news';
 import type { ProviderItem } from './types';
 
 export const tmdbAvailable = () => !!config.tmdbKey;
@@ -170,4 +171,67 @@ export async function providersTmdb(kind: TmdbKind): Promise<NamedId[]> {
 export async function searchCompaniesTmdb(q: string): Promise<NamedId[]> {
   const data = await memCached(`tmdb:company:${q.toLowerCase()}`, 3600, () => call('/search/company', { query: q, page: '1' }));
   return (data.results ?? []).slice(0, 8).map((c: any) => ({ id: c.id, name: c.name }));
+}
+
+// --- Novedades (notificaciones) ---
+// Estas consultas NO usan la caché de detalle: la frecuencia con la que se repiten la decide la base de datos
+// (domain/news.ts: `ttlFor`), para no pedir lo mismo una y otra vez ni quedarse con datos viejos.
+
+const relOf = (r: any): RelMovie => ({
+  id: r.id,
+  title: r.title || r.original_title || 'Sin título',
+  date: r.release_date || null,
+  poster: r.poster_path ? poster(r.poster_path) : null,
+  overview: r.overview || null,
+});
+
+/** Película de TMDB lista para guardarla como contenido (sin pedir nada más). */
+export const movieItemFromRel = (m: RelMovie): ProviderItem => ({
+  source: 'tmdb',
+  externalId: `movie-${m.id}`,
+  type: 'pelicula',
+  title: m.title,
+  posterUrl: m.poster ?? null,
+  synopsis: m.overview ?? null,
+  year: yearOf(m.date ?? undefined),
+  totalEpisodes: 1,
+  runtimeMinutes: null,
+  studio: null,
+});
+
+/** Estado, temporadas (con fecha) y películas relacionadas de una serie. */
+export async function newsTv(externalId: string, prev: TvSnap | null, relatedTtlMs: number): Promise<TvSnap> {
+  const id = externalId.split('-')[1];
+  if (!/^\d+$/.test(id ?? '')) throw new HttpError(400, 'Identificador TMDB no válido');
+  const d = await call(`/tv/${id}`);
+  const seasons = (Array.isArray(d.seasons) ? d.seasons : [])
+    .filter((x: any) => x.season_number > 0)
+    .map((x: any) => ({ n: x.season_number, air: x.air_date || null, eps: x.episode_count || 0 }));
+  let related = prev?.related ?? [];
+  let relatedAt = prev?.relatedAt;
+  // Las películas relacionadas se buscan con poca frecuencia: aparecen raramente y cuesta una petición extra
+  if (!relatedAt || Date.now() - Date.parse(relatedAt) >= relatedTtlMs) {
+    const q = await call('/search/movie', { query: String(d.name ?? ''), include_adult: 'false', page: '1' });
+    related = (q.results ?? [])
+      .filter((m: any) => isRelatedMovie(String(d.name ?? ''), d.first_air_date || null, { title: m.title || '', date: m.release_date || null, genres: m.genre_ids }))
+      .sort((a: any, b: any) => (b.popularity ?? 0) - (a.popularity ?? 0))
+      .slice(0, 5)
+      .map(relOf);
+    relatedAt = new Date().toISOString();
+  }
+  return { kind: 'tv', status: d.status ?? null, firstAir: d.first_air_date || null, seasons, related, relatedAt };
+}
+
+/** Películas de la misma saga (colección de TMDB), incluida la propia. */
+export async function newsMovie(externalId: string): Promise<MovieSnap> {
+  const id = externalId.split('-')[1];
+  if (!/^\d+$/.test(id ?? '')) throw new HttpError(400, 'Identificador TMDB no válido');
+  const d = await call(`/movie/${id}`);
+  const self = relOf({ ...d, id: Number(id) });
+  const cid = d.belongs_to_collection?.id;
+  if (!cid) return { kind: 'movie', parts: [self] };
+  const col = await call(`/collection/${cid}`);
+  const parts: RelMovie[] = (col.parts ?? []).map(relOf);
+  if (!parts.some((p) => p.id === self.id)) parts.push(self);
+  return { kind: 'movie', parts };
 }

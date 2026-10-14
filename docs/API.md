@@ -32,6 +32,7 @@ API JSON bajo `/api`. Todas las respuestas de error tienen la forma `{ "error": 
 | `PUT /avatar` · `DELETE /avatar` | `{ dataUrl }` (imagen recortada) · quitar la foto. `GET /api/avatar/:id` la sirve |
 | `PUT /visibility` | `{ isPublic, showList }` |
 | `PUT /theme` | `{ theme: "dark" \| "light" }` — preferencia guardada en la cuenta |
+| `PUT /notifications` | `{ favoritesOnly?, introSeen? }` — ajustes de la campana (solo favoritos; ventana inicial vista). Ambos viajan en `GET /api/auth/me` como `notifFavoritesOnly` y `notifIntroSeen` |
 | `GET /export` | Copia de todos los datos de la cuenta |
 
 ## Búsqueda y contenido
@@ -112,6 +113,15 @@ El acceso se decide en `resolve()`: `self`, `friend`, `public` o `private` (solo
 | `POST /:id/leave` · `POST /:id/join` | Salir sin borrarla / volver a unirse |
 | `POST /:id/items` · `PUT /:id/items/:contentId` · `DELETE /:id/items/:contentId` | Añadir (`{ contentId }`), cambiar estado o episodios, quitar |
 | `GET /:id/history` · `GET /:id/items/:contentId/history` · `POST /:id/items/:contentId/rollback` | Historial y rollback (`{ historyId }`) |
+
+## Notificaciones (`/api/notifications`, sesión)
+
+Novedades de los contenidos de la lista (temporadas anunciadas o disponibles; películas relacionadas de una serie o de la misma saga). **Estas rutas solo leen de la base de datos y vuelven al instante**: el cálculo, que consulta TMDB, se programa en segundo plano.
+
+| Método y ruta | Descripción |
+|---|---|
+| `GET /` | `{ items, unseen, favoritesOnly, introSeen, checking }`. Cada item: `id`, `kind` (`season_announced` \| `season_released` \| `related_movie`), `text`, `title` (contenido de la lista que lo origina), `createdAt`, `seen`, `contentId` (a dónde lleva: la película nueva si la hay) y `posterUrl`. Máximo 50, de más a menos reciente. Solo los contenidos que siguen en la lista y, con `favoritesOnly`, solo los favoritos. `checking: true` indica que hay un cálculo en marcha y conviene volver a preguntar en unos segundos |
+| `POST /seen` | Marca todo como visto (al abrir la campana): `{ ok, marked }` |
 
 ## Roadmap (`/api/roadmap`, público)
 

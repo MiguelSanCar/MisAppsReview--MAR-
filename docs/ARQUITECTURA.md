@@ -43,7 +43,8 @@ client/src
 ├─ profile/             Contexto y envoltorio de /perfil/:usuario
 ├─ pwa/                 Registro del service worker y aviso de versión nueva
 ├─ hooks/               useSwipeMenu (gesto táctil del menú lateral)
-├─ components/          Layout, PosterCard, CardRow, SeasonList, ThemeSwitch, Logo…
+├─ notifications/       Contexto de la campana (lectura, repreguntas y ajustes)
+├─ components/          Layout, PosterCard, CardRow, SeasonList, NotificationBell, ThemeSwitch, Logo…
 ├─ pages/               Inicio, Búsqueda avanzada, Mi lista, Ficha, Perfiles, Amigos, Listas, Ajustes, Roadmap
 └─ styles.css, index.css  Estilos globales y variables de tema
 
@@ -57,14 +58,15 @@ server/src
 ├─ library.ts           Biblioteca personal (paginación por cursor, contadores)
 ├─ profile.ts, compare.ts  Estadísticas y comparación de perfiles
 ├─ recommendations.ts   Recomendaciones por géneros
+├─ news.ts              Motor de novedades (notificaciones) en segundo plano
 ├─ listLife.ts, mailer.ts, roadmap.ts
-├─ domain/              Reglas puras sin red ni BD: rules, time, recommend, seasons
+├─ domain/              Reglas puras sin red ni BD: rules, time, recommend, seasons, news
 └─ routes/              auth, account, library, discover, recommendations, friends, invites, profiles, lists
 ```
 
 ## Datos
 
-SQLite con `sql.js` (WebAssembly): la base vive **en memoria** y se vuelca a `data/mar.db` 300 ms después de cada escritura. Por eso solo puede haber **un proceso por fichero**. Las migraciones están numeradas (hoy 12) y nunca se edita una publicada.
+SQLite con `sql.js` (WebAssembly): la base vive **en memoria** y se vuelca a `data/mar.db` 300 ms después de cada escritura. Por eso solo puede haber **un proceso por fichero**. Las migraciones están numeradas (hoy 13) y nunca se edita una publicada.
 
 | Tabla | Contenido |
 |---|---|
@@ -75,6 +77,8 @@ SQLite con `sql.js` (WebAssembly): la base vive **en memoria** y se vuelca a `da
 | `friendships`, `invite_links` | Amistades (solicitada/aceptada) y enlaces de amistad |
 | `joint_lists`, `joint_list_members`, `joint_list_items`, `joint_list_history` | Listas conjuntas, sus miembros, contenidos e historial para el rollback |
 | `auth_tokens` | Tokens de un solo uso (recuperar contraseña, verificar correo) |
+| `notifications` | Avisos de novedades por persona (`dedupe_key` única, `seen_at`) |
+| `content.news`, `user_content.news_base` | Instantánea de novedades de cada contenido (compartida) y lo que ya se conocía cuando la persona lo añadió |
 
 ## Proveedores externos y resiliencia
 
@@ -94,6 +98,30 @@ SQLite con `sql.js` (WebAssembly): la base vive **en memoria** y se vuelca a `da
 - **Amistad**: el enlace propio añade como amigo a quien lo abre; el de otro perfil solo envía una solicitud.
 - **Listas conjuntas**: una por pareja; salir no la borra; se borra tras 60 días sin actividad con aviso en la aplicación 15 días antes; cada cambio queda en un historial con rollback.
 - **Recomendaciones**: afinidad por género según presencia en el mercado, en la lista y cantidad (ver DECISIONES).
+
+## Notificaciones de novedades
+
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant A as API (solo lee la BD)
+    participant M as Motor en segundo plano
+    participant T as TMDB
+    C->>A: GET /api/notifications
+    A-->>C: avisos y contador al instante (checking: true)
+    A--)M: programa un refresco si toca (como mucho cada 30 min por persona)
+    loop rondas de 30 contenidos, 3 peticiones a la vez
+        M->>T: estado, temporadas, saga o películas relacionadas
+        M->>M: instantánea compartida en content.news
+    end
+    M->>M: compara con la base de cada persona y crea avisos
+    C->>A: vuelve a preguntar a los 2,5 s, 5 s… y cada 5 min
+```
+
+- **Qué avisa**: temporada nueva *anunciada* o *disponible* de una serie, y película nueva de la misma saga (si el contenido es una película) o **película relacionada** de una serie (spin-off), esta última por una heurística de título (ver DECISIONES).
+- **Base de comparación**: al empezar a seguir un contenido se guarda lo que ya existía (`news_base`); solo lo posterior es novedad, así que añadir una serie con diez temporadas no genera diez avisos.
+- **Rendimiento**: la lectura es una consulta indexada; el cálculo nunca bloquea una petición. Cola con límite global de peticiones simultáneas a TMDB, rondas pequeñas que ceden el turno, instantánea compartida entre personas y caducidades por tipo (series en emisión 12 h; terminadas y películas 7 días; búsqueda de películas relacionadas 7 días). Un fallo se reintenta a los 15 min.
+- **Ajustes**: «solo favoritos» se aplica al leer (no al calcular), por lo que activarlo o quitarlo es inmediato.
 
 ## Seguridad
 

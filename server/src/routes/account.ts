@@ -60,6 +60,14 @@ accountRouter.put('/theme', (req, res) => {
   res.json({ user: selfDto(getUser(uid(req))!) });
 });
 
+// --- Ajustes de las notificaciones ---
+accountRouter.put('/notifications', (req, res) => {
+  const body = parse(z.object({ favoritesOnly: z.boolean().optional(), introSeen: z.boolean().optional() }), req.body);
+  if (body.favoritesOnly !== undefined) run('UPDATE users SET notif_favorites_only = ? WHERE id = ?', [body.favoritesOnly, uid(req)]);
+  if (body.introSeen !== undefined) run('UPDATE users SET notif_intro_seen = ? WHERE id = ?', [body.introSeen, uid(req)]);
+  res.json({ user: selfDto(getUser(uid(req))!) });
+});
+
 // --- Exportar todos los datos (copia de seguridad personal) ---
 accountRouter.get('/export', (req, res) => {
   const u = getUser(uid(req))!;

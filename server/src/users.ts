@@ -13,6 +13,9 @@ export interface UserRow {
   profile_public: number;
   email_verified: number;
   theme: string;
+  notif_favorites_only: number;
+  notif_intro_seen: number;
+  news_checked_at: string | null;
   created_at: string;
 }
 
@@ -43,4 +46,8 @@ export const selfDto = (u: UserRow) => ({
   showList: !!u.share_list,
   /** Tema de la interfaz: 'dark' (por defecto) o 'light'. */
   theme: u.theme === 'light' ? 'light' : 'dark',
+  /** Notificaciones solo de los contenidos favoritos. */
+  notifFavoritesOnly: !!u.notif_favorites_only,
+  /** Ya vio la ventana explicativa de la campana. */
+  notifIntroSeen: !!u.notif_intro_seen,
 });

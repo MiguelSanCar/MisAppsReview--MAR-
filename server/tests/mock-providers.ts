@@ -3,14 +3,31 @@ import type { AddressInfo } from 'net';
 import { demoTmdb } from './demo-data';
 
 /** Servidor local que imita TMDB, Jikan y OMDb (no hay acceso a las APIs reales en los tests). */
-export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ base: string; close: () => Promise<void>; calls: string[] }> {
+/** Estado que las pruebas modifican para simular que TMDB cambia con el tiempo (novedades) y para medir carga. */
+export interface MockState {
+  /** Temporadas añadidas a una serie (id de TMDB → [{ season_number, air_date, episode_count }]). */
+  extraSeasons: Record<number, any[]>;
+  /** Estado de TMDB de una serie («Returning Series», «Ended»…). */
+  status: Record<number, string>;
+  /** Sagas: id de película → { id de colección, partes }. */
+  collections: Record<number, { id: number; parts: any[] }>;
+  /** Resultados de /search/movie (se devuelven tal cual). */
+  movieSearch: any[];
+  /** Retraso artificial de cada respuesta de TMDB (ms). */
+  delayMs: number;
+  active: number;
+  maxActive: number;
+}
+
+export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ base: string; close: () => Promise<void>; calls: string[]; state: MockState }> {
   const calls: string[] = [];
+  const state: MockState = { extraSeasons: {}, status: {}, collections: {}, movieSearch: [], delayMs: 0, active: 0, maxActive: 0 };
   const movies = Array.from({ length: 12 }, (_, i) => ({
     id: 101 + i, media_type: 'movie', title: `Pelicula ${i + 1}`, poster_path: '/p.jpg',
     release_date: '2010-01-01', overview: `Sinopsis ${i + 1}`, original_language: 'en', genre_ids: [28],
   }));
 
-  const server = http.createServer((req, res) => {
+  const handle = (req: http.IncomingMessage, res: http.ServerResponse) => {
     const url = new URL(req.url!, 'http://x');
     const send = (code: number, body: unknown) => {
       res.writeHead(code, { 'Content-Type': 'application/json' });
@@ -50,8 +67,15 @@ export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ bas
           title: `Pelicula ${Number(m[1]) - 100}`, overview: 'Detalle', runtime: 100, imdb_id: `tt00${m[1]}`,
           release_date: '2010-01-01', poster_path: '/p.jpg', production_companies: [{ name: 'Studio X' }],
           genres: [{ id: 28, name: 'Acción' }],
+          belongs_to_collection: state.collections[Number(m[1])] ? { id: state.collections[Number(m[1])].id, name: 'Saga' } : null,
         });
       }
+      const col = /^\/tmdb\/collection\/(\d+)$/.exec(p);
+      if (col) {
+        const entry = Object.values(state.collections).find((c) => c.id === Number(col[1]));
+        return entry ? send(200, { id: entry.id, name: 'Saga', parts: entry.parts }) : send(404, {});
+      }
+      if (p === '/tmdb/search/movie') return send(200, { results: state.movieSearch });
       m = /^\/tmdb\/tv\/1396$/.exec(p);
       if (m) {
         return send(200, {
@@ -59,8 +83,14 @@ export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ bas
           first_air_date: '2008-01-20', poster_path: '/bb.jpg', production_companies: [{ name: 'Sony' }],
           networks: [{ name: 'AMC' }], external_ids: { imdb_id: 'tt0903747' },
           genres: [{ id: 18, name: 'Drama' }, { id: 80, name: 'Crimen' }],
-          seasons: [{ season_number: 0, episode_count: 3 }, { season_number: 1, episode_count: 7 }, { season_number: 2, episode_count: 13 }, { season_number: 3, episode_count: 13 }, { season_number: 4, episode_count: 13 }, { season_number: 5, episode_count: 16 }],
+          status: state.status[1396] ?? 'Ended',
+          seasons: [{ season_number: 0, episode_count: 3 }, { season_number: 1, episode_count: 7, air_date: '2008-01-20' }, { season_number: 2, episode_count: 13, air_date: '2009-03-08' }, { season_number: 3, episode_count: 13, air_date: '2010-03-21' }, { season_number: 4, episode_count: 13, air_date: '2011-07-17' }, { season_number: 5, episode_count: 16, air_date: '2012-07-15' }, ...(state.extraSeasons[1396] ?? [])],
         });
+      }
+      // Cualquier otra serie (pruebas de carga): una temporada ya emitida
+      const anyTv = /^\/tmdb\/tv\/(\d+)$/.exec(p);
+      if (anyTv && !opts.demo) {
+        return send(200, { name: `Serie ${anyTv[1]}`, number_of_episodes: 5, first_air_date: '2020-01-01', status: state.status[Number(anyTv[1])] ?? 'Ended', seasons: [{ season_number: 1, episode_count: 5, air_date: '2020-01-01' }, ...(state.extraSeasons[Number(anyTv[1])] ?? [])] });
       }
       const GENRES: Record<string, Record<number, string>> = {
         tv: { 18: 'Drama', 35: 'Comedia', 80: 'Crimen', 9648: 'Misterio', 10759: 'Acción y aventura', 10765: 'Ciencia ficción y fantasía', 10768: 'Bélica y política', 16: 'Animación' },
@@ -150,12 +180,25 @@ export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ bas
       return send(200, { Response: 'True', imdbRating: '7.1', Ratings: [{ Source: 'Internet Movie Database', Value: '7.1/10' }] });
     }
     send(404, {});
+  };
+
+  const server = http.createServer((req, res) => {
+    state.active++;
+    state.maxActive = Math.max(state.maxActive, state.active);
+    // Se descuenta justo antes de responder: así el cliente no puede lanzar otra petición mientras esta sigue contando
+    let counted = true;
+    const done = () => { if (counted) { counted = false; state.active--; } };
+    const end = res.end.bind(res) as (...a: any[]) => any;
+    (res as any).end = (...a: any[]) => { done(); return end(...a); };
+    res.on('close', done);
+    if (state.delayMs > 0) setTimeout(() => handle(req, res), state.delayMs);
+    else handle(req, res);
   });
 
   return new Promise((resolve) => {
     server.listen(0, '127.0.0.1', () => {
       const port = (server.address() as AddressInfo).port;
-      resolve({ base: `http://127.0.0.1:${port}`, calls, close: () => new Promise((r) => server.close(() => r())) });
+      resolve({ base: `http://127.0.0.1:${port}`, calls, state, close: () => new Promise((r) => server.close(() => r())) });
     });
   });
 }

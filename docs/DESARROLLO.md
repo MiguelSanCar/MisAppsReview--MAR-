@@ -57,6 +57,7 @@ Cubren las reglas de dominio puras, la API completa y las migraciones. `tests/cl
 | `api.test.ts`, `features.test.ts` | Cuentas, biblioteca, amigos, enlaces, perfiles, listas conjuntas |
 | `library-manage.test.ts`, `library-page.test.ts` | Revisionado, borrado, paginación por cursor |
 | `compare.test.ts`, `theme.test.ts`, `seasons.test.ts` | Comparación de perfiles, tema por usuario, temporadas |
+| `news.test.ts` | Notificaciones: reglas puras, motor con TMDB simulado y rendimiento (latencia de la API durante un cálculo de 90 contenidos y límite de peticiones simultáneas) |
 | `recommend.test.ts`, `discover.test.ts` | Recomendaciones (fórmula y API) y búsqueda avanzada |
 | `pwa.test.ts` | Manifiesto, iconos, service worker y cabeceras de caché |
 | `guard.test.ts`, `lists-life.test.ts`, `migrations.test.ts`, `mailer.test.ts` | Corte de proveedores caídos, vida de las listas, migraciones, correo |
@@ -77,6 +78,7 @@ MOCK_DEMO=1 MOCK_PORT=3102 npm run dev:mock -w server   # demostración (ver aba
 
 - `JOINT_INACTIVITY_DAYS` y `JOINT_WARNING_DAYS` cortos permiten probar los avisos de las listas conjuntas.
 - **Modo demo** (`MOCK_DEMO=1`): títulos conocidos con carátulas SVG generadas (sin imágenes con derechos de autor) y los usuarios `demo` y `lucia` (contraseña `Prueba-12345`, amigos entre sí). Sirve para capturas de pantalla y revisiones visuales. Los datos están en `server/tests/demo-data.ts`.
+- **Control de TMDB simulado**: `POST /__mock/state` con un JSON parcial (`extraSeasons`, `status`, `collections`, `movieSearch`, `delayMs`) cambia lo que «devuelve TMDB» para probar las **notificaciones de novedades** en el navegador (temporada anunciada, película relacionada, secuela de una saga). El servidor simulado calcula las novedades sin esperas.
 - El servidor simulado **no recarga solo** al cambiar el código del servidor: hay que reiniciarlo. Los cambios del cliente requieren `npm run build`.
 
 ### Pruebas en navegador

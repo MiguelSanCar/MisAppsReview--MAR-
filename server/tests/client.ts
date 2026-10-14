@@ -3,6 +3,7 @@ import type { AddressInfo } from 'net';
 import { createApp } from '../src/app';
 import { config } from '../src/config';
 import { closeDb, openDb } from '../src/db';
+import { drainNews, resetNewsState } from '../src/news';
 import { startMockProviders } from './mock-providers';
 
 /** Cliente HTTP mínimo con "cookie jar" (una sesión por instancia). */
@@ -43,6 +44,7 @@ export class Client {
 /** Arranca app + proveedores simulados con BD en memoria. Devuelve la función para apagarlo todo. */
 export async function startTestApp() {
   await openDb(null);
+  resetNewsState();
   const mock = await startMockProviders();
   Object.assign(config, {
     tmdbBase: `${mock.base}/tmdb`, jikanBase: `${mock.base}/jikan`, omdbBase: `${mock.base}/omdb`,
@@ -51,5 +53,5 @@ export async function startTestApp() {
   const server = createApp().listen(0, '127.0.0.1');
   await new Promise((r) => server.once('listening', r));
   Client.port = (server.address() as AddressInfo).port;
-  return { mock, stop: async () => { server.close(); await mock.close(); closeDb(); } };
+  return { mock, stop: async () => { await drainNews(); server.close(); await mock.close(); closeDb(); } };
 }

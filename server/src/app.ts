@@ -13,6 +13,7 @@ import { invitesRouter } from './routes/invites';
 import { contentRouter, libraryRouter, searchRouter } from './routes/library';
 import { listsRouter } from './routes/lists';
 import { discoverRouter } from './routes/discover';
+import { notificationsRouter } from './routes/notifications';
 import { recoRouter } from './routes/recommendations';
 import { roadmapRouter } from './roadmap';
 
@@ -53,6 +54,7 @@ export function createApp() {
   app.use('/api/library', libraryRouter);
   app.use('/api/recommendations', recoRouter);
   app.use('/api/discover', discoverRouter);
+  app.use('/api/notifications', notificationsRouter);
   app.use('/api/friends', friendsRouter);
   app.use('/api/invites', invitesRouter);
   app.use('/api/profiles', profilesRouter);

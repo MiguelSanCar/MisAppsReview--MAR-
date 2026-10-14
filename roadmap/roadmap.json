@@ -1859,7 +1859,7 @@
     {
       "id": "f22",
       "name": "Fase 22 · Notificaciones y novedades",
-      "release": "1.x",
+      "release": "1.10.0",
       "summary": "Horas vistas en el perfil y campana de notificaciones con las novedades (nuevas temporadas y películas relacionadas) de los contenidos de cada persona",
       "features": [
         {
@@ -1883,44 +1883,44 @@
             {
               "id": "22.2",
               "title": "Migración 13: tabla de notificaciones, instantánea de novedades por contenido, base de comparación por contenido de cada persona y ajustes (solo favoritos, ventana inicial vista)",
-              "status": "pendiente",
-              "eta": "2026-11-03"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "22.3",
               "title": "TMDB: novedades de series (estado, temporadas anunciadas o estrenadas), de películas (otras películas de su saga) y películas relacionadas de una serie (spin-off) con una heurística documentada",
-              "status": "pendiente",
-              "eta": "2026-11-03"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "22.4",
               "title": "Reglas puras: comparar lo que ya se conocía con lo actual y generar los avisos y sus textos (temporada anunciada, temporada disponible, película relacionada)",
-              "status": "pendiente",
-              "eta": "2026-11-03"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "22.5",
               "title": "Refresco con presupuesto y concurrencia limitados; la primera vez solo se fija la base de comparación para no inundar de avisos lo ya existente",
-              "status": "pendiente",
-              "eta": "2026-11-03"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "22.6",
               "title": "API: lista de notificaciones (con filtro de favoritos), marcar como vistas y guardar los ajustes",
-              "status": "pendiente",
-              "eta": "2026-11-04"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "22.7",
               "title": "Tests de las reglas, del motor con TMDB simulado y de la API",
-              "status": "pendiente",
-              "eta": "2026-11-04"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "22.15",
               "title": "Rendimiento: la campana solo lee de la base de datos (nunca espera a TMDB); el cálculo va en segundo plano con cola única, concurrencia limitada, caducidades por tipo (series en emisión 12 h; terminadas y películas 7 días) y lotes pequeños que ceden el paso a las demás peticiones. Medido con pruebas (latencia de la API durante un refresco de 300 contenidos y límite de peticiones simultáneas)",
-              "status": "pendiente",
-              "eta": "2026-11-04"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
@@ -1932,38 +1932,38 @@
             {
               "id": "22.8",
               "title": "Campana (icono de línea) arriba a la derecha, a la izquierda del interruptor de tema; en rojo si hay novedades sin ver",
-              "status": "pendiente",
-              "eta": "2026-11-05"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "22.9",
               "title": "Al entrar con novedades sin ver, mensaje emergente a la izquierda de la campana que dura unos segundos",
-              "status": "pendiente",
-              "eta": "2026-11-05"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "22.10",
               "title": "Panel con título «Notificaciones» arriba a la izquierda; sin novedades lo dice; al pulsar una se abre la ficha del contenido y no se hace nada más",
-              "status": "pendiente",
-              "eta": "2026-11-05"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "22.11",
               "title": "Ajustes: opción para recibir solo notificaciones de los contenidos favoritos",
-              "status": "pendiente",
-              "eta": "2026-11-05"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "22.12",
               "title": "La primera vez que se abre la campana, ventana emergente que oscurece el resto: explica el ajuste y pide elegir entre todos los contenidos o solo favoritos",
-              "status": "pendiente",
-              "eta": "2026-11-05"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "22.13",
               "title": "Pruebas en navegador real (móvil y escritorio, claro y oscuro) y despliegue",
-              "status": "pendiente",
-              "eta": "2026-11-06"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
@@ -1975,14 +1975,14 @@
             {
               "id": "22.14",
               "title": "Documentación (README, ARQUITECTURA, API, DECISIONES, CHANGELOG), versión 1.10.0 y despliegue comprobado",
-              "status": "pendiente",
-              "eta": "2026-11-06"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         }
       ]
     }
   ],
-  "release": "1.9.5",
+  "release": "1.10.0",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

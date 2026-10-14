@@ -148,3 +148,19 @@
 | **Capturas con un modo demo del servidor simulado** | Reproducibles (`scripts/capturas.js`), sin datos reales ni imágenes con derechos de autor: las carátulas son SVG generadas a partir del título. |
 | **Insignia de versión leída de `package.json`** | El README no se desactualiza en cada publicación. |
 | **Documentos de origen en `docs/historico/`** | El encargo inicial y el borrador de roadmap se conservan como contexto, claramente separados de la documentación vigente. |
+
+## Notificaciones de novedades (fase 22)
+
+| Decisión | Motivo |
+|---|---|
+| **La petición de la campana nunca espera a TMDB** | Pedir las novedades de cientos de contenidos tarda segundos. La API solo lee de la base de datos y vuelve al instante; el cálculo va en segundo plano y el cliente vuelve a preguntar (2,5 s, 5 s…, luego cada 5 min y al volver a la pestaña). |
+| **Cola global con límite de concurrencia (3) y rondas de 30 contenidos** | Acota la carga sobre TMDB y sobre el proceso (la base de datos es de un solo hilo): entre contenido y contenido se cede el turno al resto de peticiones. El hueco del limitador se traspasa al siguiente en espera para que nadie se cuele y se supere el límite (hubo una carrera que lo permitía; ahora hay una prueba). |
+| **Instantánea de novedades por contenido, compartida** | Si varias personas tienen la misma serie, TMDB se consulta una vez. Lo individual (qué es novedad para cada una) se decide comparando con su «base». |
+| **Caducidades según el tipo** | Una serie terminada o una película casi nunca cambian (7 días); una serie en emisión sí (12 h). Reduce las peticiones en un orden de magnitud. Las películas relacionadas (una petición extra de búsqueda) se revisan cada 7 días. |
+| **Base de comparación al empezar a seguir** | Sin ella, la primera vez saldrían avisos de todo lo que ya existía. Solo lo posterior a haber añadido el contenido es novedad. |
+| **Clave única por novedad (`dedupe_key`)** | Recalcular no duplica avisos. «Anunciada» y «disponible» son dos avisos distintos de la misma temporada (primero se anuncia, luego se estrena). |
+| **Películas relacionadas por título (heurística)** | TMDB no enlaza series con sus películas ni spin-offs. Se busca una película cuyo título contenga el de la serie como palabras completas, no sea anterior a la serie y no sea un documental ni un «making of». Puede haber falsos positivos (otra obra con el mismo nombre): solo generan un aviso que se puede ignorar. Para películas se usa la **colección** de TMDB (sagas), que sí es fiable. |
+| **«Solo favoritos» se aplica al leer** | Activarlo o quitarlo es inmediato y no obliga a recalcular ni a perder avisos. |
+| **Los avisos llevan a la ficha y no hacen nada más** | Es la persona quien decide qué hacer (añadir, marcar…). Si el aviso es de una película relacionada, lleva a la película (que se guarda como contenido, sin pedir más datos). |
+| **Ventana inicial con elección** | La primera vez que se abre la campana se explica el ajuste y se pide elegir entre todos y solo favoritos; se guarda en la cuenta y no vuelve a salir. |
+| **Panel y ventana en un portal** | La cabecera usa `backdrop-filter`, que convierte a la cabecera en el bloque contenedor de todo lo «fixed» de su interior y lo recortaría. |

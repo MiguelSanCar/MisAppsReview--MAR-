@@ -7,6 +7,7 @@ import { useProfileCtx } from '../profile/ProfileContext';
 import { AvatarDialog } from './AvatarDialog';
 import { Emoji } from './Emoji';
 import { Logo } from './Logo';
+import { NotificationBell } from './NotificationBell';
 import { ThemeSwitch } from './ThemeSwitch';
 import { useToast } from './Toast';
 import { useSwipeMenu } from '../hooks/useSwipeMenu';
@@ -93,7 +94,10 @@ export default function Layout() {
           <Icon name={open ? 'close' : 'menu'} />
         </button>
         <Link to="/home" className="brand" aria-label="MAR, ir al inicio"><Logo height={20} /></Link>
-        <ThemeSwitch className="topbar-theme" />
+        <div className="topbar-right">
+          <NotificationBell />
+          <ThemeSwitch className="topbar-theme" />
+        </div>
       </header>
 
       {open && <div className="scrim" onClick={() => setOpen(false)} />}

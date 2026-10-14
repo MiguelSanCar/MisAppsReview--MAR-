@@ -2,7 +2,7 @@
 // (https://lucide.dev, licencia ISC; ver docs/THIRD_PARTY_LICENSES.md). Se pintan como SVG con trazo
 // `currentColor` y sin relleno, así que se ven igual en cualquier sistema y toman el color de su botón o texto.
 import {
-  CalendarDays, Check, ClipboardList, Eye, Folders, Moon, NotebookPen, Repeat, Search, Sun, Users, type LucideIcon,
+  Bell, CalendarDays, Check, ClipboardList, Eye, Folders, Moon, NotebookPen, Repeat, Search, Sun, Users, type LucideIcon,
 } from 'lucide-react';
 
 const ICONS = {
@@ -15,6 +15,7 @@ const ICONS = {
   repetir: Repeat, //      🔁
   calendario: CalendarDays, // 📅
   lupa: Search, //         🔍
+  campana: Bell, //        🔔
   luna: Moon, //           🌙
   sol: Sun, //             ☀
 } satisfies Record<string, LucideIcon>;

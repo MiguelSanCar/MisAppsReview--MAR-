@@ -36,6 +36,9 @@
 - **Recomendaciones** según los géneros con más afinidad: combinan la presencia del género en el mercado, en la lista de la persona y la cantidad de contenidos (los favoritos pesan más).
 - **Búsqueda avanzada** con filtros combinables: plataforma (Netflix, HBO, Prime…), género, estudio, años, puntuación mínima y orden.
 
+**Novedades**
+- **Campana de notificaciones** con las novedades de lo que hay en la lista: nuevas temporadas (anunciadas o ya disponibles) y películas relacionadas (secuelas de una saga o spin-offs de una serie). Se calcula en segundo plano, sin ralentizar la aplicación; puede limitarse a los favoritos.
+
 **Estadísticas y social**
 - Perfil con tiempo total visto (horas → días → semanas → meses → años), episodios, **temporadas vistas**, contadores por estado y top 10 de favoritas.
 - Perfiles con URL propia (`/perfil/<usuario>`): visibles solo para amigos o públicos; la lista, opcional.

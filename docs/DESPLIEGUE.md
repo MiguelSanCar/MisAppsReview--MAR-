@@ -40,6 +40,9 @@ Lo siguiente es la preparación original, válida para cualquier hosting.
 | `JWT_SECRET` | Sí (si falta, el servidor no arranca) | Firma de sesiones. Una cadena larga aleatoria |
 | `PUBLIC_URL` | Sí | URL pública (`https://...`), para enlaces de correo |
 | `CLIENT_ORIGIN` | Sí | El mismo valor que `PUBLIC_URL` (CORS) |
+| `NEWS_TTL_ACTIVE_MS` / `NEWS_TTL_IDLE_MS` | No (12 h / 7 días) | Cada cuánto se revisan las novedades de series en emisión / de series terminadas y películas |
+| `NEWS_BUDGET` / `NEWS_CONCURRENCY` | No (`30` / `3`) | Contenidos consultados por ronda y peticiones simultáneas a TMDB (límite global) |
+| `NEWS_USER_INTERVAL_MS` | No (30 min) | Cada cuánto se programa un refresco de novedades por persona |
 | `TMDB_REGION` | No (`ES`) | País para saber en qué plataformas (Netflix, HBO…) está disponible cada título |
 | `TMDB_API_KEY` | Para series/películas | https://www.themoviedb.org/settings/api (gratis) |
 | `OMDB_API_KEY` | Para IMDb + Rotten Tomatoes | https://www.omdbapi.com/apikey.aspx (gratis, 1.000/día) |

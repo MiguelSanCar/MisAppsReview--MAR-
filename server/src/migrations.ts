@@ -197,4 +197,36 @@ export const MIGRATIONS: { version: number; name: string; sql: string }[] = [
       ALTER TABLE content ADD COLUMN seasons TEXT;
     `,
   },
+  {
+    version: 13,
+    name: 'notificaciones de novedades',
+    sql: `
+      -- Ajustes de la persona: solo favoritos y si ya vio la ventana explicativa de la campana.
+      ALTER TABLE users ADD COLUMN notif_favorites_only INTEGER NOT NULL DEFAULT 0;
+      ALTER TABLE users ADD COLUMN notif_intro_seen INTEGER NOT NULL DEFAULT 0;
+      -- Última vez que se programó un refresco de novedades para esta persona.
+      ALTER TABLE users ADD COLUMN news_checked_at TEXT;
+      -- Instantánea de novedades de cada contenido (temporadas, películas de la saga o relacionadas), compartida por todas
+      -- las personas que lo tienen, y cuándo se calculó.
+      ALTER TABLE content ADD COLUMN news TEXT;
+      ALTER TABLE content ADD COLUMN news_at TEXT;
+      -- Lo que ya se conocía de ese contenido cuando la persona lo tenía en su lista: solo lo posterior es novedad.
+      ALTER TABLE user_content ADD COLUMN news_base TEXT;
+      CREATE TABLE notifications (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        content_id INTEGER NOT NULL REFERENCES content(id) ON DELETE CASCADE,
+        kind TEXT NOT NULL,
+        dedupe_key TEXT NOT NULL,
+        season INTEGER,
+        air_date TEXT,
+        related_content_id INTEGER REFERENCES content(id) ON DELETE SET NULL,
+        related_title TEXT,
+        created_at TEXT NOT NULL,
+        seen_at TEXT,
+        UNIQUE (user_id, dedupe_key)
+      );
+      CREATE INDEX idx_notifications_user ON notifications(user_id, created_at DESC);
+    `,
+  },
 ];

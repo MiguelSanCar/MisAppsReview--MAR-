@@ -5,6 +5,9 @@
  * Variables opcionales:
  *  - MOCK_PORT: puerto (3101 por defecto).
  *  - MOCK_SEED=300: crea el usuario «carga» (contraseña Prueba-12345) con N contenidos, para medir listas largas.
+ *  - Control de TMDB simulado (solo aquí): `POST /__mock/state` con un JSON parcial (extraSeasons, status, collections,
+ *    movieSearch, delayMs) cambia lo que «devuelve TMDB», para probar las notificaciones de novedades en el navegador.
+ *    Las novedades se calculan sin esperas (caducidades a 0) para poder verlas al momento.
  *  - MOCK_DEMO=1: modo demostración para capturas de pantalla: títulos conocidos con carátulas SVG generadas, y los
  *    usuarios «demo» y «lucia» (contraseña Prueba-12345), amigos entre sí, con listas variadas.
  */
@@ -86,12 +89,22 @@ async function main() {
     ...(demo ? { tmdbImageBase: `${origin}/__posters` } : {}),
   });
   if (demo) seedDemo(origin);
+  Object.assign(config, { newsUserIntervalMs: 0, newsTtlActiveMs: 0, newsTtlIdleMs: 0, newsRelatedTtlMs: 0, newsRoundDelayMs: 500 });
   const app = createApp();
   const server = http.createServer((req, res) => {
     // Carátulas generadas del modo demo (mismo origen que la app: la CSP las admite)
     const m = demo ? /^\/__posters\/(\d+)\.svg/.exec(req.url ?? '') : null;
     const t = m && DEMO.find((x) => x.id === Number(m[1]));
     if (t) { res.writeHead(200, { 'Content-Type': 'image/svg+xml', 'Cache-Control': 'max-age=3600' }); res.end(posterSvg(t)); return; }
+    if (req.method === 'POST' && req.url === '/__mock/state') {
+      let body = '';
+      req.on('data', (c) => { body += c; });
+      req.on('end', () => {
+        try { Object.assign(mock.state, JSON.parse(body || '{}')); res.writeHead(200, { 'Content-Type': 'application/json' }); res.end('{"ok":true}'); }
+        catch { res.writeHead(400); res.end('{"error":"JSON no válido"}'); }
+      });
+      return;
+    }
     app(req, res);
   });
   server.listen(port, () => console.log(`Servidor simulado${demo ? ' (modo demo)' : ''} en ${origin}`));

@@ -2,6 +2,18 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.10.0 · 2026-10-14 · Notificaciones de novedades
+### Añadido
+- **Campana de notificaciones** arriba a la derecha, a la izquierda del interruptor de tema. Avisa de novedades de los contenidos de la lista: temporadas anunciadas o ya disponibles y películas relacionadas (secuelas de una saga o spin-offs de una serie). Un clic lleva a la ficha del contenido y nada más.
+- Con avisos sin ver la campana se pone en rojo y aparece un mensaje emergente («Tienes actualizaciones pendientes») durante unos segundos.
+- Primera vez: ventana que oscurece la pantalla, explica el ajuste y pide elegir entre avisos de todos los contenidos o solo de los favoritos. El ajuste también está en Ajustes.
+- Motor de novedades en segundo plano: la API solo lee de la base de datos y responde al instante; el cálculo contra TMDB va en cola con límite global de peticiones, rondas pequeñas, instantánea compartida entre personas y caducidades por tipo de contenido.
+- Migración 13 (tabla `notifications` y columnas de apoyo) y rutas `GET /api/notifications`, `POST /api/notifications/seen`, `PUT /api/me/notifications`.
+- 29 pruebas nuevas (reglas, motor, aislamiento de fallos y rendimiento).
+
+### Notas
+- Las películas relacionadas de una serie se detectan por título (heurística): puede haber algún falso positivo.
+
 ## 1.9.5 · 2026-10-14 · Horas vistas en el perfil
 - **Horas vistas en el perfil (22.1):** bajo el tiempo visto (p. ej. «1,1 semanas») aparece ahora, en pequeño y con menos énfasis, el total en horas («180 horas vistas»; con un decimal por debajo de 10 h y con separador de miles en español). Se calcula en el cliente a partir de los minutos totales que ya devolvía la API.
 

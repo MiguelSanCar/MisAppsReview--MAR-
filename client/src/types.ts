@@ -59,6 +59,10 @@ export interface Me extends PublicUser {
   showList: boolean;
   /** Tema de la interfaz guardado en la cuenta. */
   theme: 'dark' | 'light';
+  /** Notificaciones solo de los contenidos favoritos. */
+  notifFavoritesOnly: boolean;
+  /** Ya vio la ventana explicativa de la campana. */
+  notifIntroSeen: boolean;
 }
 
 export interface WatchTime { value: number; unit: string; text: string }
