@@ -1071,7 +1071,7 @@
     {
       "id": "f16",
       "name": "Fase 16 · Ficha y botones",
-      "release": "1.0.0",
+      "release": "0.17.0",
       "summary": "Eliminar desde la ficha e iconos de línea en los botones",
       "features": [
         {
@@ -1373,6 +1373,6 @@
       ]
     }
   ],
-  "release": "0.17.0",
+  "release": "1.0.0",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }
