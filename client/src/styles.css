@@ -558,3 +558,6 @@ html, body { overscroll-behavior-x: none; }
 .ep.on { background: var(--done); border-color: var(--done); color: var(--on-accent); font-weight: 700; }
 .ep:disabled { opacity: .6; cursor: not-allowed; }
 @media (pointer: coarse) { .ep { min-height: 44px; } }
+
+/* Horas vistas bajo el tiempo visto: más pequeñas y discretas */
+.stat-hours { font-size: 0.85rem; color: var(--muted); opacity: .85; margin-top: -2px; }

@@ -1870,7 +1870,7 @@
             {
               "id": "22.1",
               "title": "Perfil: bajo el tiempo visto, en pequeño y con menos énfasis, las horas vistas",
-              "status": "pendiente",
+              "status": "hecho",
               "eta": "2026-10-14"
             }
           ]
@@ -1983,6 +1983,6 @@
       ]
     }
   ],
-  "release": "1.9.4",
+  "release": "1.9.5",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

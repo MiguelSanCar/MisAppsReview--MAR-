@@ -2,6 +2,9 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.9.5 · 2026-10-14 · Horas vistas en el perfil
+- **Horas vistas en el perfil (22.1):** bajo el tiempo visto (p. ej. «1,1 semanas») aparece ahora, en pequeño y con menos énfasis, el total en horas («180 horas vistas»; con un decimal por debajo de 10 h y con separador de miles en español). Se calcula en el cliente a partir de los minutos totales que ya devolvía la API.
+
 ## 1.9.4 · 2026-10-14 · Gesto del menú desde más lejos del borde
 - **Gesto del menú desde más lejos del borde:** la zona donde puede empezar el deslizamiento para abrir el menú pasa del 35 % al **40 % del ancho** de la pantalla (156 px en un móvil de 390 px), y **ahora también funciona si el dedo empieza sobre un campo de texto sin foco** (p. ej. el buscador de inicio o el filtro de «Mi lista», que ocupan todo el ancho). Con el campo enfocado el gesto no actúa, porque se usa para seleccionar texto.
 - Comprobado con toques reales en Edge: abre empezando al 5, 15, 30 y 38 % del ancho y no al 45 ni al 60 %; sobre un campo sin foco abre y con foco no; el resto de reglas (vertical, corto, lento, filas con scroll, diálogos, escritorio) sigue igual.

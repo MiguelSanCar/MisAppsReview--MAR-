@@ -14,6 +14,13 @@ import { ListGrid } from './ListViews';
 /** Dirección única de un perfil: la misma para todo el mundo. */
 export const profileUrl = (username: string) => `${window.location.origin}/perfil/${encodeURIComponent(username)}`;
 
+/** Horas totales vistas, en texto: «1.234 horas vistas» (con un decimal por debajo de 10 h). */
+export function hoursText(totalMinutes: number): string {
+  const h = Math.max(0, totalMinutes) / 60;
+  const n = h < 10 ? Math.round(h * 10) / 10 : Math.round(h);
+  return `${n.toLocaleString('es-ES', { maximumFractionDigits: 1 })} ${n === 1 ? 'hora vista' : 'horas vistas'}`;
+}
+
 export function ProfileView({
   profile, own, listEndpoint, canOpen,
 }: { profile: ProfileData; own?: boolean; listEndpoint?: string | null; canOpen: boolean }) {
@@ -46,6 +53,7 @@ export function ProfileView({
         <div className="stat big">
           <span className="muted">Tiempo visto</span>
           <strong>{stats.watchTime.text}</strong>
+          <span className="stat-hours">{hoursText(stats.totalMinutes)}</span>
           <span className="muted small">{stats.episodes} episodios vistos</span>
         </div>
         {STATUSES.map((s) => (
