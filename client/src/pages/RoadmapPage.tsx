@@ -56,7 +56,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
       </button>
       {open && (
         <ul className="tasks">
-          {feature.tasks.map((t) => (
+          {[...feature.tasks].reverse().map((t) => (
             <li key={t.id} className={`task st-${t.status}`}>
               <i className="dot" />
               <span className="task-main">
@@ -77,7 +77,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
 
 function PhaseColumn({ phase, filter }: { phase: Phase; filter: Filter }) {
   const stats = countTasks(allTasks(phase.features));
-  const features = phase.features.filter((f) => filter === 'todas' || featureStatus(f) === filter);
+  const features = [...phase.features].reverse().filter((f) => filter === 'todas' || featureStatus(f) === filter);
   return (
     <section className="col">
       <header className="col-head">
@@ -138,7 +138,7 @@ export default function RoadmapPage() {
       {error && <p className="rm-error">{error}</p>}
       <IdeasBox />
       <main className="cols">
-        {data?.phases.map((p) => <PhaseColumn key={p.id} phase={p} filter={filter} />)}
+        {data && [...data.phases].reverse().map((p) => <PhaseColumn key={p.id} phase={p} filter={filter} />)}
       </main>
     </div>
   );

@@ -1837,7 +1837,7 @@
     {
       "id": "f21",
       "name": "Fase 21 · Retoques menores",
-      "release": "1.x",
+      "release": "1.9.2",
       "summary": "Mejoras de baja prioridad",
       "features": [
         {
@@ -1848,15 +1848,15 @@
             {
               "id": "21.1",
               "title": "Roadmap: orden inverso (lo que se está haciendo o falta por hacer primero y lo ya hecho al final), también en las columnas y en las tareas de cada tarjeta",
-              "status": "pendiente",
+              "status": "hecho",
               "note": "Prioridad baja; se hace al terminar las fases 18 y 19",
-              "eta": "2026-11-02"
+              "eta": "2026-10-14"
             }
           ]
         }
       ]
     }
   ],
-  "release": "1.9.1",
+  "release": "1.9.2",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

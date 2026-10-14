@@ -2,6 +2,10 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.9.2 · 2026-10-14 · Roadmap en orden inverso
+- **Roadmap en orden inverso (21.1):** la página `/roadmap` muestra ahora **lo más reciente primero**: las columnas van de la última fase (la que se está haciendo) a la primera, las tarjetas de cada fase de la última a la primera y las tareas de cada tarjeta también, de modo que lo que está en marcha o pendiente se ve antes que lo ya hecho (en el móvil, donde las columnas pasan a vertical, la primera es la más reciente). Los filtros por estado y el refresco automático no cambian. Solo cambia la presentación: `roadmap.json` conserva su orden natural.
+- Comprobado en Edge real: 22 fases de la «Fase 21» a la «Fase 0», tareas invertidas dentro de una tarjeta, filtros y móvil.
+
 ## 1.9.1 · 2026-10-14 · Documentación para GitHub
 - **README profesional para GitHub (20.5):** reescrito en tercera persona (sin dirigirse al autor ni mencionar su entorno): qué es MAR, enlace a la demostración y a la hoja de ruta, **capturas** (móvil y escritorio, oscuro y claro), funcionalidades agrupadas, pila tecnológica, diagrama de arquitectura (Mermaid), puesta en marcha, configuración, scripts, pruebas, despliegue, estructura del repositorio, índice de documentación, versiones y limitaciones conocidas, créditos y atribuciones (incluida la de TMDB) y nota de licencia. La insignia de versión se lee de `package.json`.
 - **Documentación complementaria (20.6):** `docs/ARQUITECTURA.md` (componentes, datos, proveedores y resiliencia, reglas de negocio, seguridad, cliente), `docs/API.md` (referencia de todos los endpoints con parámetros y ejemplos), `docs/DESARROLLO.md` (requisitos, scripts, pruebas, servidor simulado, convenciones, solución de problemas y trampas conocidas; recoge lo que antes estaba en el README) y `docs/historico/` para el encargo inicial y el borrador de roadmap. `.env.example` y `docs/DESPLIEGUE.md` incluyen `TMDB_REGION`.
