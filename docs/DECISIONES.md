@@ -127,3 +127,14 @@
 | **Solo series y películas** | Jikan (anime) no ofrece plataformas, estudios por id ni filtros equivalentes de forma fiable. |
 | **Nota mínima ⇒ ≥ 150 votos** | Sin un mínimo de votos, ordenar por nota devuelve títulos desconocidos con un único 10. |
 | **Años se aplican al escribir 4 cifras válidas, nunca inválidos** | Evita peticiones con 1, 2 o 3 cifras mientras se teclea y deja el error visible sin tocar el servidor. |
+
+## Temporadas (fase 19)
+
+| Decisión | Motivo |
+|---|---|
+| **El progreso sigue siendo un número de episodios vistos** | El contador, las estadísticas, el revisionado y las listas conjuntas ya se basan en él. Las temporadas son una **vista** sobre ese número: los episodios se marcan por orden hasta el visto, y pulsar uno lo fija (pulsar el último visto lo desmarca). No hay un registro por episodio, así que no se puede «saltar» uno. |
+| **Estructura en `content.seasons` (migración 12), tomada de TMDB** | `/tv/{id}` ya devuelve las temporadas y sus episodios. Se guardan sin los especiales (temporada 0) y las series guardadas antes se completan al abrir su ficha. |
+| **`normalizeSeasons`: la suma debe coincidir con el total** | TMDB a veces no cuadra (episodios de más o de menos). El total es lo que cuenta el progreso: si sobran, se recortan los últimos; si faltan, se añaden a la última temporada. |
+| **Anime y series sin datos: una sola sección «Episodios»** | Jikan no aporta temporadas; es mejor una lista única que inventarlas. |
+| **«Temporadas vistas» = temporadas completas** | Se cuenta una temporada cuando todos sus episodios están vistos. En un revisionado se usa el mayor entre el visionado actual y los anteriores (ya se vio todo una vez), no se suman dos veces. Sin estructura, una serie o anime terminado cuenta como 1; las películas, 0. |
+| **Temporadas plegables, abierta la que toca ver** | Series largas tienen cientos de episodios: solo se pintan los botones de las secciones abiertas. |

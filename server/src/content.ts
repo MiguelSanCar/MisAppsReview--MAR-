@@ -1,6 +1,7 @@
 import { all, get, run } from './db';
 import { HttpError } from './http';
 import type { ContentType } from './domain/rules';
+import { normalizeSeasons, parseSeasons, Season } from './domain/seasons';
 import { config } from './config';
 import { detailJikan, searchJikan, trendingJikan } from './providers/jikan';
 import { detailTmdb, searchTmdb, tmdbAvailable, trendingTmdb } from './providers/tmdb';
@@ -26,6 +27,8 @@ export interface ContentRow {
   ratings_try_at: string | null;
   /** JSON con ids de género de TMDB; null = sin consultar. */
   genres: string | null;
+  /** JSON [{number, episodes}]; null = sin consultar. */
+  seasons: string | null;
 }
 
 export interface ContentDto {
@@ -42,6 +45,8 @@ export interface ContentDto {
   studio: string | null;
   ratings: Ratings;
   imdbUrl: string | null;
+  /** Temporadas de la serie ajustadas a su total de episodios; null si no hay estructura (anime, películas, sin datos). */
+  seasons: Season[] | null;
 }
 
 const nowIso = () => new Date().toISOString();
@@ -62,6 +67,7 @@ export function toDto(r: ContentRow): ContentDto {
     studio: r.studio,
     ratings: r.ratings ? JSON.parse(r.ratings) : {},
     imdbUrl: r.imdb_id ? `https://www.imdb.com/title/${r.imdb_id}/` : null,
+    seasons: normalizeSeasons(parseSeasons(r.seasons), r.total_episodes),
   };
 }
 
@@ -113,12 +119,27 @@ export async function ensureCore(row: ContentRow): Promise<ContentRow> {
   run(
     `UPDATE content SET title = ?, poster_url = COALESCE(?, poster_url), synopsis = COALESCE(?, synopsis),
        year = COALESCE(?, year), total_episodes = ?, runtime_minutes = ?, studio = ?, imdb_id = COALESCE(?, imdb_id),
-       genres = COALESCE(?, genres), detailed_at = ? WHERE id = ?`,
-    [d.title, d.posterUrl, d.synopsis, d.year, d.totalEpisodes, d.runtimeMinutes, d.studio, d.imdbId ?? null, d.genres?.length ? JSON.stringify(d.genres) : null, nowIso(), row.id],
+       genres = COALESCE(?, genres), seasons = COALESCE(?, seasons), detailed_at = ? WHERE id = ?`,
+    [d.title, d.posterUrl, d.synopsis, d.year, d.totalEpisodes, d.runtimeMinutes, d.studio, d.imdbId ?? null, d.genres?.length ? JSON.stringify(d.genres) : null, d.seasons ? JSON.stringify(d.seasons) : null, nowIso(), row.id],
   );
   const mal = malText(d.malScore);
   if (mal) run('UPDATE content SET ratings = ?, ratings_at = ? WHERE id = ?', [JSON.stringify({ mal }), nowIso(), row.id]);
   return getContent(row.id)!;
+}
+
+/**
+ * Las series guardadas antes de existir la columna `seasons` no tienen estructura: se completa la primera vez que se
+ * abre su ficha (el detalle de TMDB ya está en caché de 7 días). Si TMDB no da temporadas se guarda [] para no insistir.
+ */
+export async function ensureSeasons(row: ContentRow): Promise<ContentRow> {
+  if (row.seasons != null || row.source !== 'tmdb' || row.type !== 'serie' || !row.detailed_at) return row;
+  try {
+    const d = await detailTmdb(row.external_id);
+    run('UPDATE content SET seasons = ? WHERE id = ?', [JSON.stringify(d.seasons ?? []), row.id]);
+    return getContent(row.id)!;
+  } catch {
+    return row; // se reintentará la próxima vez
+  }
 }
 
 /** IMDb + Rotten Tomatoes vía OMDb (series y películas). Si falla, reintenta pasados 10 minutos. */

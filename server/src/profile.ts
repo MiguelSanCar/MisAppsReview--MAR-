@@ -1,6 +1,7 @@
 import { all } from './db';
 import { formatDuration } from './domain/time';
 import { minutesWatched, Status, STATUSES } from './domain/rules';
+import { normalizeSeasons, parseSeasons, seasonsWatchedOf } from './domain/seasons';
 import { toItem, UserContentRow } from './library';
 import { getUser, publicUser } from './users';
 
@@ -15,6 +16,7 @@ export function buildProfile(userId: number) {
 
   let totalMinutes = 0;
   let episodes = 0;
+  let seasonsWatched = 0;
   const byStatus = Object.fromEntries(STATUSES.map((s) => [s, 0])) as Record<Status, number>;
   const byType: Record<string, number> = { serie: 0, pelicula: 0, anime: 0 };
   for (const r of rows) {
@@ -23,6 +25,10 @@ export function buildProfile(userId: number) {
     totalMinutes += minutesWatched(r.type, seen, r.runtime_minutes);
     episodes += seen;
     byStatus[r.status]++;
+    seasonsWatched += seasonsWatchedOf({
+      type: r.type, status: r.status, watched: r.watched_episodes, previous: r.prev_episodes,
+      seasons: normalizeSeasons(parseSeasons(r.seasons), r.total_episodes),
+    });
     // «Terminadas»: finalizadas ahora o ya terminadas antes (está reviéndolas)
     if (r.status === 'FINALIZADO' || r.prev_episodes > 0) byType[r.type]++;
   }
@@ -39,6 +45,8 @@ export function buildProfile(userId: number) {
       totalMinutes,
       watchTime: formatDuration(totalMinutes),
       episodes,
+      /** Temporadas completas vistas (series con estructura de TMDB; una serie o anime terminado sin ella cuenta como 1). */
+      seasonsWatched,
       byStatus,
       finishedByType: byType,
     },

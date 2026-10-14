@@ -4,6 +4,7 @@ import { api, errorText } from '../api';
 import { Emoji } from '../components/Emoji';
 import { PosterImage } from '../components/PosterCard';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { SeasonList } from '../components/SeasonList';
 import { EpisodeCounter, RatingBadges, StatusPicker } from '../components/Tracker';
 import { useToast } from '../components/Toast';
 import { ErrorBox, Icon, Spinner } from '../components/ui';
@@ -100,6 +101,9 @@ export default function ContentPage() {
           <p className="muted small">
             {c.type === 'pelicula' ? 'Una película cuenta como 1 episodio.' : 'Si escribes un número mayor al total, se fija el máximo y pasa a Finalizado.'}
           </p>
+          {c.type !== 'pelicula' && (
+            <SeasonList key={c.id} seasons={c.seasons ?? null} total={c.totalEpisodes} watched={state?.watched ?? 0} disabled={busy} onSet={(n) => update('episodes', { watched: n })} />
+          )}
           <Link to="/home" className="small">Buscar otro título</Link>
         </div>
       </div>

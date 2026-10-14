@@ -27,6 +27,7 @@ const finished = (p: Profile) => p.stats.finishedByType.serie + p.stats.finished
 const METRICS: Metric[] = [
   { key: 'time', label: 'Tiempo visto', value: (p) => p.stats.totalMinutes, text: (p) => p.stats.watchTime.text },
   { key: 'episodes', label: 'Episodios vistos', value: (p) => p.stats.episodes },
+  { key: 'seasons', label: 'Temporadas vistas', value: (p) => p.stats.seasonsWatched },
   { key: 'finished', label: 'Terminadas', value: finished },
   { key: 'serie', label: 'Series terminadas', value: (p) => p.stats.finishedByType.serie },
   { key: 'pelicula', label: 'Películas terminadas', value: (p) => p.stats.finishedByType.pelicula },

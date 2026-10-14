@@ -18,6 +18,8 @@ export interface ProviderItem {
   malScore?: number | null;
   /** Ids de género de TMDB (series y películas; Jikan no los aporta). */
   genres?: number[];
+  /** Temporadas de una serie de TMDB (sin la 0, que son especiales). */
+  seasons?: { number: number; episodes: number }[];
   /** Nota media de TMDB (0-10) en resultados de descubrimiento. */
   voteAverage?: number | null;
 }

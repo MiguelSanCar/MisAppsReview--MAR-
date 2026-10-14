@@ -189,4 +189,12 @@ export const MIGRATIONS: { version: number; name: string; sql: string }[] = [
       ALTER TABLE content ADD COLUMN genres TEXT;
     `,
   },
+  {
+    version: 12,
+    name: 'temporadas',
+    sql: `
+      -- seasons: JSON con [{number, episodes}] de cada serie (sin especiales); NULL = aún no consultado, [] = sin datos.
+      ALTER TABLE content ADD COLUMN seasons TEXT;
+    `,
+  },
 ];

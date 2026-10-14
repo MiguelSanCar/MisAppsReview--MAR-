@@ -4,7 +4,7 @@ import { run, transaction } from '../db';
 import { ah, HttpError, parse } from '../http';
 import { requireAuth, uid } from './auth';
 import {
-  ensureRatings, getContent, loadCore, loadContent, search, searchStatus, toDto, trending, SearchType,
+  ensureRatings, ensureSeasons, getContent, loadCore, loadContent, search, searchStatus, toDto, trending, SearchType,
 } from '../content';
 import {
   applyEpisodes, applyFavorite, applyStatus, CONTENT_TYPES, ItemState, STATUSES,
@@ -70,6 +70,7 @@ contentRouter.get(
     const id = idParam(req.params.id);
     let row = await loadCore(id);
     row = await ensureRatings(row);
+    row = await ensureSeasons(row);
     res.json({ content: toDto(row), state: getState(uid(req), id) ?? null });
   }),
 );

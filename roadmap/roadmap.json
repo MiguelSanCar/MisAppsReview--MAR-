@@ -1632,8 +1632,8 @@
     {
       "id": "f19",
       "name": "Fase 19 · Temporadas y pulido móvil",
-      "release": "1.x",
-      "summary": "Gesto para abrir el menú, episodios por temporadas, temporadas vistas en el perfil y retoques de «Mi lista» y del menú en el móvil",
+      "release": "1.9.0",
+      "summary": "Gesto para abrir el menú, episodios por temporadas, temporadas vistas en el perfil y retoques de «Mi lista» y del menú en el móvil (versiones 1.6.4 a 1.9.0)",
       "features": [
         {
           "id": "f19-gesto",
@@ -1675,26 +1675,26 @@
             {
               "id": "19.4",
               "title": "Migración 12: estructura de temporadas de cada serie (número de temporada y episodios), tomada de TMDB y guardada con relleno perezoso de lo ya existente",
-              "status": "pendiente",
-              "eta": "2026-10-29"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "19.5",
               "title": "Ficha: secciones «Temporada 1», «Temporada 2»… con sus episodios debajo; los botones + y − y el contador siguen igual y marcan los episodios vistos por orden; al pulsar un episodio se fija el progreso hasta ahí. Anime y series sin datos: una sola sección «Episodios»",
-              "status": "pendiente",
-              "eta": "2026-10-29"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "19.6",
               "title": "Tests de la estructura de temporadas y del progreso por episodio",
-              "status": "pendiente",
-              "eta": "2026-10-29"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "19.7",
               "title": "Estadística nueva en el perfil: «Temporadas vistas» (temporadas con todos sus episodios vistos, sumando visionados anteriores); también en la comparación de perfiles y con test",
-              "status": "pendiente",
-              "eta": "2026-10-30"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
@@ -1724,8 +1724,8 @@
             {
               "id": "19.11",
               "title": "Capturas en móvil y escritorio, en claro y oscuro, y despliegue",
-              "status": "pendiente",
-              "eta": "2026-10-30"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
@@ -1736,9 +1736,9 @@
           "tasks": [
             {
               "id": "19.12",
-              "title": "Documentación (README, CHANGELOG, DECISIONES), versión 1.2.0 y despliegue comprobado en https://mar.fly.dev",
-              "status": "pendiente",
-              "eta": "2026-10-30"
+              "title": "Documentación (CHANGELOG, DECISIONES, README), versiones 1.7.0 a 1.9.0 y despliegue comprobado en https://mar.fly.dev",
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         }
@@ -1857,6 +1857,6 @@
       ]
     }
   ],
-  "release": "1.7.0",
+  "release": "1.9.0",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

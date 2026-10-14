@@ -55,6 +55,10 @@ export function ProfileView({
           </div>
         ))}
         <div className="stat">
+          <span className="muted">Temporadas vistas</span>
+          <strong>{stats.seasonsWatched ?? 0}</strong>
+        </div>
+        <div className="stat">
           <span className="muted">Terminadas</span>
           <ul className="mini-list">
             <li><b>{stats.finishedByType.serie}</b> series</li>

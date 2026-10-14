@@ -541,3 +541,20 @@ a, button, .chip, .tab, label.file-btn { touch-action: manipulation; } /* sin re
 
 /* Gesto de menú: sin esto, deslizar horizontalmente puede disparar «atrás» del navegador (desbordamiento del historial) */
 html, body { overscroll-behavior-x: none; }
+
+/* ---------- episodios por temporadas (ficha) ---------- */
+.seasons { display: grid; gap: 8px; margin: 18px 0 8px; }
+.season { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
+.season > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; cursor: pointer; list-style: none; min-height: 48px; }
+.season > summary::-webkit-details-marker { display: none; }
+.season > summary::before { content: '▸'; color: var(--muted); margin-right: 8px; display: inline-block; transition: transform .15s; }
+.season[open] > summary::before { transform: rotate(90deg); }
+.season > summary .season-name { font-weight: 600; flex: 1; }
+.season-progress { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 0.9rem; }
+.season.done .season-progress { color: var(--done); font-weight: 700; }
+.eps { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 6px; padding: 4px 12px 14px; }
+.ep { min-height: 42px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg-2); color: var(--muted); font: inherit; font-size: 0.9rem; cursor: pointer; font-variant-numeric: tabular-nums; }
+.ep:hover:not(:disabled) { border-color: var(--accent); color: var(--text); }
+.ep.on { background: var(--done); border-color: var(--done); color: var(--on-accent); font-weight: 700; }
+.ep:disabled { opacity: .6; cursor: not-allowed; }
+@media (pointer: coarse) { .ep { min-height: 44px; } }

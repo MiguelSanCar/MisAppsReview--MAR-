@@ -88,6 +88,9 @@ export async function detailTmdb(externalId: string): Promise<ProviderItem> {
     studio,
     imdbId: (isMovie ? r.imdb_id : r.external_ids?.imdb_id) || null,
     genres: Array.isArray(r.genres) ? r.genres.map((g: any) => g.id).filter((n: any) => Number.isInteger(n)) : undefined,
+    seasons: isMovie ? undefined : (Array.isArray(r.seasons) ? r.seasons : [])
+      .filter((s: any) => s.season_number > 0 && s.episode_count > 0)
+      .map((s: any) => ({ number: s.season_number, episodes: s.episode_count })),
   };
 }
 

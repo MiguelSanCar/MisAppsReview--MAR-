@@ -26,7 +26,11 @@ export interface Content {
   studio: string | null;
   ratings: Ratings;
   imdbUrl: string | null;
+  /** Temporadas de la serie (ajustadas a su total); null si no hay estructura. */
+  seasons?: Season[] | null;
 }
+
+export interface Season { number: number; episodes: number }
 
 export interface UserState {
   status: Status;
@@ -64,6 +68,8 @@ export interface Profile {
     totalMinutes: number;
     watchTime: WatchTime;
     episodes: number;
+    /** Temporadas completas vistas. */
+    seasonsWatched: number;
     byStatus: Record<Status, number>;
     finishedByType: Record<ContentType, number>;
   };

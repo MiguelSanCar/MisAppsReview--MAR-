@@ -57,6 +57,7 @@ export function startMockProviders(): Promise<{ base: string; close: () => Promi
           first_air_date: '2008-01-20', poster_path: '/bb.jpg', production_companies: [{ name: 'Sony' }],
           networks: [{ name: 'AMC' }], external_ids: { imdb_id: 'tt0903747' },
           genres: [{ id: 18, name: 'Drama' }, { id: 80, name: 'Crimen' }],
+          seasons: [{ season_number: 0, episode_count: 3 }, { season_number: 1, episode_count: 7 }, { season_number: 2, episode_count: 13 }, { season_number: 3, episode_count: 13 }, { season_number: 4, episode_count: 13 }, { season_number: 5, episode_count: 16 }],
         });
       }
       const GENRES: Record<string, Record<number, string>> = {

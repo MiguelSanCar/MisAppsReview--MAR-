@@ -2,6 +2,15 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.9.0 · 2026-10-14 · Temporadas vistas en el perfil
+- **Temporadas vistas en el perfil (19.7):** nueva estadística **«Temporadas vistas»** en el perfil (propio y de otras personas) con el número de temporadas completas que ha visto la persona; en un revisionado no se cuentan dos veces; sin estructura, una serie o anime terminado cuenta como 1 y las películas, 0. También es una fila nueva de **«Comparar perfil»** (`seasons`) y viaja en `stats.seasonsWatched` de la API.
+- Ver DECISIONES (Temporadas) para las reglas de cálculo.
+
+## 1.8.0 · 2026-10-14 · Episodios por temporadas
+- **Episodios por temporadas (19.4–19.6):** la ficha de una serie muestra secciones **«Temporada 1», «Temporada 2»…** con sus episodios debajo, como botones numerados. **Los botones + y − y el contador siguen igual**: los episodios se marcan por orden hasta el número de vistos, cada temporada indica su progreso (`5/7`, y `✓ 7/7` al completarla) y **pulsar un episodio fija el progreso hasta ahí** (pulsar el último visto lo desmarca). Se abre por defecto la temporada que toca ver; las demás se pliegan. Anime y series sin datos de temporadas tienen una sola sección «Episodios»; las películas, ninguna.
+- **Datos:** migración 12 (`content.seasons`), tomada de TMDB sin los especiales; las series guardadas antes se completan al abrir su ficha. `normalizeSeasons` ajusta la suma al total de episodios (recorta o amplía la última temporada). API: la ficha (`GET /api/content/:id`) devuelve `seasons`.
+- 14 tests nuevos (`server/tests/seasons.test.ts`): reglas puras, ficha, relleno de lo antiguo, progreso, perfil, revisionado, borrado, comparación y migración; y comprobación en Edge real (estructura, pulsar episodios, desmarcar, retroceder, terminar la serie, anime con 220 episodios, película sin temporadas).
+
 ## 1.7.0 · 2026-10-14 · Menú con gesto táctil
 - **Gesto para abrir el menú (19.1):** en el móvil, **deslizar el dedo de izquierda a derecha** empezando en el tercio izquierdo de la pantalla **abre el menú lateral**, y **deslizar hacia la izquierda lo cierra** (también desde la zona oscura de la derecha). Hook `client/src/hooks/useSwipeMenu.ts`, activo solo cuando el menú es un cajón (< 900 px).
 - **Sin interferencias (19.2):** el gesto se descarta si es sobre todo vertical (scroll), corto (< 70 px) o lento (> 0,9 s); no actúa sobre campos de texto, el recorte de foto ni con un diálogo abierto; y respeta las filas con scroll lateral: si el dedo empieza sobre una que puede desplazarse, el gesto es suyo; solo si ya está en su inicio y se desliza hacia la derecha (no puede ir a ningún sitio) se abre el menú. En pantallas anchas (menú fijo) no hace nada.

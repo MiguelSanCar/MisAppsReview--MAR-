@@ -24,22 +24,22 @@ const befriend = async (a: Client, b: Client) => {
 };
 
 describe('comparación pura', () => {
-  const profile = (minutes: number, byStatus: any, fin: any, favs = 0): any => ({
+  const profile = (minutes: number, byStatus: any, fin: any, favs = 0, seasons = 0): any => ({
     user: { username: 'x' },
-    stats: { totalMinutes: minutes, watchTime: { text: `${minutes} min` }, episodes: minutes / 50, byStatus, finishedByType: fin },
+    stats: { totalMinutes: minutes, watchTime: { text: `${minutes} min` }, episodes: minutes / 50, seasonsWatched: seasons, byStatus, finishedByType: fin },
     favorites: new Array(favs).fill({}),
   });
   const st = (v: number, p: number, d: number) => ({ VIENDO: v, POR_VER: p, DEJADO: d, FINALIZADO: 0 });
 
   it('gana quien tiene más en cada fila, y los empates no ganan nadie', () => {
     const rows = compareProfiles(
-      profile(500, st(2, 1, 0), { serie: 3, pelicula: 0, anime: 1 }, 2),
-      profile(300, st(2, 4, 1), { serie: 1, pelicula: 2, anime: 1 }, 2),
+      profile(500, st(2, 1, 0), { serie: 3, pelicula: 0, anime: 1 }, 2, 6),
+      profile(300, st(2, 4, 1), { serie: 1, pelicula: 2, anime: 1 }, 2, 3),
     );
     const w = Object.fromEntries(rows.map((r) => [r.key, r.winner]));
-    expect(w).toMatchObject({ time: 'me', episodes: 'me', serie: 'me', pelicula: 'them', anime: 'tie', viendo: 'tie', porver: 'them', dejado: 'them', favorites: 'tie', finished: 'tie' });
+    expect(w).toMatchObject({ time: 'me', episodes: 'me', seasons: 'me', serie: 'me', pelicula: 'them', anime: 'tie', viendo: 'tie', porver: 'them', dejado: 'them', favorites: 'tie', finished: 'tie' });
     expect(rows.find((r) => r.key === 'time')).toMatchObject({ meText: '500 min', themText: '300 min' });
-    expect(summarize(rows)).toEqual({ me: 3, them: 3, ties: 4 });
+    expect(summarize(rows)).toEqual({ me: 4, them: 3, ties: 4 });
   });
 });
 
