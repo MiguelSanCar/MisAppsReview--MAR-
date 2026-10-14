@@ -1771,20 +1771,20 @@
             {
               "id": "20.2",
               "title": "Portada: solo «Series del momento» (y las películas / el anime según el filtro) con scroll lateral; «Series que has podido ver» vuelve a ser una rejilla con scroll vertical",
-              "status": "pendiente",
-              "eta": "2026-10-31"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "20.3",
               "title": "API de recomendaciones paginada: cada página pide más candidatos de tus géneros con más afinidad, sin repetir los ya mostrados",
-              "status": "pendiente",
-              "eta": "2026-10-31"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "20.4",
               "title": "Al llegar al final de la rejilla de recomendaciones se cargan más automáticamente (con botón «Cargar más» de reserva); tests y comprobación en navegador",
-              "status": "pendiente",
-              "eta": "2026-10-31"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
@@ -1838,6 +1838,6 @@
       ]
     }
   ],
-  "release": "1.6.0",
+  "release": "1.6.1",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

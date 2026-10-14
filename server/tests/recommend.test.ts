@@ -157,6 +157,25 @@ describe('GET /api/recommendations', () => {
     expect(get<{ genres: string }>('SELECT genres FROM content WHERE id = ?', [bb.id])!.genres).toBe('[18,80]');
   });
 
+  it('pagina: cada página trae candidatos nuevos de tus géneros, sin repetir, hasta un máximo', async () => {
+    const p1 = await ana.get('/api/recommendations?type=serie');
+    const p2 = await ana.get('/api/recommendations?type=serie&page=2');
+    expect(p1.body.page).toBe(1);
+    expect(p1.body.hasMore).toBe(true);
+    expect(p2.status).toBe(200);
+    expect(p2.body.page).toBe(2);
+    expect(p2.body.items.length).toBeGreaterThan(0);
+    const ids1 = p1.body.items.map((i: any) => i.id);
+    expect(p2.body.items.filter((i: any) => ids1.includes(i.id))).toEqual([]); // la segunda página no repite la primera
+    expect(p2.body.items.map((i: any) => i.id)).not.toContain(bb.id); // y sigue excluyendo lo que ya tienes
+    const last = await ana.get('/api/recommendations?type=serie&page=5');
+    expect(last.body.hasMore).toBe(false); // límite de páginas
+  });
+
+  it('valida la página', async () => {
+    for (const q of ['page=0', 'page=6', 'page=x', 'page=1.5', 'page=-1']) expect((await ana.get('/api/recommendations?type=serie&' + q)).status, q).toBe(400);
+  });
+
   it('anime todavía no (Jikan no da géneros), tipo no válido y sin sesión', async () => {
     const r = await ana.get('/api/recommendations?type=anime');
     expect(r.body).toMatchObject({ reason: 'anime', items: [] });

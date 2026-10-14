@@ -114,7 +114,7 @@ export function startMockProviders(): Promise<{ base: string; close: () => Promi
         const out: any[] = [];
         for (const id of wg.split('|').map(Number)) {
           for (let i = 0; i < 6; i++) {
-            out.push({ id: id * 10 + i, [titleKey]: `${GENRES[kind][id] ?? 'Género ' + id} ${kind === 'tv' ? 'serie' : 'película'} ${i}`, poster_path: '/d.jpg', [dateKey]: '2022-02-02', original_language: 'en', genre_ids: i === 0 ? [id, 18] : [id], vote_average: 6.5 + i * 0.4 });
+            out.push({ id: (page - 1) * 100000 + id * 10 + i, [titleKey]: `${GENRES[kind][id] ?? 'Género ' + id} ${kind === 'tv' ? 'serie' : 'película'} ${page > 1 ? 'p' + page + '-' : ''}${i}`, poster_path: '/d.jpg', [dateKey]: '2022-02-02', original_language: 'en', genre_ids: i === 0 ? [id, 18] : [id], vote_average: 6.5 + i * 0.4 });
           }
         }
         if (kind === 'tv' && wg.split('|').includes('18')) out.unshift({ id: 1396, name: 'Breaking Bad', poster_path: '/bb.jpg', first_air_date: '2008-01-20', original_language: 'en', genre_ids: [18, 80], vote_average: 9.5 });

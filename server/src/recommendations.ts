@@ -11,6 +11,8 @@ const TK: Record<Kind, TmdbKind> = { serie: 'tv', pelicula: 'movie' };
 const BACKFILL_MAX = 8;
 const TOP_GENRES = 3;
 const RESULTS = 20;
+/** Páginas de TMDB que se recorren como máximo por género (60 títulos por página y 3 géneros). */
+export const MAX_RECO_PAGES = 5;
 
 interface Row { id: number; source: string; external_id: string; type: ContentType; genres: string | null; status: Status; is_favorite: number }
 
@@ -23,6 +25,9 @@ export interface Recommendations {
   items: (ContentDto & { why: string | null })[];
   /** Los géneros con más afinidad (para entender de dónde salen las recomendaciones). */
   genres: RecoGenre[];
+  page: number;
+  /** Hay otra página con más candidatos de tus géneros. */
+  hasMore: boolean;
   warnings: string[];
 }
 
@@ -52,9 +57,9 @@ async function backfillGenres(rows: Row[]) {
 
 const parse = (g: string | null): number[] => { try { const v = JSON.parse(g ?? '[]'); return Array.isArray(v) ? v.filter((n) => Number.isInteger(n)) : []; } catch { return []; } };
 
-export async function recommend(userId: number, kind: 'serie' | 'pelicula' | 'anime'): Promise<Recommendations> {
+export async function recommend(userId: number, kind: 'serie' | 'pelicula' | 'anime', page = 1): Promise<Recommendations> {
   const title = kind === 'pelicula' ? 'Películas que has podido ver' : kind === 'anime' ? 'Anime que has podido ver' : 'Series que has podido ver';
-  const base = { kind, title, items: [], genres: [], warnings: [] as string[] };
+  const base = { kind, title, items: [], genres: [], warnings: [] as string[], page, hasMore: false };
   // Jikan no aporta géneros: por ahora no hay recomendaciones de anime
   if (kind === 'anime') return { ...base, reason: 'anime' };
   if (!tmdbAvailable()) return { ...base, reason: 'sin_tmdb' };
@@ -77,7 +82,7 @@ export async function recommend(userId: number, kind: 'serie' | 'pelicula' | 'an
 
   const top = scores.slice(0, TOP_GENRES);
   const warnings: string[] = [];
-  const lists = await Promise.all(top.map((g) => discoverTmdb(TK[kind], { genres: [g.id], quality: true }).catch(() => { warnings.push('TMDB no respondió a una de las consultas de recomendaciones.'); return [] as ProviderItem[]; })));
+  const lists = await Promise.all(top.map((g) => discoverTmdb(TK[kind], { genres: [g.id], quality: true, page }).catch(() => { warnings.push('TMDB no respondió a una de las consultas de recomendaciones.'); return [] as ProviderItem[]; })));
 
   const owned = new Set(rows.map((r) => r.external_id));
   const seen = new Set<string>();
@@ -98,5 +103,7 @@ export async function recommend(userId: number, kind: 'serie' | 'pelicula' | 'an
     return { ...toDto(upsertFromProvider(c.item)), why: best != null && aff.has(best) ? names[best] ?? null : null };
   });
   const genres: RecoGenre[] = top.map((g) => ({ id: g.id, name: names[g.id] ?? `Género ${g.id}`, score: +g.score.toFixed(3), lift: +g.lift.toFixed(3), userShare: +g.userShare.toFixed(3), marketShare: +g.marketShare.toFixed(3), weight: +g.weight.toFixed(2) }));
-  return { ...base, items, genres, warnings, reason: null };
+  // Más páginas mientras TMDB siga devolviendo candidatos y no se supere el límite
+  const hasMore = page < MAX_RECO_PAGES && lists.some((l) => l.length > 0);
+  return { ...base, items, genres, warnings, reason: null, hasMore };
 }

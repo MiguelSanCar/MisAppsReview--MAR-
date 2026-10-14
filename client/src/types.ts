@@ -117,6 +117,8 @@ export interface Recommendations {
   reason: 'sin_tmdb' | 'sin_datos' | 'anime' | null;
   items: (Content & { why: string | null })[];
   genres: RecoGenre[];
+  page: number;
+  hasMore: boolean;
   states: Record<number, UserState | null | undefined>;
   warnings: string[];
 }
