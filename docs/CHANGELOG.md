@@ -2,6 +2,10 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.6.2 · 2026-10-14 · Búsqueda: error de años sin interrumpir al escribir
+- **Filtro de años de la búsqueda avanzada (20.8):** ya no salta el error mientras se escribe (antes aparecía al teclear la primera cifra de «Año desde»). Ahora no se avisa ni se busca con un año a medias; la búsqueda se lanza sola en cuanto el rango es coherente (cuatro cifras válidas o vacío, y el inicial no mayor que el final). El error aparece solo **al salir del campo** o al pulsar el nuevo botón **«Buscar»** (o Intro) con datos incoherentes, y desaparece al corregirlos. Se marca únicamente el campo que falla, y el aviso queda separado de los campos del formulario. «Buscar» con datos coherentes los aplica al momento y, en el móvil, pliega los filtros para ver los resultados.
+- Comprobado en Edge real: 22 comprobaciones (escritura progresiva sin error ni petición, aviso al salir del campo, separación de 18 px, «Buscar» e Intro con rango incoherente sin llamar al servidor, corrección que limpia el error y busca, sin errores de JavaScript).
+
 ## 1.6.1 · 2026-10-14 · Portada: recomendaciones en vertical
 - **Portada (20.2–20.4):** solo la fila de lo más visto («Series del momento», «Películas del momento» o «Anime del momento», según el filtro) tiene scroll lateral. **«Series que has podido ver» vuelve a ser una rejilla con scroll vertical** y, al llegar al final, **carga más recomendaciones** automáticamente (con «Cargar más» de reserva) hasta agotar los candidatos o llegar a 5 páginas. Cada página pide a TMDB la siguiente tanda de títulos de tus géneros con más afinidad y no repite lo mostrado ni lo que ya tienes; cambiar el filtro (Series / Películas) reinicia la rejilla.
 - **API:** `GET /api/recommendations?type=…&page=1..5` devuelve además `page` y `hasMore`; una página fuera de rango es un 400.

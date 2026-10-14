@@ -506,3 +506,7 @@ a, button, .chip, .tab, label.file-btn { touch-action: manipulation; } /* sin re
 .adv-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
 .adv-filters input[aria-invalid="true"] { border-color: var(--danger); }
 .adv-filters[hidden] { display: none; }
+
+.adv-year-error { margin: 18px 0 0; }
+.adv-actions { gap: 10px; margin-top: 16px; }
+.adv-results-anchor, #adv-results { scroll-margin-top: 70px; }

@@ -75,20 +75,33 @@ export default function AdvancedSearchPage() {
     return () => c.abort();
   }, [dStudio]);
 
-  // Años: se aplican al escribir 4 cifras válidas (o al vaciar el campo)
+  // Años: mientras se escribe no se avisa de nada ni se busca. Se aplican solos cuando son coherentes (4 cifras
+  // válidas o vacío, y el inicial no mayor que el final); el error solo aparece al salir del campo o al pulsar «Buscar».
   const [yf, setYf] = useState(yearFrom);
   const [yt, setYt] = useState(yearTo);
+  const [showYearError, setShowYearError] = useState(false);
   // Cada campo se sincroniza por separado: al confirmarse uno no se debe pisar lo que se escribe en el otro
   useEffect(() => { setYf(yearFrom); }, [yearFrom]);
   useEffect(() => { setYt(yearTo); }, [yearTo]);
+  const coherent = (yf === '' || isYear(yf)) && (yt === '' || isYear(yt)) && !(isYear(yf) && isYear(yt) && +yf > +yt);
   useEffect(() => {
-    const t = setTimeout(() => {
-      if (yf !== yearFrom && (yf === '' || isYear(yf))) set({ yearFrom: yf || undefined });
-      if (yt !== yearTo && (yt === '' || isYear(yt))) set({ yearTo: yt || undefined });
-    }, 450);
+    if (coherent) setShowYearError(false);
+    if (!coherent || (yf === yearFrom && yt === yearTo)) return;
+    const t = setTimeout(() => set({ yearFrom: yf || undefined, yearTo: yt || undefined }), 450);
     return () => clearTimeout(t);
-  }, [yf, yt, yearFrom, yearTo, set]);
-  const yearsBad = (yf !== '' && !isYear(yf)) || (yt !== '' && !isYear(yt)) || (isYear(yf) && isYear(yt) && +yf > +yt);
+  }, [coherent, yf, yt, yearFrom, yearTo, set]);
+  const yearsError = showYearError && !coherent;
+  // Solo se marca el campo que falla (si el rango está al revés, los dos)
+  const reversed = isYear(yf) && isYear(yt) && +yf > +yt;
+  const fromBad = yearsError && ((yf !== '' && !isYear(yf)) || reversed);
+  const toBad = yearsError && ((yt !== '' && !isYear(yt)) || reversed);
+  /** Botón «Buscar» / Intro: si los años no son coherentes se avisa; si lo son, se aplican al momento. */
+  const submit = () => {
+    if (!coherent) { setShowYearError(true); return; }
+    set({ yearFrom: yf || undefined, yearTo: yt || undefined });
+    if (window.matchMedia('(max-width: 719px)').matches) setOpen(false); // en el móvil se pliegan los filtros para ver los resultados
+    document.getElementById('adv-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   // Resultados con scroll infinito
   const query = useCallback((page: number) => {
@@ -169,6 +182,7 @@ export default function AdvancedSearchPage() {
 
       <section id="adv-filters" className="panel adv-filters" hidden={!open} aria-label="Filtros">
         {listsError && <ErrorBox>{listsError}</ErrorBox>}
+        <form className="adv-form" onSubmit={(e) => { e.preventDefault(); submit(); }} noValidate>
         <div className="adv-grid">
           <label className="field">Ordenar por
             <select value={sort} onChange={(e) => set({ sort: e.target.value === 'popularity' ? undefined : e.target.value })}>
@@ -194,10 +208,10 @@ export default function AdvancedSearchPage() {
             </select>
           </label>
           <label className="field">Año desde
-            <input type="text" inputMode="numeric" maxLength={4} placeholder="p. ej. 2010" value={yf} onChange={(e) => setYf(e.target.value.replace(/\D/g, ''))} aria-invalid={yearsBad} />
+            <input type="text" inputMode="numeric" maxLength={4} placeholder="p. ej. 2010" value={yf} onChange={(e) => setYf(e.target.value.replace(/\D/g, ''))} onBlur={() => !coherent && setShowYearError(true)} aria-invalid={fromBad} aria-describedby={yearsError ? 'adv-year-error' : undefined} />
           </label>
           <label className="field">Año hasta
-            <input type="text" inputMode="numeric" maxLength={4} placeholder={String(thisYear)} value={yt} onChange={(e) => setYt(e.target.value.replace(/\D/g, ''))} aria-invalid={yearsBad} />
+            <input type="text" inputMode="numeric" maxLength={4} placeholder={String(thisYear)} value={yt} onChange={(e) => setYt(e.target.value.replace(/\D/g, ''))} onBlur={() => !coherent && setShowYearError(true)} aria-invalid={toBad} aria-describedby={yearsError ? 'adv-year-error' : undefined} />
           </label>
           <div className="field adv-studio">
             <label htmlFor="adv-studio-in">Estudio o productora</label>
@@ -219,13 +233,15 @@ export default function AdvancedSearchPage() {
             )}
           </div>
         </div>
-        {yearsBad && <p className="error-box" role="alert">Escribe años de 4 cifras y que el inicial no sea mayor que el final.</p>}
+        {yearsError && <p id="adv-year-error" className="error-box adv-year-error" role="alert">Escribe años de 4 cifras y que el inicial no sea mayor que el final.</p>}
         <div className="adv-actions">
-          <button className="btn ghost" onClick={clear} disabled={active === 0 && sort === 'popularity'}>Limpiar filtros</button>
+          <button type="button" className="btn ghost" onClick={clear} disabled={active === 0 && sort === 'popularity'}>Limpiar filtros</button>
+          <button type="submit" className="btn primary">Buscar</button>
         </div>
+        </form>
       </section>
 
-      <section aria-live="polite" aria-busy={!loaded || loadingMore}>
+      <section id="adv-results" aria-live="polite" aria-busy={!loaded || loadingMore}>
         {error && <ErrorBox>{error}</ErrorBox>}
         {!loaded && <Spinner text="Buscando…" />}
         {loaded && !error && !items.length && <p className="muted center">No hay resultados con estos filtros. Prueba a quitar alguno.</p>}

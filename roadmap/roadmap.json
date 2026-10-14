@@ -1812,6 +1812,25 @@
               "eta": "2026-11-01"
             }
           ]
+        },
+        {
+          "id": "f20-anios",
+          "title": "Búsqueda avanzada: ajustes",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "20.8",
+              "title": "Filtro de años: no avisar ni buscar mientras se escribe, buscar solo cuando el rango es coherente, avisar al salir del campo o al pulsar «Buscar» (nuevo botón, también con Intro) y con el error separado de los campos",
+              "status": "hecho",
+              "eta": "2026-10-14"
+            },
+            {
+              "id": "20.9",
+              "title": "Cuadros de texto con sugerencias automáticas (estudio): las sugerencias desaparecen en cuanto el cuadro pierde el foco (clic fuera, tabulador) o con Escape",
+              "status": "pendiente",
+              "eta": "2026-11-02"
+            }
+          ]
         }
       ]
     },
@@ -1838,6 +1857,6 @@
       ]
     }
   ],
-  "release": "1.6.1",
+  "release": "1.6.2",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }
