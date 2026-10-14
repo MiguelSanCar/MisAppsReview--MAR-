@@ -3,6 +3,7 @@ import { Link, Navigate, Outlet, useNavigate, useParams, useSearchParams } from 
 import { api, errorText } from '../api';
 import { useAuth } from '../auth/AuthContext';
 import { Footer } from '../components/Layout';
+import { Logo } from '../components/Logo';
 import { ErrorBox, Field, PasswordInput } from '../components/ui';
 
 /** Destino tras iniciar sesión: solo rutas internas (evita redirecciones a otros sitios). */
@@ -19,7 +20,7 @@ export function PublicLayout() {
   return (
     <div className="public">
       <header className="pub-top">
-        <Link to="/" className="brand">MAR</Link>
+        <Link to="/" className="brand" aria-label="MAR, ir al inicio"><Logo height={20} /></Link>
         <nav className="pub-nav">
           <Link to="/roadmap" className="muted">Roadmap</Link>
           {user ? (

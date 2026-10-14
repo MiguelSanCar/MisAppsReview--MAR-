@@ -1165,26 +1165,26 @@
             {
               "id": "17.1",
               "title": "Logotipo propio «MAR» en SVG: letras de bloque gruesas y geométricas, inspiradas en Lock Block (solo referencia; sin copiar glifos por su licencia de uso personal)",
-              "status": "pendiente",
-              "eta": "2026-10-15"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.2",
               "title": "Favicon de la pestaña del navegador (favicon.svg y favicon.ico de 32×32) desde el mismo logotipo, legible a 16 px",
-              "status": "pendiente",
-              "eta": "2026-10-15"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.3",
               "title": "Logotipo en los menús y la cabecera en lugar del texto «MAR» (SVG con currentColor y aria-label, válido en tema claro y oscuro)",
-              "status": "pendiente",
-              "eta": "2026-10-15"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.4",
               "title": "Comprobación visual con capturas en Edge headless a 16, 32 y 180 px",
-              "status": "pendiente",
-              "eta": "2026-10-15"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },

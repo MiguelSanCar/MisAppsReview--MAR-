@@ -6,6 +6,7 @@ import { copyText } from '../clipboard';
 import { useProfileCtx } from '../profile/ProfileContext';
 import { AvatarDialog } from './AvatarDialog';
 import { Emoji } from './Emoji';
+import { Logo } from './Logo';
 import { useToast } from './Toast';
 import { Avatar, Icon } from './ui';
 
@@ -86,7 +87,7 @@ export default function Layout() {
         <button className="icon-btn" onClick={() => setOpen(!open)} aria-label={open ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={open}>
           <Icon name={open ? 'close' : 'menu'} />
         </button>
-        <Link to="/home" className="brand">MAR</Link>
+        <Link to="/home" className="brand" aria-label="MAR, ir al inicio"><Logo height={20} /></Link>
       </header>
 
       {open && <div className="scrim" onClick={() => setOpen(false)} />}

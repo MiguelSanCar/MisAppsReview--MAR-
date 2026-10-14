@@ -2,6 +2,10 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## Fase 17 (en curso) · Versión móvil (PWA)
+- **Identidad visual (17.1–17.4):** logotipo propio «MAR» en SVG (`client/src/components/Logo.tsx`): letras de bloque gruesas y geométricas dibujadas desde cero sobre una cuadrícula de 40×50, inspiradas en el estilo de Lock Block pero sin copiar sus glifos (esa fuente es solo de uso personal). Es un trazado, no texto: no depende de ninguna fuente, hereda el color (`currentColor`) y lleva `aria-label="MAR"`. Sustituye al texto «MAR» en la cabecera de la app y en la de las páginas públicas.
+- **Favicon:** `favicon.svg` (monograma «M» blanco sobre ficha azul, legible a 16 px) y `favicon.ico` con 16 y 32 px, enlazados en `index.html`.
+
 ## Despliegue · 2026-10-14 · Fly.io
 - **App publicada en https://mar.fly.dev (5.1, 5.3, 5.8):** Fly.io, región París (`cdg`; Madrid ya no existe), una máquina `shared-cpu-1x` de 512 MB siempre encendida y volumen cifrado de 1 GB en `/data` con copias diarias. Configuración en `fly.toml`.
 - Secretos en Fly (`JWT_SECRET` nuevo y distinto del local, `PUBLIC_URL`, `CLIENT_ORIGIN`, claves de TMDB y OMDb). La BD de producción empieza vacía.
