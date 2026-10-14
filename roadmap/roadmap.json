@@ -1662,8 +1662,8 @@
             {
               "id": "19.3",
               "title": "Botones del menú lateral más altos (≥ 52 px) en el móvil y en la app instalada, para pulsarlos con facilidad",
-              "status": "pendiente",
-              "eta": "2026-10-28"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
@@ -1706,20 +1706,20 @@
             {
               "id": "19.8",
               "title": "Los estados de «Mi lista» ya no se desplazan de lado: se adaptan al ancho y los que no caben pasan a la línea siguiente, siempre todos a la vista",
-              "status": "pendiente",
-              "eta": "2026-10-30"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "19.9",
               "title": "Al pulsar la flecha de una tarjeta, el contador del estado de destino se ilumina en verde un momento para que se vea adónde ha ido",
-              "status": "pendiente",
-              "eta": "2026-10-30"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "19.10",
               "title": "Papelera roja y todos los botones de las tarjetas de «Mi lista» con la misma transparencia que los de la búsqueda",
-              "status": "pendiente",
-              "eta": "2026-10-30"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "19.11",
@@ -1857,6 +1857,6 @@
       ]
     }
   ],
-  "release": "1.6.3",
+  "release": "1.6.4",
   "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
 }

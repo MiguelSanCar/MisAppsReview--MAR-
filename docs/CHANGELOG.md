@@ -2,6 +2,13 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.6.4 · 2026-10-14 · Mi lista y menú en el móvil
+- **Menú lateral más alto (19.3):** en el móvil y en la app instalada, cada botón del menú (y los del pie: «Roadmap», «Cerrar sesión») mide **≥ 52 px**, para pulsarlos con facilidad.
+- **Estados de «Mi lista» sin scroll lateral (19.8):** Todos, Por ver, Viendo, Finalizado, Dejado y Favoritos aparecen **siempre a la vista**; los que no caben pasan a la línea siguiente (en 390 px: dos líneas de tres).
+- **Destello al cambiar de estado (19.9):** al pulsar la flecha de una tarjeta, el contador del estado de destino **se ilumina en verde unos 2 s** y su número sube al instante (el del estado de origen baja), para ver adónde ha ido la tarjeta. Los contadores se sincronizan después con el servidor.
+- **Botones de las tarjetas (19.10):** la **papelera es roja** (translúcida) y el corazón y la flecha tienen **la misma transparencia y desenfoque que los botones de la búsqueda** (iconos blancos con sombra, legibles sobre cualquier carátula).
+- Comprobado en Edge real (390 px, 300 contenidos): alturas del menú, 6 estados en 2 líneas sin scroll lateral, destello y números, y transparencias. Las pruebas detectaron dos errores de la propia prueba (cerrar el menú con un toque que caía sobre el menú; muestrear el color a mitad de la transición). Para poder avanzar de estado los contenidos sembrados de `dev:mock`, ahora se crean ya detallados.
+
 ## 1.6.3 · 2026-10-14 · Sugerencias que se cierran al perder el foco
 - **Sugerencias que se cierran al perder el foco (20.9):** en el cuadro «Estudio o productora» de la búsqueda avanzada, la lista de sugerencias **desaparece en cuanto el cuadro deja de tener el foco** (clic fuera, paso a otro campo o tabulador fuera de la lista) y también con **Escape**, que cierra la lista sin borrar lo escrito (en un campo de búsqueda el navegador lo borraría). Vuelve a abrirse al poner de nuevo el foco o al seguir escribiendo. Con el teclado, el tabulador mueve el foco a la lista (se puede elegir sin ratón) y se cierra al salir de ella; elegir una sugerencia con el ratón o con el dedo sigue funcionando. Accesibilidad: el cuadro es un `combobox` con `aria-expanded` y `aria-controls`.
 - Comprobado en Edge real: 13 comprobaciones (clic fuera, Escape, tabulador, otro campo, volver al cuadro, elegir sugerencia, sin errores de JavaScript).

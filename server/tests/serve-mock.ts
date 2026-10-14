@@ -14,7 +14,7 @@ function seedLongList(n: number) {
   const types = ['serie', 'pelicula', 'anime'];
   const states = ['POR_VER', 'VIENDO', 'FINALIZADO', 'DEJADO'];
   for (let i = 0; i < n; i++) {
-    const { lastId } = run('INSERT INTO content (source, external_id, type, title, year, total_episodes) VALUES (?, ?, ?, ?, ?, ?)', ['tmdb', `tv-seed-${i}`, types[i % 3], `Contenido de prueba ${String(i).padStart(3, '0')}`, 1990 + (i % 35), 12]);
+    const { lastId } = run('INSERT INTO content (source, external_id, type, title, year, total_episodes, detailed_at) VALUES (?, ?, ?, ?, ?, ?, ?)', ['tmdb', `tv-seed-${i}`, types[i % 3], `Contenido de prueba ${String(i).padStart(3, '0')}`, 1990 + (i % 35), 12, '2026-01-01T00:00:00.000Z']); // ya detallado: avanzar su estado no pide la ficha a TMDB
     run('INSERT INTO user_content (user_id, content_id, status, watched_episodes, is_favorite, updated_at) VALUES (?, ?, ?, ?, ?, ?)', [uid, lastId, states[i % 4], i % 4 === 2 ? 12 : 0, i % 25 === 0 ? 1 : 0, new Date(Date.UTC(2026, 0, 1) + i * 60_000).toISOString()]);
   }
 }

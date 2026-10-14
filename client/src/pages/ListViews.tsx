@@ -99,6 +99,12 @@ export function ListGrid({
   const [loaded, setLoaded] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState('');
+  /** Estado cuyo contador se ilumina un momento en verde tras mover una tarjeta con la flecha. */
+  const [flash, setFlash] = useState<string | null>(null);
+  const flashTimer = useRef<number>();
+  const itemsRef = useRef<LibraryItem[]>([]);
+  itemsRef.current = items;
+  useEffect(() => () => window.clearTimeout(flashTimer.current), []);
   const sentinel = useRef<HTMLDivElement>(null);
   const busyRef = useRef(false);
   const gen = useRef(0); // identifica la carga vigente: las respuestas de filtros anteriores se descartan
@@ -159,7 +165,16 @@ export function ListGrid({
   }, [endpoint]);
 
   const onState = useCallback((id: number, s: UserState | null) => {
+    const prev = itemsRef.current.find((i) => i.id === id);
     setItems((l) => (s ? l.map((i) => (i.id === id ? { ...i, state: s } : i)) : l.filter((i) => i.id !== id)));
+    if (s && prev && prev.state.status !== s.status) {
+      // El número del estado nuevo sube al instante y se ilumina un momento: así se ve adónde ha ido la tarjeta
+      const from = prev.state.status;
+      setCounts((c) => ({ ...c, [from]: Math.max(0, (c[from] ?? 0) - 1), [s.status]: (c[s.status] ?? 0) + 1 }));
+      setFlash(s.status);
+      window.clearTimeout(flashTimer.current);
+      flashTimer.current = window.setTimeout(() => setFlash(null), 1800);
+    }
     refreshCounts();
   }, [refreshCounts]);
 
@@ -236,8 +251,8 @@ export function ListGrid({
     <>
       <div className="tabs" role="tablist">
         {tabs.map((t) => (
-          <button key={t.id} role="tab" aria-selected={status === t.id} className={`tab ${status === t.id ? 'on' : ''}`} onClick={(e) => { setStatus(t.id); e.currentTarget.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); }}>
-            {t.label} <span className="count">{counts[t.id]}</span>
+          <button key={t.id} role="tab" aria-selected={status === t.id} className={`tab ${status === t.id ? 'on' : ''}`} onClick={() => setStatus(t.id)}>
+            {t.label} <span className={`count ${flash === t.id ? 'flash' : ''}`}>{counts[t.id]}</span>
           </button>
         ))}
       </div>

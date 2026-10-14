@@ -510,3 +510,31 @@ a, button, .chip, .tab, label.file-btn { touch-action: manipulation; } /* sin re
 .adv-year-error { margin: 18px 0 0; }
 .adv-actions { gap: 10px; margin-top: 16px; }
 .adv-results-anchor, #adv-results { scroll-margin-top: 70px; }
+
+/* ---------- Mi lista y menú en el móvil (v1.6.4) ---------- */
+/* Menú lateral con botones más altos (≥ 52 px) en el móvil y en la app instalada */
+@media (max-width: 899px), (pointer: coarse), (display-mode: standalone) {
+  .nav-item, .nav-top { min-height: 52px; display: flex; align-items: center; padding-top: 12px; padding-bottom: 12px; }
+  .side-nav, .nav-sub { gap: 4px; }
+  .side-foot a, .side-foot .btn { min-height: 52px; display: inline-flex; align-items: center; justify-content: center; }
+  .side-name-btn { min-height: 52px; }
+}
+/* Estados de «Mi lista»: siempre todos a la vista; los que no caben pasan a la línea siguiente */
+@media (max-width: 720px) {
+  .tabs { flex-wrap: wrap; overflow-x: visible; gap: 2px 4px; }
+  .tab { flex: 0 1 auto; white-space: nowrap; padding: 8px 10px; font-size: 0.95rem; }
+  .tab .count { margin-left: 3px; padding: 1px 6px; }
+}
+/* El contador del estado de destino se ilumina en verde un momento tras pulsar la flecha de una tarjeta */
+.tab .count { transition: background-color .35s ease, color .35s ease, box-shadow .35s ease; }
+.tab .count.flash { background: var(--done); color: var(--on-accent); box-shadow: 0 0 0 4px rgba(61, 220, 151, .35); font-weight: 700; }
+/* Botones de las tarjetas de «Mi lista»: misma transparencia que los de la búsqueda; la papelera, roja */
+.poster-btn:not(.st-btn) { background: rgba(8, 12, 22, .5); backdrop-filter: blur(2px); color: #fff; border: 2px solid transparent; }
+.poster-btn:not(.st-btn) svg, .poster-btn:not(.st-btn) .emoji { filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .55)); }
+.poster-btn.fav.on { background: rgba(255, 77, 109, .62); }
+.poster-btn.later.on { background: rgba(94, 181, 255, .62); color: #fff; }
+.poster-btn.advance { background: rgba(61, 220, 151, .58); color: #fff; }
+.poster-btn.advance.again { background: rgba(94, 181, 255, .6); }
+.poster-trash { background: rgba(229, 72, 77, .62); backdrop-filter: blur(2px); color: #fff; border: 2px solid transparent; }
+.poster-trash:hover { background: rgba(229, 72, 77, .92); }
+.poster-trash svg { filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .55)); }
