@@ -10,7 +10,7 @@ Responde siempre en español. Código primero, explicación breve después. La i
 
 ## Restricciones de entorno (obligatorias)
 - Windows. Node.js 16.20.2 -> NO uses dependencias que exijan Node >= 18 (p. ej. Vite 5, Vitest 1+, tsx). Fija versiones compatibles (Vite 4.5.x, etc.) y verifica con `npm install` real. Para ejecutar TypeScript en el servidor usa ts-node-dev o nodemon + ts-node.
-- Git NO está en el PATH: es portable en C:\Users\mascarneiro.INDRA\Downloads\PortableGit. Úsalo por ruta completa para commits.
+- Git NO está en el PATH: puede ser portable; úsalo por ruta completa para commits.
 - Todo debe levantarse en local con `npm install` + `npm run dev` desde la raíz (monorepo con npm workspaces: /client, /server).
 - Documenta CADA cambio relevante: README.md (cómo levantar en local, variables de entorno, scripts), docs/CHANGELOG.md (una entrada por cambio) y docs/DECISIONES.md (por qué se eligió cada tecnología).
 

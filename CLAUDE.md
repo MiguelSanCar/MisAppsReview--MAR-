@@ -17,8 +17,8 @@ Estado, decisiones y cómo levantarlo: `README.md`, `docs/CHANGELOG.md`, `docs/D
 ## Entorno (restricciones)
 
  - Windows, **Node 16.20.2** / npm 8. Todo debe funcionar ahí: Vite 4, Vitest 0.34, `ts-node-dev` (nada que exija Node 18+, ni `tsx`, ni `fetch` global: usar `getJson` de `server/src/http.ts`).
- - Git: usar `git`; si no responde, el portable en `C:\Users\mascarneiro.INDRA\Downloads\PortableGit`.
- - Red corporativa (Netskope): re-firma HTTPS; Node necesita `certs/corporate-ca.pem` (lo pasa `scripts/ca.js` a `dev` y `share`). Jikan/MyAnimeList y `image.tmdb.org` no responden desde esta red/terminal; TMDB y OMDb sí. Nunca desactivar la verificación TLS.
+ - Git: usar `git`; si no responde, ver `CLAUDE.local.md` (no versionado).
+ - Si la red re-firma HTTPS, Node necesita un PEM propio (`scripts/ca.js`, ver README). Nunca desactivar la verificación TLS. Los detalles del equipo concreto están en `CLAUDE.local.md` (ignorado por git; no copiar su contenido a ficheros versionados).
  - PowerShell está en modo restringido (no se pueden llamar métodos .NET): usar cmdlets.
  - El `.env` real tiene `JWT_SECRET`, `TMDB_API_KEY` y `OMDB_API_KEY`: no los imprimas ni los copies a otros ficheros.
 
@@ -57,7 +57,7 @@ npm run mail:test -w server -- tu@correo.com   # comprueba SMTP (base lista, aú
  - `roadmap/roadmap.json` es la fuente de verdad (fases > funcionalidades > tareas; estados `pendiente` | `en_progreso` | `hecho`); la página pública `/roadmap` lo lee y es solo lectura. Actualízalo al terminar cada tarea y al recibir cambios.
  - **Fechas**: cada tarea lleva `eta` (AAAA-MM-DD): la estimada mientras esté pendiente y la real al terminarla; si depende de algo externo, `eta: null` y `etaNote` con el motivo y el esfuerzo. Al crear tareas pon su fecha estimada y al cerrarlas actualiza `eta` a la fecha real. La página `/roadmap` las muestra por tarea, tarjeta y columna.
  - Versión 0.x: fase N completada = `0.(N+1).0` (`package.json` y `roadmap.json`). Al cerrar una fase: CHANGELOG, DECISIONES si hay decisión nueva, README si cambia algo visible, y subir a GitHub.
- - Pendiente conocido: correo (12.10, 12.12), en espera por decisión del usuario. Hosting: Fly.io (`mar-miguel`), se opera con `tools/fly.exe` (ver `docs/DESPLIEGUE.md`). No hacer nada que requiera administrador.
+ - Pendiente conocido: correo (12.10, 12.12), en espera por decisión del usuario. Hosting: Fly.io (`mar-miguel`), se opera con `tools/fly.exe` (ver `docs/DESPLIEGUE.md`).
 
 ## Pruebas
 

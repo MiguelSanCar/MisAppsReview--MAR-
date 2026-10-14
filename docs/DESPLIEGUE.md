@@ -2,21 +2,24 @@
 
 Estado: **publicado en Fly.io** → https://mar-miguel.fly.dev (app `mar-miguel`, región `cdg`, 1 máquina de 512 MB, volumen `data` de 1 GB en `/data`). Render queda como alternativa (`render.yaml`).
 
-## Operar Fly.io desde Claude Code (Windows, sin administrador, red corporativa)
-`flyctl` está en `tools/fly.exe` (ignorado por git). Se descargó el `.zip` de https://github.com/superfly/flyctl/releases porque `iwr ... | iex` no funciona en el PowerShell restringido.
+## Operar Fly.io desde Claude Code
+`flyctl` va en `tools/fly.exe` (ignorado por git). Instalación: el script oficial (`iwr https://fly.io/install.ps1 -useb | iex`) o, si PowerShell está restringido o no hay administrador, el `.zip` de https://github.com/superfly/flyctl/releases (extraer `flyctl.exe` y renombrarlo a `fly.exe`; no necesita administrador).
 ```bash
 tools/fly.exe auth login                    # una vez; si el navegador es de otra sesión: auth login --code <código>
-# Desplegar (Netskope: hace falta el CA corporativo y el builder sin Depot):
-SSL_CERT_FILE="$(pwd -W)/certs/corporate-ca.pem" tools/fly.exe deploy --app mar-miguel --depot=false --remote-only
+tools/fly.exe deploy --app mar-miguel       # desplegar (construye en remoto)
 tools/fly.exe status --app mar-miguel
 tools/fly.exe logs --app mar-miguel
 tools/fly.exe secrets set CLAVE=valor --app mar-miguel
 tools/fly.exe ssh sftp shell --app mar-miguel   # copiar /data/mar.db
 ```
-- Con Depot (el builder por defecto) el despliegue falla con `x509: certificate signed by unknown authority`; `--depot=false` lo evita.
-- El aviso «DNS verification failed ... 8.8.8.8» es de la red corporativa; la app responde igualmente.
-- Cada `fly deploy` reconstruye la imagen con lo que haya en el directorio (respeta `.dockerignore`/`.gitignore` de forma parcial: no pongas ahí nada sensible).
-- Nunca imprimir ni versionar los secretos: se cargan con `fly secrets import` desde un fichero temporal borrado después.
+- Cada `fly deploy` sube el directorio actual para construir la imagen: no dejes ahí nada sensible.
+- Nunca imprimir ni versionar los secretos: se cargan con `fly secrets import` desde un fichero temporal que se borra después.
+- Región: Madrid (`mad`) ya no existe en Fly; se usa París (`cdg`).
+
+### Según el equipo desde el que trabajes
+- **Equipo con acceso directo a Internet (casa):** los comandos de arriba funcionan tal cual; no hace falta nada más.
+- **Equipo con proxy que re-firma HTTPS (empresa):** `flyctl` (escrito en Go) no usa el almacén de Windows y falla con `x509: certificate signed by unknown authority`. Pásale el PEM de la empresa (el mismo `certs/corporate-ca.pem` del README, ignorado por git) con `SSL_CERT_FILE=<ruta al PEM>`, y si el builder por defecto (Depot) sigue fallando, añade `--depot=false --remote-only`. Nunca se desactiva la verificación TLS. Un aviso «DNS verification failed» al final del despliegue puede ser solo de esa red.
+- Las notas del equipo concreto (rutas, proxy, permisos) van en `CLAUDE.local.md`, que no se versiona. Al cambiar de ordenador: copiar el repo, `npm install`, tu `.env`, descargar `tools/fly.exe`, `fly auth login` y, si procede, tu propio `CLAUDE.local.md`.
 
 Lo siguiente es la preparación original, válida para cualquier hosting.
 

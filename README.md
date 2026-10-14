@@ -54,7 +54,7 @@ JIKAN_ENABLED=false     # en .env; reinicia npm run dev (el anime dejará de bus
 Otros ajustes: `TMDB_SOFT_MS`, `JIKAN_SOFT_MS`, `PROVIDER_DOWN_MS`, `PROVIDER_DOWN_MAX_MS`.
 
 ### Red corporativa que inspecciona HTTPS (error "self signed certificate in certificate chain")
-Si TMDB falla con ese error es que tu red (p. ej. Netskope) re-firma el tráfico con su propio certificado: Windows y el navegador lo aceptan, pero Node no usa el almacén de Windows. Solución, sin desactivar ninguna verificación:
+Si TMDB falla con ese error es que tu red (p. ej. un proxy de empresa) re-firma el tráfico con su propio certificado: Windows y el navegador lo aceptan, pero Node no usa el almacén de Windows. Solución, sin desactivar ninguna verificación:
 1. Exporta el certificado raíz de la empresa y los intermedios a un PEM en `certs/corporate-ca.pem` (carpeta ignorada por git). Con PowerShell: `Export-Certificate -Cert <cert> -FilePath x.cer` y conviértelos a PEM (base64 entre `-----BEGIN CERTIFICATE-----` y `-----END CERTIFICATE-----`).
 2. `npm run dev` y `npm run share` lo detectan solos (`scripts/ca.js`) y lo pasan a Node como `NODE_EXTRA_CA_CERTS`. También puedes apuntar a otro fichero con `EXTRA_CA_CERTS=ruta` en `.env`.
 

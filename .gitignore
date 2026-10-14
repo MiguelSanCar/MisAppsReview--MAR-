@@ -11,3 +11,6 @@ tools/
 certs/
 
 roadmap/ideas.json
+
+# Notas de entorno de cada equipo (no versionar)
+CLAUDE.local.md

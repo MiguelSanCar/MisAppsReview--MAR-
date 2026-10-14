@@ -5,7 +5,7 @@ Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 ## Despliegue · 2026-10-14 · Fly.io
 - **App publicada en https://mar-miguel.fly.dev (5.1, 5.3, 5.8):** Fly.io, región París (`cdg`; Madrid ya no existe), una máquina `shared-cpu-1x` de 512 MB siempre encendida y volumen cifrado de 1 GB en `/data` con copias diarias. Configuración en `fly.toml`.
 - Secretos en Fly (`JWT_SECRET` nuevo y distinto del local, `PUBLIC_URL`, `CLIENT_ORIGIN`, claves de TMDB y OMDb). La BD de producción empieza vacía.
-- `flyctl` portable en `tools/fly.exe` (sin administrador; el instalador de PowerShell no funciona en modo restringido). Pasos y trampas en `docs/DESPLIEGUE.md`.
+- `flyctl` portable en `tools/fly.exe` (sin administrador). Pasos y trampas en `docs/DESPLIEGUE.md`.
 - Correo (12.10, 12.12): en espera por decisión del usuario.
 
 ## 0.17.0 · 2026-10-13 · Fase 16 · Ficha y botones

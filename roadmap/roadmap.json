@@ -348,7 +348,7 @@
               "id": "5.8",
               "title": "Operar el hosting desde Claude Code (flyctl)",
               "status": "hecho",
-              "note": "tools/fly.exe, sin administrador; usa el CA corporativo y --depot=false",
+              "note": "tools/fly.exe, sin administrador",
               "eta": "2026-10-14"
             },
             {
