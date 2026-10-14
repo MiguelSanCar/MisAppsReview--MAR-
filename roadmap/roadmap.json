@@ -341,7 +341,7 @@
               "id": "5.3",
               "title": "Despliegue",
               "status": "hecho",
-              "note": "https://mar-miguel.fly.dev (fly.toml)",
+              "note": "https://mar.fly.dev (fly.toml)",
               "eta": "2026-10-14"
             },
             {

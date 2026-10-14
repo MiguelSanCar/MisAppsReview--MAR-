@@ -116,7 +116,7 @@ Dockerfile, render.yaml   despliegue (ver docs/DESPLIEGUE.md)
 En local, además, aparece un **buzón de ideas** (solo desde `localhost`, no en producción): se guardan en `roadmap/ideas.json`.
 
 ## Estado
-Todo el roadmap está implementado y probado **salvo lo que está en espera**: conectar el envío de correos (12.10 y 12.12). La app está publicada en Fly.io (https://mar-miguel.fly.dev); cómo operarla en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
+Todo el roadmap está implementado y probado **salvo lo que está en espera**: conectar el envío de correos (12.10 y 12.12). La app está publicada en Fly.io (https://mar.fly.dev); cómo operarla en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
 
 Limitaciones conocidas:
 - La duración por episodio es fija (serie 50 min, película 90, anime 23) salvo que actives `USE_REAL_RUNTIME=true` (usa la duración media de las APIs).

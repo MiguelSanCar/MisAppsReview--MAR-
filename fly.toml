@@ -1,5 +1,5 @@
 # MAR en Fly.io. Despliegue: `tools/fly.exe deploy` (ver docs/DESPLIEGUE.md).
-app = "mar-miguel"
+app = "mar"
 primary_region = "cdg"
 
 [build]

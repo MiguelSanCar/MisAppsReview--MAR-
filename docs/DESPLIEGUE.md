@@ -1,16 +1,16 @@
 # Despliegue de MAR
 
-Estado: **publicado en Fly.io** → https://mar-miguel.fly.dev (app `mar-miguel`, región `cdg`, 1 máquina de 512 MB, volumen `data` de 1 GB en `/data`). Render queda como alternativa (`render.yaml`).
+Estado: **publicado en Fly.io** → https://mar.fly.dev (app `mar`, región `cdg`, 1 máquina de 512 MB, volumen `data` de 1 GB en `/data`). Render queda como alternativa (`render.yaml`).
 
 ## Operar Fly.io desde Claude Code
 `flyctl` va en `tools/fly.exe` (ignorado por git). Instalación: el script oficial (`iwr https://fly.io/install.ps1 -useb | iex`) o, si PowerShell está restringido o no hay administrador, el `.zip` de https://github.com/superfly/flyctl/releases (extraer `flyctl.exe` y renombrarlo a `fly.exe`; no necesita administrador).
 ```bash
 tools/fly.exe auth login                    # una vez; si el navegador es de otra sesión: auth login --code <código>
-tools/fly.exe deploy --app mar-miguel       # desplegar (construye en remoto)
-tools/fly.exe status --app mar-miguel
-tools/fly.exe logs --app mar-miguel
-tools/fly.exe secrets set CLAVE=valor --app mar-miguel
-tools/fly.exe ssh sftp shell --app mar-miguel   # copiar /data/mar.db
+tools/fly.exe deploy --app mar       # desplegar (construye en remoto)
+tools/fly.exe status --app mar
+tools/fly.exe logs --app mar
+tools/fly.exe secrets set CLAVE=valor --app mar
+tools/fly.exe ssh sftp shell --app mar   # copiar /data/mar.db
 ```
 - Cada `fly deploy` sube el directorio actual para construir la imagen: no dejes ahí nada sensible.
 - Nunca imprimir ni versionar los secretos: se cargan con `fly secrets import` desde un fichero temporal que se borra después.

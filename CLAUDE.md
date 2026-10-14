@@ -57,7 +57,7 @@ npm run mail:test -w server -- tu@correo.com   # comprueba SMTP (base lista, aú
  - `roadmap/roadmap.json` es la fuente de verdad (fases > funcionalidades > tareas; estados `pendiente` | `en_progreso` | `hecho`); la página pública `/roadmap` lo lee y es solo lectura. Actualízalo al terminar cada tarea y al recibir cambios.
  - **Fechas**: cada tarea lleva `eta` (AAAA-MM-DD): la estimada mientras esté pendiente y la real al terminarla; si depende de algo externo, `eta: null` y `etaNote` con el motivo y el esfuerzo. Al crear tareas pon su fecha estimada y al cerrarlas actualiza `eta` a la fecha real. La página `/roadmap` las muestra por tarea, tarjeta y columna.
  - Versión 0.x: fase N completada = `0.(N+1).0` (`package.json` y `roadmap.json`). Al cerrar una fase: CHANGELOG, DECISIONES si hay decisión nueva, README si cambia algo visible, y subir a GitHub.
- - Pendiente conocido: correo (12.10, 12.12), en espera por decisión del usuario. Hosting: Fly.io (`mar-miguel`), se opera con `tools/fly.exe` (ver `docs/DESPLIEGUE.md`).
+ - Pendiente conocido: correo (12.10, 12.12), en espera por decisión del usuario. Hosting: Fly.io (`mar`), se opera con `tools/fly.exe` (ver `docs/DESPLIEGUE.md`).
 
 ## Pruebas
 
