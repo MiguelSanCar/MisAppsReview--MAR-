@@ -25,7 +25,7 @@
 
 .cols { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 16px; scroll-snap-type: x proximity; align-items: flex-start; }
 .col { flex: 0 0 290px; scroll-snap-align: start; background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
-.col-head { padding: 16px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; background: linear-gradient(180deg, #17213a, var(--bg-2)); }
+.col-head { padding: 16px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; background: linear-gradient(180deg, var(--col-grad), var(--bg-2)); }
 .col-head h2 { margin: 0; font-size: 1.05rem; }
 .col-head p { margin: 0; color: var(--muted); font-size: 0.82rem; }
 .col-body { padding: 12px; display: grid; gap: 10px; }
@@ -93,6 +93,7 @@
 .task-eta { font-size: 0.7rem; }
 .eta-note { color: var(--muted); font-style: normal; font-size: 0.72rem; line-height: 1.35; }
 
+:root[data-theme="light"] .tag-Frontend { color: #0a62b8; background: #dcebfd; }
 :root[data-theme="light"] .tag-Backend { color: #5b3cc4; background: #ece6ff; }
 :root[data-theme="light"] .tag-Datos { color: #8a5a00; background: #fff1cf; }
 :root[data-theme="light"] .tag-Infra { color: #0a7a5c; background: #d9f5ec; }

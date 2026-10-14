@@ -16,6 +16,9 @@
   --avatar-ph: #1d2a46;
   --tag-bg: #243049;
   --switch-track: #263149;
+  --stat-grad: #1a2a4d;
+  --col-grad: #17213a;
+  --badge-bg: rgba(8, 12, 22, .8);
   color-scheme: dark;
 }
 * { box-sizing: border-box; }

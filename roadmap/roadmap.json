@@ -1499,6 +1499,12 @@
               "title": "Tests y capturas en ambos temas (móvil y ordenador)",
               "status": "hecho",
               "eta": "2026-10-14"
+            },
+            {
+              "id": "18.32",
+              "title": "Corrección del tema claro: degradados y etiquetas que seguían oscuros (tarjetas de estadística, cabeceras del roadmap, etiqueta de estado de «Mi lista»), contrastes ajustados y auditoría automática de fondos oscuros, sombras y contraste en 8 pantallas × 2 temas × móvil y escritorio",
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },
@@ -1733,6 +1739,28 @@
               "title": "Documentación (README, CHANGELOG, DECISIONES), versión 1.2.0 y despliegue comprobado en https://mar.fly.dev",
               "status": "pendiente",
               "eta": "2026-10-30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f20",
+      "name": "Fase 20 · Retoques menores",
+      "release": "1.3.0",
+      "summary": "Mejoras de baja prioridad",
+      "features": [
+        {
+          "id": "f20-roadmap",
+          "title": "Roadmap con lo actual primero",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "20.1",
+              "title": "Roadmap: orden inverso (lo que se está haciendo o falta por hacer primero y lo ya hecho al final), también en las columnas y en las tareas de cada tarjeta",
+              "status": "pendiente",
+              "note": "Prioridad baja; se hace al terminar las fases 18 y 19",
+              "eta": "2026-11-02"
             }
           ]
         }
