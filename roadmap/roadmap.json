@@ -1226,27 +1226,27 @@
           "tasks": [
             {
               "id": "17.9",
-              "title": "Service worker que cachea la cáscara de la app y las carátulas (con límite); /api nunca se cachea",
-              "status": "pendiente",
-              "eta": "2026-10-19"
+              "title": "Service worker que cachea la cáscara de la app (las carátulas quedan en la caché HTTP del navegador); /api nunca se cachea",
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.10",
               "title": "Pantalla «Sin conexión» con reintento",
-              "status": "pendiente",
-              "eta": "2026-10-19"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.11",
               "title": "Aviso «Hay una versión nueva · Actualizar» al desplegar",
-              "status": "pendiente",
-              "eta": "2026-10-19"
+              "status": "hecho",
+              "eta": "2026-10-14"
             },
             {
               "id": "17.12",
               "title": "Cabeceras de caché: sw.js e index.html sin caché; assets con hash en caché larga",
-              "status": "pendiente",
-              "eta": "2026-10-19"
+              "status": "hecho",
+              "eta": "2026-10-14"
             }
           ]
         },

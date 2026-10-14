@@ -333,3 +333,12 @@ a.fcard:hover, .lcard:hover { border-color: var(--accent); background: var(--pan
 .emoji.in-text { display: inline-block; vertical-align: -2px; margin: 0 2px; }
 
 .poster-btn.st-btn.done .emoji { transform: translateY(.6px); } /* la marca queda 0,6 px alta en su caja: se compensa para que quede centrada */
+
+/* Aviso de versión nueva (PWA) */
+.update-banner {
+  position: fixed; left: 50%; transform: translateX(-50%); z-index: 60;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px)); max-width: calc(100vw - 32px);
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 16px; width: max-content;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 8px 30px rgba(0, 0, 0, .45);
+}
+.update-banner span { white-space: nowrap; }

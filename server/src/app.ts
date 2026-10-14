@@ -57,8 +57,21 @@ export function createApp() {
 
   // En producción el servidor también sirve el cliente compilado.
   const clientDist = path.resolve(__dirname, '../../client/dist');
-  app.use(express.static(clientDist));
+  // Caché: los ficheros con hash (/assets) son inmutables; el punto de entrada y el service worker se revalidan siempre
+  // (si no, un móvil podría quedarse con un cliente o un sw.js antiguos).
+  const NO_CACHE = new Set(['index.html', 'sw.js', 'offline.html', 'manifest.webmanifest']);
+  app.use(
+    express.static(clientDist, {
+      setHeaders(res, file) {
+        const rel = path.relative(clientDist, file).split(path.sep).join('/');
+        if (rel.startsWith('assets/')) res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        else if (NO_CACHE.has(rel)) res.setHeader('Cache-Control', 'no-cache');
+        else res.setHeader('Cache-Control', 'public, max-age=86400');
+      },
+    }),
+  );
   app.get('*', (_req, res, next) => {
+    res.setHeader('Cache-Control', 'no-cache');
     res.sendFile(path.join(clientDist, 'index.html'), (err) => err && next());
   });
 
