@@ -2027,6 +2027,58 @@
           ]
         }
       ]
+    },
+    {
+      "id": "f24",
+      "name": "Fase 24 · Duración real de los episodios",
+      "release": null,
+      "summary": "Las horas vistas usan la duración real de los episodios de TMDB: media de los primeros N episodios de cada temporada larga (más de 3N) o de N episodios para todas las temporadas cortas",
+      "features": [
+        {
+          "id": "f24-calculo",
+          "title": "Cálculo",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "24.1",
+              "title": "Reglas puras (domain/runtimes): plan de muestreo, medias por temporada o de toda la serie y minutos de los primeros N episodios",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            },
+            {
+              "id": "24.2",
+              "title": "TMDB: duración por episodio de una temporada (caché larga) y relleno en segundo plano con límite de concurrencia y de peticiones por serie",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            },
+            {
+              "id": "24.3",
+              "title": "Estadísticas y revisiones: sumar los minutos reales de los episodios vistos, con la duración fija como respaldo",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            },
+            {
+              "id": "24.4",
+              "title": "Completar las series ya guardadas poco a poco sin frenar la aplicación",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            }
+          ]
+        },
+        {
+          "id": "f24-cierre",
+          "title": "Cierre",
+          "category": "Infra",
+          "tasks": [
+            {
+              "id": "24.5",
+              "title": "Pruebas (reglas, relleno y estadísticas), documentación, versión 1.12.0 y despliegue",
+              "status": "pendiente",
+              "eta": "2026-10-15"
+            }
+          ]
+        }
+      ]
     }
   ],
   "release": "1.11.1",
