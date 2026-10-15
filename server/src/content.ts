@@ -2,6 +2,7 @@ import { all, get, run } from './db';
 import { HttpError } from './http';
 import type { ContentType } from './domain/rules';
 import { normalizeSeasons, parseSeasons, Season } from './domain/seasons';
+import { scheduleRuntimes } from './runtimes';
 import { config } from './config';
 import { detailJikan, searchJikan, trendingJikan } from './providers/jikan';
 import { detailTmdb, searchTmdb, tmdbAvailable, trendingTmdb } from './providers/tmdb';
@@ -124,6 +125,7 @@ export async function ensureCore(row: ContentRow): Promise<ContentRow> {
   );
   const mal = malText(d.malScore);
   if (mal) run('UPDATE content SET ratings = ?, ratings_at = ? WHERE id = ?', [JSON.stringify({ mal }), nowIso(), row.id]);
+  if (d.seasons?.length) scheduleRuntimes(row.id); // duración real de los episodios, en segundo plano
   return getContent(row.id)!;
 }
 
@@ -136,6 +138,7 @@ export async function ensureSeasons(row: ContentRow): Promise<ContentRow> {
   try {
     const d = await detailTmdb(row.external_id);
     run('UPDATE content SET seasons = ? WHERE id = ?', [JSON.stringify(d.seasons ?? []), row.id]);
+    if (d.seasons?.length) scheduleRuntimes(row.id);
     return getContent(row.id)!;
   } catch {
     return row; // se reintentará la próxima vez

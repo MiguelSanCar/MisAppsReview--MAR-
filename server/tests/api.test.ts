@@ -48,6 +48,7 @@ const anon = new Client();
 
 beforeAll(async () => {
   await openDb(null);
+  config.useRealRuntime = false; // estas pruebas parten de las duraciones fijas
   mock = await startMockProviders();
   Object.assign(config, {
     tmdbBase: `${mock.base}/tmdb`, jikanBase: `${mock.base}/jikan`, omdbBase: `${mock.base}/omdb`,

@@ -2,6 +2,16 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.12.0 · 2026-10-15 · Duración real de los episodios
+### Añadido
+- **Duración real de los episodios**: las horas vistas de las series suman la media de cada temporada en lugar de 50 min fijos. Se estima con una muestra de TMDB: los primeros N (4) episodios de cada temporada larga (más de 3N episodios) o, si las temporadas son cortas, N episodios cuya media vale para toda la serie.
+- El cálculo va en segundo plano (concurrencia global 2, máximo 12 peticiones por serie, caché de 30 días) al abrir la ficha de una serie o ver un perfil con series sin calcular; nada espera a TMDB. Si falta el dato se usa la duración fija.
+- Las revisiones también suman los minutos reales de los episodios revistos.
+
+### Cambiado
+- `USE_REAL_RUNTIME` pasa a `true` por defecto (`false` vuelve a 50 / 90 / 23 min). Las horas de los perfiles cambiarán en consecuencia.
+- Nuevas variables opcionales `RUNTIME_SAMPLE`, `RUNTIME_MAX_FETCH` y `RUNTIME_CONCURRENCY`.
+
 ## 1.11.1 · 2026-10-14 · Recomendaciones al día
 ### Corregido
 - Búsqueda inicial: «Series que has podido ver» (y películas) no cambiaba al añadir contenidos; ahora se recalcula unos segundos después del último cambio, sin parpadeo.

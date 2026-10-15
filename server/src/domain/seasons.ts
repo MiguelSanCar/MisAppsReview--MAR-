@@ -2,6 +2,8 @@
 export interface Season {
   number: number;
   episodes: number;
+  /** Duración media de un episodio de la temporada (min); 0 = consultado sin datos; ausente = aún sin consultar. */
+  minutes?: number;
 }
 
 /** Lee el JSON guardado: null = aún no consultado; [] = consultado y sin temporadas. */
@@ -12,7 +14,7 @@ export function parseSeasons(json: string | null | undefined): Season[] | null {
     if (!Array.isArray(v)) return null;
     return v
       .filter((s) => s && Number.isInteger(s.number) && s.number > 0 && Number.isInteger(s.episodes) && s.episodes > 0)
-      .map((s) => ({ number: s.number, episodes: s.episodes }));
+      .map((s) => (Number.isFinite(s.minutes) && s.minutes >= 0 ? { number: s.number, episodes: s.episodes, minutes: Math.round(s.minutes) } : { number: s.number, episodes: s.episodes }));
   } catch {
     return null;
   }

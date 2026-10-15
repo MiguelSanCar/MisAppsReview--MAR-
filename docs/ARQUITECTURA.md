@@ -59,8 +59,9 @@ server/src
 ├─ profile.ts, compare.ts  Estadísticas y comparación de perfiles
 ├─ recommendations.ts   Recomendaciones por géneros
 ├─ news.ts              Motor de novedades (notificaciones) en segundo plano
+├─ runtimes.ts          Duración real de los episodios (medias por temporada) en segundo plano
 ├─ listLife.ts, mailer.ts, roadmap.ts
-├─ domain/              Reglas puras sin red ni BD: rules, time, recommend, seasons, news
+├─ domain/              Reglas puras sin red ni BD: rules, time, recommend, seasons, news, runtimes
 └─ routes/              auth, account, library, discover, recommendations, friends, invites, profiles, lists
 ```
 
@@ -91,7 +92,8 @@ SQLite con `sql.js` (WebAssembly): la base vive **en memoria** y se vuelca a `da
 
 - **Estados**: Por ver, Viendo, Finalizado, Dejado. **Favorito** (máximo 10) = Finalizado con todos los episodios; quitarlo solo lo saca de favoritos.
 - **Episodios**: enteros; llegar o superar el total fija el máximo y finaliza. Una película cuenta como 1 episodio.
-- **Tiempo visto** = episodios vistos × duración fija (serie 50 min, película 90, anime 23; `USE_REAL_RUNTIME=true` usa la real). Se muestra en horas → días → semanas → meses → años.
+- **Tiempo visto** = minutos de los episodios vistos. Series: se suma la media de cada temporada (`Season.minutes`, ver «Duración de los episodios»); película y anime: su duración; si falta el dato o `USE_REAL_RUNTIME=false`, la fija (serie 50 min, película 90, anime 23). Se muestra en horas → días → semanas → meses → años.
+- **Duración de los episodios**: TMDB no da una duración fiable por serie, sino por episodio y temporada. Para no hacer decenas de peticiones se muestrea (`domain/runtimes.ts`): en una temporada «larga» (más de 3N episodios) se toman sus primeros N episodios y su media es la de esa temporada; las temporadas «cortas» no se consultan una a una: se toman N episodios de las primeras y su media vale para todas ellas. N = `RUNTIME_SAMPLE` (4). Lo que no se pudo medir usa la media de lo medido y, si no hay nada, la duración fija. Se calcula en segundo plano (`runtimes.ts`: concurrencia global de 2, máximo 12 peticiones por serie, caché de 30 días) al abrir la ficha de una serie y al ver un perfil con series sin calcular; nada espera a ello.
 - **Revisionado**: volver a ver algo finalizado lo pasa a «Por ver» con los episodios a 0 y se muestra «Reviendo»; lo ya visto se conserva en `prev_episodes` y sigue contando en las estadísticas.
 - **Temporadas**: el progreso sigue siendo un número de episodios; las temporadas son una vista sobre él. «Temporadas vistas» cuenta las completas.
 - **Perfiles**: `/perfil/<usuario>`, solo para amigos por defecto o públicos; la lista solo si se permite; los amigos de alguien nunca son públicos. Todo el acceso se decide en `resolve()` (`routes/profiles.ts`).

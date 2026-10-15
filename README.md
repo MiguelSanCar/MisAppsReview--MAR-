@@ -113,7 +113,7 @@ Variables de entorno principales (todas en `.env.example`):
 | `DB_FILE` | Fichero SQLite | `data/mar.db` |
 | `TMDB_REGION` | País para la disponibilidad en plataformas | `ES` |
 | `JIKAN_ENABLED` | `false` desactiva el anime (útil si la red lo bloquea) | `true` |
-| `USE_REAL_RUNTIME` | Usar la duración real de las fuentes en lugar de 50 / 90 / 23 min | `false` |
+| `USE_REAL_RUNTIME` | Usar la duración real de las fuentes (por temporada en las series) en lugar de 50 / 90 / 23 min | `true` |
 
 La lista completa está en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
 
@@ -168,7 +168,7 @@ Dockerfile, fly.toml, render.yaml   Despliegue
 Versionado semántico: arreglos `x.y.Z`, funcionalidades nuevas `x.Y.0`, cambios incompatibles `X.0.0`. Cada versión está descrita en el [CHANGELOG](docs/CHANGELOG.md) y el trabajo pendiente y hecho, por fases, en la [hoja de ruta](https://mar.fly.dev/roadmap).
 
 Limitaciones conocidas:
-- La duración por episodio es fija (serie 50 min, película 90, anime 23) salvo con `USE_REAL_RUNTIME=true`.
+- Las horas vistas usan la duración real: la de la película, la media de cada temporada en las series (estimada con una muestra de episodios de TMDB) y la del anime. Si falta el dato, o con `USE_REAL_RUNTIME=false`, se usa la fija (serie 50 min, película 90, anime 23).
 - El anime no tiene estructura de temporadas ni recomendaciones (MyAnimeList no ofrece esos datos de forma fiable).
 - El envío de correo está preparado pero no activo: «recuperar contraseña» y «verificar correo» escriben el enlace en el registro del servidor.
 

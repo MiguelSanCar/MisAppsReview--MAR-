@@ -81,6 +81,7 @@ describe('reglas de episodios y estados', () => {
 
 describe('minutos vistos', () => {
   it('usa duraciones fijas: serie 50, película 90, anime 23', () => {
+    config.useRealRuntime = false;
     expect(DEFAULT_EPISODE_MINUTES).toEqual({ serie: 50, pelicula: 90, anime: 23 });
     expect(minutesWatched('serie', 10, 47)).toBe(500);
     expect(minutesWatched('pelicula', 1)).toBe(90);

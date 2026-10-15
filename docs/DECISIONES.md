@@ -164,3 +164,13 @@
 | **Los avisos llevan a la ficha y no hacen nada más** | Es la persona quien decide qué hacer (añadir, marcar…). Si el aviso es de una película relacionada, lleva a la película (que se guarda como contenido, sin pedir más datos). |
 | **Ventana inicial con elección** | La primera vez que se abre la campana se explica el ajuste y se pide elegir entre todos y solo favoritos; se guarda en la cuenta y no vuelve a salir. |
 | **Panel y ventana en un portal** | La cabecera usa `backdrop-filter`, que convierte a la cabecera en el bloque contenedor de todo lo «fixed» de su interior y lo recortaría. |
+
+## Duración real de los episodios (fase 24)
+
+| Decisión | Motivo |
+|---|---|
+| **Muestrear en vez de pedir todos los episodios** | Una serie larga tiene cientos de episodios; TMDB da la duración por episodio y temporada. Se piden solo los primeros N (4) de cada temporada larga (más de 3N episodios) y, para las cortas, N episodios en total cuya media vale para todas. Una serie de 5 temporadas cuesta unas 5 peticiones; con el límite de 12, una de 30 temporadas no pasa de 12. |
+| **Media por temporada guardada en `content.seasons`** | Ya es un JSON por serie: no hace falta migración y el cálculo de horas es una suma de números ya guardados. Ausente = sin consultar; `0` = consultado sin datos (no se insiste). |
+| **En segundo plano, con límite de concurrencia (2)** | La ficha y el perfil nunca esperan a TMDB: usan lo guardado (con la duración fija como respaldo) y la media aparece en la siguiente visita. Un fallo no guarda nada y se reintenta pasados 15 minutos. |
+| **`USE_REAL_RUNTIME` pasa a `true` por defecto** | El autor pidió usar la duración real. Las horas de todas las personas cambian de golpe (suelen ser menos de 50 min por episodio). `false` vuelve a las fijas. |
+| **Aproximación de «los primeros N episodios vistos»** | Se guarda cuántos episodios se han visto, no cuáles; se suman las medias de las primeras temporadas hasta ese número. En varios visionados se vuelve a empezar la serie. |

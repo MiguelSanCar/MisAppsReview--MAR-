@@ -95,6 +95,14 @@ export async function detailTmdb(externalId: string): Promise<ProviderItem> {
   };
 }
 
+/** Duración (min) de cada episodio de una temporada, en orden; null donde TMDB no la tiene. Caché de 30 días. */
+export async function seasonRuntimesTmdb(externalId: string, season: number): Promise<(number | null)[]> {
+  const [kind, id] = externalId.split('-');
+  if (kind !== 'tv' || !/^\d+$/.test(id ?? '') || !Number.isInteger(season) || season < 1) throw new HttpError(400, 'Temporada no válida');
+  const r = await cached(`tmdb:season:${externalId}:${season}`, 30 * 86400, () => call(`/tv/${id}/season/${season}`));
+  return (Array.isArray(r.episodes) ? r.episodes : []).map((e: any) => (e.runtime > 0 ? Math.round(e.runtime) : null));
+}
+
 export type TmdbKind = 'tv' | 'movie';
 
 /** Descubrimiento de TMDB: por popularidad, o filtrado por géneros (con buena nota y votos suficientes). */

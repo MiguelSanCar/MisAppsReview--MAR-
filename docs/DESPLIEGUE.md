@@ -50,7 +50,9 @@ Lo siguiente es la preparación original, válida para cualquier hosting.
 | `PORT` | No (`3001`) | Puerto |
 | `JIKAN_ENABLED` | No (`true`) | `false` desactiva la búsqueda de anime (Jikan) |
 | `TMDB_SOFT_MS` / `JIKAN_SOFT_MS` | No (`6000` / `2000`) | Espera máxima de la búsqueda a cada fuente |
-| `USE_REAL_RUNTIME` | No (`false`) | `true` = duración real de las APIs en lugar de 50/90/23 min |
+| `USE_REAL_RUNTIME` | No (`true`) | `false` = duraciones fijas 50/90/23 min en lugar de las reales de las APIs |
+| `RUNTIME_SAMPLE` | No (`4`) | Episodios de muestra por temporada larga (más del triple) o por serie (temporadas cortas) |
+| `RUNTIME_MAX_FETCH` / `RUNTIME_CONCURRENCY` | No (`12` / `2`) | Peticiones máximas a TMDB por serie y peticiones simultáneas globales para calcular duraciones |
 | `JOINT_HISTORY_LIMIT` | No (`50`, mínimo 15) | Modificaciones guardadas por lista conjunta |
 | `JOINT_INACTIVITY_DAYS` / `JOINT_WARNING_DAYS` | No (`60` / `15`) | Borrado de listas conjuntas por inactividad y antelación del aviso |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM` | No (sin usar todavía) | Envío de correos; ver `npm run mail:test -w server` |

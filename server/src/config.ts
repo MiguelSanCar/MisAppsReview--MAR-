@@ -53,8 +53,15 @@ export const config = {
   providerDownMaxMs: Number(env.PROVIDER_DOWN_MAX_MS ?? 15 * 60_000),
   jikanMinGapMs: Number(env.JIKAN_MIN_GAP_MS ?? 400),
 
-  // Duración real de las APIs (tarea 4.6). Por defecto: duraciones fijas por tipo.
-  useRealRuntime: env.USE_REAL_RUNTIME === 'true',
+  // Duración real de las APIs. Por defecto sí; `USE_REAL_RUNTIME=false` vuelve a las fijas por tipo (50 / 90 / 23 min).
+  useRealRuntime: env.USE_REAL_RUNTIME !== 'false',
+  // Duración de los episodios de las series: N episodios de muestra por temporada (larga = más de 3N) o por serie
+  // (temporadas cortas), peticiones máximas a TMDB por serie, concurrencia global y reintento tras un fallo.
+  runtimeSample: Number(env.RUNTIME_SAMPLE) || 4,
+  runtimeMaxFetch: Number(env.RUNTIME_MAX_FETCH) || 12,
+  runtimeConcurrency: Number(env.RUNTIME_CONCURRENCY) || 2,
+  runtimeRetryMs: Number(env.RUNTIME_RETRY_MS ?? 15 * 60_000),
+  runtimeFillPerProfile: Number(env.RUNTIME_FILL_PER_PROFILE) || 10,
 
   // Correo (SMTP). Base lista pero sin usar todavía; ver src/mailer.ts.
   smtp: {

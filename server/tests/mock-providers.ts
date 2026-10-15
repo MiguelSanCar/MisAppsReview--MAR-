@@ -13,6 +13,8 @@ export interface MockState {
   collections: Record<number, { id: number; parts: any[] }>;
   /** Resultados de /search/movie (se devuelven tal cual). */
   movieSearch: any[];
+  /** Duración de cada episodio de una temporada («idSerie:temporada» → minutos). Por defecto 40 + 2 × nº de temporada. */
+  seasonRuntimes: Record<string, (number | null)[]>;
   /** Retraso artificial de cada respuesta de TMDB (ms). */
   delayMs: number;
   active: number;
@@ -21,7 +23,7 @@ export interface MockState {
 
 export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ base: string; close: () => Promise<void>; calls: string[]; state: MockState }> {
   const calls: string[] = [];
-  const state: MockState = { extraSeasons: {}, status: {}, collections: {}, movieSearch: [], delayMs: 0, active: 0, maxActive: 0 };
+  const state: MockState = { extraSeasons: {}, status: {}, collections: {}, movieSearch: [], seasonRuntimes: {}, delayMs: 0, active: 0, maxActive: 0 };
   const movies = Array.from({ length: 12 }, (_, i) => ({
     id: 101 + i, media_type: 'movie', title: `Pelicula ${i + 1}`, poster_path: '/p.jpg',
     release_date: '2010-01-01', overview: `Sinopsis ${i + 1}`, original_language: 'en', genre_ids: [28],
@@ -76,6 +78,11 @@ export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ bas
         return entry ? send(200, { id: entry.id, name: 'Saga', parts: entry.parts }) : send(404, {});
       }
       if (p === '/tmdb/search/movie') return send(200, { results: state.movieSearch });
+      const sr = /^\/tmdb\/tv\/(\d+)\/season\/(\d+)$/.exec(p);
+      if (sr) {
+        const rt = state.seasonRuntimes[`${sr[1]}:${sr[2]}`] ?? Array<number>(20).fill(40 + 2 * Number(sr[2]));
+        return send(200, { season_number: Number(sr[2]), episodes: rt.map((runtime, i) => ({ episode_number: i + 1, runtime })) });
+      }
       m = /^\/tmdb\/tv\/1396$/.exec(p);
       if (m) {
         return send(200, {
