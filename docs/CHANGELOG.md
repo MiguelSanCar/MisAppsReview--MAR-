@@ -2,6 +2,10 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.12.1 · 2026-10-15 · Revisión de redacción del roadmap
+### Cambiado
+- Roadmap: revisión de redacción de fases, funcionalidades y tareas con un tono profesional y neutro (sin dirigirse al autor), nota de fechas reformulada y emojis sustituidos por la descripción de los iconos.
+
 ## 1.12.0 · 2026-10-15 · Duración real de los episodios
 ### Añadido
 - **Duración real de los episodios**: las horas vistas de las series suman la media de cada temporada en lugar de 50 min fijos. Se estima con una muestra de TMDB: los primeros N (4) episodios de cada temporada larga (más de 3N episodios) o, si las temporadas son cortas, N episodios cuya media vale para toda la serie.

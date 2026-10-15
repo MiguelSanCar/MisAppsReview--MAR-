@@ -135,7 +135,7 @@
     {
       "id": "f2",
       "name": "Fase 2 · Búsqueda",
-      "summary": "Encontrar contenido y guardarlo con un click",
+      "summary": "Búsqueda de contenido y guardado en la lista con un solo clic",
       "features": [
         {
           "id": "f2-datos",
@@ -316,7 +316,7 @@
     {
       "id": "f5",
       "name": "Fase 5 · Despliegue",
-      "summary": "Publicar la app y compartir perfiles",
+      "summary": "Publicación de la aplicación y perfiles compartibles",
       "features": [
         {
           "id": "f5-deploy",
@@ -346,7 +346,7 @@
             },
             {
               "id": "5.8",
-              "title": "Operar el hosting desde Claude Code (flyctl)",
+              "title": "Operación del hosting desde la línea de comandos (flyctl)",
               "status": "hecho",
               "note": "tools/fly.exe, sin administrador",
               "eta": "2026-10-14"
@@ -359,7 +359,7 @@
             },
             {
               "id": "5.7",
-              "title": "Acceso temporal por túnel para pruebas",
+              "title": "Túnel temporal para pruebas externas",
               "status": "hecho",
               "note": "npm run share",
               "eta": "2026-10-13"
@@ -392,7 +392,7 @@
     {
       "id": "f6",
       "name": "Fase 6 · Amigos",
-      "summary": "Ver el perfil de otras personas",
+      "summary": "Perfiles de otras personas y gestión de amistades",
       "features": [
         {
           "id": "f6-amigos",
@@ -477,7 +477,7 @@
     {
       "id": "f8",
       "name": "Fase 8 · Opcionales",
-      "summary": "Mejoras futuras de prioridad baja",
+      "summary": "Mejoras de baja prioridad: cuentas y comunicación",
       "features": [
         {
           "id": "f8-extra",
@@ -536,7 +536,7 @@
           "tasks": [
             {
               "id": "9.2",
-              "title": "Enlace propio: quien lo abre te añade como amigo",
+              "title": "Enlace propio: quien lo abre añade a su propietario como amigo",
               "status": "hecho",
               "eta": "2026-10-13"
             },
@@ -567,7 +567,7 @@
           "tasks": [
             {
               "id": "9.6",
-              "title": "Búsqueda al escribir, sin pulsar Enter (con interruptor para volver atrás)",
+              "title": "Búsqueda al escribir, sin pulsar Intro (con interruptor para desactivarla)",
               "status": "hecho",
               "eta": "2026-10-13"
             },
@@ -593,7 +593,7 @@
           "tasks": [
             {
               "id": "9.9",
-              "title": "Mostrar el tiempo de cada búsqueda para evaluar si es lo bastante rápida",
+              "title": "Indicador del tiempo de cada búsqueda para evaluar su velocidad",
               "status": "hecho",
               "eta": "2026-10-13"
             }
@@ -601,7 +601,7 @@
         },
         {
           "id": "f9-pulido",
-          "title": "Pulido",
+          "title": "Refinamientos",
           "category": "Frontend",
           "tasks": [
             {
@@ -618,7 +618,7 @@
       "id": "f10",
       "name": "Fase 10 · Menú y listas",
       "release": "0.11.0",
-      "summary": "Ajustes rápidos de menú, nombres y tarjetas",
+      "summary": "Refinamiento del menú lateral y de las tarjetas de «Mi lista»",
       "features": [
         {
           "id": "f10-menu",
@@ -627,7 +627,7 @@
           "tasks": [
             {
               "id": "10.1",
-              "title": "Botón «Inicio» diferenciado, a la altura de «Ajustes» y por debajo del resto",
+              "title": "Botón «Inicio» diferenciado, al nivel de «Ajustes» y por debajo del resto",
               "status": "hecho",
               "eta": "2026-10-13"
             },
@@ -769,7 +769,7 @@
           "tasks": [
             {
               "id": "12.4",
-              "title": "Una lista conjunta por pareja por ahora (preparado para varias)",
+              "title": "Una lista conjunta por pareja en esta versión (modelo preparado para varias)",
               "status": "hecho",
               "eta": "2026-10-13"
             },
@@ -817,7 +817,7 @@
               "status": "pendiente",
               "note": "En espera por decisión del usuario (2026-10-14); depende de conectar el correo (12.12)",
               "eta": null,
-              "etaNote": "Depende de 12.12. Unas 2 h una vez conectado el correo"
+              "etaNote": "Depende de 12.12 (conexión del correo). Esfuerzo estimado: unas 2 h una vez disponible."
             },
             {
               "id": "12.11",
@@ -832,7 +832,7 @@
               "status": "pendiente",
               "note": "En espera por decisión del usuario (2026-10-14): app de uso personal, el correo es opcional",
               "eta": null,
-              "etaNote": "Depende de ti: un servicio SMTP. Aprox. 1 día de trabajo; prioridad baja"
+              "etaNote": "Requiere un servicio SMTP externo contratado por el propietario del proyecto. Esfuerzo estimado: 1 día; prioridad baja."
             }
           ]
         }
@@ -842,7 +842,7 @@
       "id": "f13",
       "name": "Fase 13 · Búsqueda robusta",
       "release": "0.14.0",
-      "summary": "Menos avisos y esperas cuando una fuente tarda o está bloqueada",
+      "summary": "Tolerancia a proveedores externos lentos o no disponibles",
       "features": [
         {
           "id": "f13-proveedores",
@@ -921,7 +921,7 @@
             },
             {
               "id": "14.5",
-              "title": "Emoticonos: 📝 Mi lista, 🗂️ Mis listas conjuntas, 👥 Mis amigos",
+              "title": "Iconos en el menú: Mi lista, Mis listas conjuntas y Mis amigos",
               "status": "hecho",
               "eta": "2026-10-13"
             },
@@ -1036,19 +1036,19 @@
           "tasks": [
             {
               "id": "15.1",
-              "title": "📝 (izquierda): añadir a «Por ver»",
+              "title": "Botón de lista (izquierda): añadir a «Por ver»",
               "status": "hecho",
               "eta": "2026-10-13"
             },
             {
               "id": "15.2",
-              "title": "👁️ (centro, fondo verde): marcar como «Viendo»",
+              "title": "Botón de ojo (centro, fondo verde): marcar como «Viendo»",
               "status": "hecho",
               "eta": "2026-10-13"
             },
             {
               "id": "15.3",
-              "title": "✔️ (derecha, fondo morado): marcar como «Finalizado»",
+              "title": "Botón de verificación (derecha, fondo morado): marcar como «Finalizado»",
               "status": "hecho",
               "eta": "2026-10-13"
             },
@@ -1087,7 +1087,7 @@
             },
             {
               "id": "16.2",
-              "title": "Activo solo si el contenido está en tu lista, en cualquier estado",
+              "title": "Activo solo si el contenido está en la lista, en cualquier estado",
               "status": "hecho",
               "eta": "2026-10-13"
             },
@@ -1106,13 +1106,13 @@
           "tasks": [
             {
               "id": "16.4",
-              "title": "Icono de lista sin lápiz (portapapeles con lista)",
+              "title": "Icono de lista de tareas sin lápiz",
               "status": "hecho",
               "eta": "2026-10-13"
             },
             {
               "id": "16.5",
-              "title": "Marca ✔ centrada en su botón (medido: desvío < 0,2 px)",
+              "title": "Marca de verificación centrada en su botón (desvío medido inferior a 0,2 px)",
               "status": "hecho",
               "eta": "2026-10-13"
             },
@@ -1164,7 +1164,7 @@
           "tasks": [
             {
               "id": "17.1",
-              "title": "Logotipo propio «MAR» en SVG: letras de bloque gruesas y geométricas, inspiradas en Lock Block (solo referencia; sin copiar glifos por su licencia de uso personal)",
+              "title": "Logotipo «MAR» en SVG con letras de bloque gruesas y geométricas, inspirado en la tipografía Lock Block (solo como referencia estilística; sin copiar glifos)",
               "status": "hecho",
               "eta": "2026-10-14"
             },
@@ -1269,7 +1269,7 @@
             },
             {
               "id": "17.15",
-              "title": "Táctil: objetivos de 44 px y sin dependencias del ratón (hover, tooltips, temblor del modo «Eliminar»)",
+              "title": "Interacción táctil: objetivos de al menos 44 px y sin dependencia de hover, tooltips ni del temblor del modo «Eliminar»",
               "status": "hecho",
               "eta": "2026-10-14"
             },
@@ -1316,30 +1316,30 @@
         },
         {
           "id": "f17-revision",
-          "title": "Ajustes tras la primera revisión",
+          "title": "Refinamientos de identidad y pantallas públicas",
           "category": "Frontend",
           "tasks": [
             {
               "id": "17.21",
-              "title": "Roadmap: arriba a la izquierda, el logotipo completo (en lugar del texto «MAR») para volver a la página",
+              "title": "Roadmap: logotipo completo arriba a la izquierda para volver a la página principal",
               "status": "hecho",
               "eta": "2026-10-14"
             },
             {
               "id": "17.22",
-              "title": "Páginas públicas (inicio de sesión y registro) a la altura exacta del móvil (100dvh), sin desplazamiento vertical",
+              "title": "Páginas públicas (inicio de sesión y registro) ajustadas a la altura del móvil (100dvh), sin desplazamiento vertical",
               "status": "hecho",
               "eta": "2026-10-14"
             },
             {
               "id": "17.23",
-              "title": "Logotipo con las letras exactas de la fuente Lock Block (glifos M, A y R convertidos a trazados SVG), en lugar de una interpretación; licencia de uso personal anotada en docs/THIRD_PARTY_LICENSES.md",
+              "title": "Logotipo con los glifos M, A y R de la fuente Lock Block convertidos a trazados SVG; licencia de uso personal documentada en docs/THIRD_PARTY_LICENSES.md",
               "status": "hecho",
               "eta": "2026-10-14"
             },
             {
               "id": "17.24",
-              "title": "La «M» del icono de la app (favicon e iconos de la PWA) es la M de esa misma fuente",
+              "title": "La «M» del icono de la aplicación (favicon e iconos de la PWA) procede de esa misma fuente",
               "status": "hecho",
               "eta": "2026-10-14"
             },
@@ -1385,7 +1385,7 @@
           "tasks": [
             {
               "id": "18.1",
-              "title": "Favicon de la pestaña: la «M» nueva (glifo de Lock Block) sola y más grande, sin ficha; enlaces con versión (?v=2) para saltarse la caché del navegador",
+              "title": "Favicon de la pestaña: la nueva «M» (glifo de Lock Block) sola y de mayor tamaño; enlaces con versión (?v=2) para evitar la caché del navegador",
               "status": "hecho",
               "eta": "2026-10-14"
             }
@@ -1502,7 +1502,7 @@
             },
             {
               "id": "18.32",
-              "title": "Corrección del tema claro: degradados y etiquetas que seguían oscuros (tarjetas de estadística, cabeceras del roadmap, etiqueta de estado de «Mi lista»), contrastes ajustados y auditoría automática de fondos oscuros, sombras y contraste en 8 pantallas × 2 temas × móvil y escritorio",
+              "title": "Revisión del tema claro: degradados y etiquetas que seguían oscuros (tarjetas de estadística, cabeceras del roadmap, etiqueta de estado de «Mi lista»), contrastes ajustados y auditoría automática de fondos, sombras y contraste en 8 pantallas, 2 temas y móvil/escritorio",
               "status": "hecho",
               "eta": "2026-10-14"
             }
@@ -1527,13 +1527,13 @@
             },
             {
               "id": "18.19",
-              "title": "Afinidad por género: cada contenido suma 1 (más si es favorito o finalizado, menos si está por ver o dejado), se compara la cuota del género en tu lista con su cuota en el mercado y se suaviza con pocos datos; fórmula pura y documentada en DECISIONES",
+              "title": "Afinidad por género: cada contenido suma 1 (más si es favorito o finalizado, menos si está por ver o dejado), se compara la cuota del género en la lista con su cuota en el mercado y se suaviza con pocos datos; fórmula pura documentada en DECISIONES",
               "status": "hecho",
               "eta": "2026-10-14"
             },
             {
               "id": "18.20",
-              "title": "API /api/recommendations (series y películas): descubre en TMDB por tus géneros con mayor afinidad, excluye lo que ya tienes y ordena por afinidad y puntuación. Anime queda fuera (Jikan no responde en esta red)",
+              "title": "API /api/recommendations (series y películas): descubre en TMDB por los géneros con mayor afinidad, excluye lo que ya está en la lista y ordena por afinidad y puntuación. El anime queda fuera (Jikan no aporta géneros)",
               "status": "hecho",
               "eta": "2026-10-14"
             },
@@ -1607,7 +1607,7 @@
             },
             {
               "id": "18.30",
-              "title": "Otros filtros de tu petición: el texto llegó cortado tras «estud…»",
+              "title": "Filtros adicionales de la búsqueda avanzada (años, puntuación mínima y orden)",
               "status": "hecho",
               "eta": "2026-10-14",
               "note": "Cerrada por decisión del autor: los filtros actuales son suficientes"
@@ -1642,13 +1642,13 @@
           "tasks": [
             {
               "id": "19.1",
-              "title": "En el móvil, deslizar el dedo de izquierda a derecha (empezando en el tercio izquierdo de la pantalla) abre el menú lateral; deslizar hacia la izquierda lo cierra",
+              "title": "Gesto en el móvil: deslizar de izquierda a derecha desde la zona izquierda de la pantalla abre el menú lateral y deslizar hacia la izquierda lo cierra",
               "status": "hecho",
               "eta": "2026-10-14"
             },
             {
               "id": "19.2",
-              "title": "El gesto no interfiere con el desplazamiento horizontal de otros elementos (carruseles, recorte de foto) ni con el scroll vertical; prueba con toques simulados en Edge",
+              "title": "El gesto no interfiere con el desplazamiento horizontal de otros elementos (carruseles, recorte de foto) ni con el scroll vertical; validado con toques simulados en un navegador real",
               "status": "hecho",
               "eta": "2026-10-14"
             }
@@ -1748,7 +1748,7 @@
       "id": "f20",
       "name": "Fase 20 · Portada, README y versiones",
       "release": "1.9.1",
-      "summary": "Política de versiones, recomendaciones en vertical con carga continua y documentación orientada a GitHub (versiones 1.6.1 a 1.9.1)",
+      "summary": "Política de versiones, recomendaciones con carga continua y documentación orientada a GitHub (versiones 1.6.1 a 1.9.1)",
       "features": [
         {
           "id": "f20-versiones",
@@ -1757,7 +1757,7 @@
           "tasks": [
             {
               "id": "20.1",
-              "title": "Política de versiones (semver): cambio pequeño = 0.0.x, funcionalidad nueva = 0.x, la major solo cuando lo indique el autor; la versión se actualiza en package.json, roadmap y pie de página en cada publicación. Aplicada con 1.0.1 → 1.6.0 en la fase 18",
+              "title": "Política de versiones (semver): cambio pequeño = x.y.Z, funcionalidad nueva = x.Y.0; la versión mayor solo la determina el autor. Se actualiza en package.json, roadmap y pie de página en cada publicación. Aplicada de 1.0.1 a 1.6.0 en la fase 18",
               "status": "hecho",
               "eta": "2026-10-14"
             }
@@ -1776,7 +1776,7 @@
             },
             {
               "id": "20.3",
-              "title": "API de recomendaciones paginada: cada página pide más candidatos de tus géneros con más afinidad, sin repetir los ya mostrados",
+              "title": "API de recomendaciones paginada: cada página pide más candidatos de los géneros con más afinidad, sin repetir los ya mostrados",
               "status": "hecho",
               "eta": "2026-10-14"
             },
@@ -1795,7 +1795,7 @@
           "tasks": [
             {
               "id": "20.5",
-              "title": "README profesional orientado a GitHub: qué es MAR, funcionalidades, pila tecnológica, arquitectura, puesta en marcha, configuración, scripts, pruebas, despliegue, hoja de ruta, licencias y créditos; sin dirigirse al autor ni mencionar su entorno",
+              "title": "README orientado a GitHub: qué es MAR, funcionalidades, pila tecnológica, arquitectura, puesta en marcha, configuración, scripts, pruebas, despliegue, hoja de ruta, licencias y créditos; redactado en tercera persona y sin referencias al entorno del autor",
               "status": "hecho",
               "eta": "2026-10-14"
             },
@@ -1815,18 +1815,18 @@
         },
         {
           "id": "f20-anios",
-          "title": "Búsqueda avanzada: ajustes",
+          "title": "Búsqueda avanzada: refinamientos",
           "category": "Frontend",
           "tasks": [
             {
               "id": "20.8",
-              "title": "Filtro de años: no avisar ni buscar mientras se escribe, buscar solo cuando el rango es coherente, avisar al salir del campo o al pulsar «Buscar» (nuevo botón, también con Intro) y con el error separado de los campos",
+              "title": "Filtro de años: sin avisos ni búsquedas mientras se escribe; búsqueda solo con un rango coherente, validación al salir del campo o al pulsar «Buscar» (también con Intro) y mensaje de error separado de los campos",
               "status": "hecho",
               "eta": "2026-10-14"
             },
             {
               "id": "20.9",
-              "title": "Cuadros de texto con sugerencias automáticas (estudio): las sugerencias desaparecen en cuanto el cuadro pierde el foco (clic fuera, tabulador) o con Escape",
+              "title": "Cuadros con sugerencias automáticas (estudio): las sugerencias se cierran al perder el foco (clic fuera, tabulador) o con Escape",
               "status": "hecho",
               "eta": "2026-10-14"
             }
@@ -1836,7 +1836,7 @@
     },
     {
       "id": "f21",
-      "name": "Fase 21 · Retoques menores",
+      "name": "Fase 21 · Refinamientos",
       "release": "1.9.2",
       "summary": "Mejoras de baja prioridad",
       "features": [
@@ -1847,7 +1847,7 @@
           "tasks": [
             {
               "id": "21.1",
-              "title": "Roadmap: orden inverso (lo que se está haciendo o falta por hacer primero y lo ya hecho al final), también en las columnas y en las tareas de cada tarjeta",
+              "title": "Roadmap en orden inverso: lo pendiente y en curso primero y lo completado al final, también en las columnas y en las tareas de cada tarjeta",
               "status": "hecho",
               "note": "Prioridad baja; se hace al terminar las fases 18 y 19",
               "eta": "2026-10-14"
@@ -2015,12 +2015,12 @@
         },
         {
           "id": "f23-fix",
-          "title": "Recomendaciones al día",
+          "title": "Recomendaciones actualizadas",
           "category": "Frontend",
           "tasks": [
             {
               "id": "23.4",
-              "title": "Búsqueda inicial: «Series/Películas que has podido ver» se recalcula al añadir o cambiar contenidos",
+              "title": "Portada: «Series/Películas que has podido ver» se recalcula al añadir o cambiar contenidos",
               "status": "hecho",
               "eta": "2026-10-14"
             }
@@ -2032,7 +2032,7 @@
       "id": "f24",
       "name": "Fase 24 · Duración real de los episodios",
       "release": "1.12.0",
-      "summary": "Las horas vistas usan la duración real de los episodios de TMDB: media de los primeros N episodios de cada temporada larga (más de 3N) o de N episodios para todas las temporadas cortas",
+      "summary": "Las horas vistas usan la duración real de los episodios de TMDB, estimada con una muestra por temporada",
       "features": [
         {
           "id": "f24-calculo",
@@ -2081,6 +2081,6 @@
       ]
     }
   ],
-  "release": "1.12.0",
-  "etaNote": "Cada tarea indica su fecha: la real si está hecha, o la estimada. Si depende de algo externo no hay fecha y se explica el esfuerzo."
+  "release": "1.12.1",
+  "etaNote": "Cada tarea indica su fecha de entrega: la real si está completada o la estimada si está pendiente. Las que dependen de un recurso externo no tienen fecha y llevan una nota con el motivo y el esfuerzo estimado."
 }
