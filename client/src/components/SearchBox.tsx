@@ -63,11 +63,13 @@ interface Props {
   onClear?: () => void;
   /** Se llama al cambiar el filtro de tipo (la portada lo usa para cambiar las tendencias). */
   onType?: (type: TypeFilter) => void;
+  /** Se llama cada vez que cambia el texto del cuadro (la portada vuelve arriba del todo). */
+  onText?: () => void;
   placeholder?: string;
 }
 
 /** Buscador: los contenidos van apareciendo según se escribe (sin autocompletado: se retiró a petición). */
-export function SearchBox({ onSearch, onClear, onType, placeholder }: Props) {
+export function SearchBox({ onSearch, onClear, onType, onText, placeholder }: Props) {
   const [q, setQ] = useState('');
   const [type, setType] = useState<TypeFilter>('todo');
   const input = useRef<HTMLInputElement>(null);
@@ -112,7 +114,7 @@ export function SearchBox({ onSearch, onClear, onType, placeholder }: Props) {
           autoComplete="off"
           autoFocus
           value={q}
-          onChange={(e) => setQ(e.target.value)}
+          onChange={(e) => { setQ(e.target.value); onText?.(); }}
           placeholder={placeholder ?? 'Busca una serie, película o anime…'}
           aria-label="Buscar"
         />

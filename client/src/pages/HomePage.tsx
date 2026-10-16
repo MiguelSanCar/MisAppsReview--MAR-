@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { api, errorText, isAbort } from '../api';
 import { CardRow } from '../components/CardRow';
 import { PosterCard } from '../components/PosterCard';
 import { SearchBox, SearchResponse, TypeFilter, useSearch } from '../components/SearchBox';
+import { ScrollTop } from '../components/ScrollTop';
 import { ErrorBox, Spinner } from '../components/ui';
 import { LibraryItem, Recommendations, UserState } from '../types';
 
@@ -31,6 +32,16 @@ export default function HomePage() {
   const recoGen = useRef(0);
   const recoEnd = useRef<HTMLDivElement>(null);
   const trendCtrl = useRef<AbortController | null>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
+
+  // El buscador se pega justo debajo de la barra superior (su altura cambia con el móvil y la zona segura)
+  useLayoutEffect(() => {
+    const bar = document.querySelector<HTMLElement>('.topbar');
+    const set = () => stickyRef.current?.style.setProperty('--topbar-h', `${bar?.offsetHeight ?? 53}px`);
+    set();
+    window.addEventListener('resize', set);
+    return () => window.removeEventListener('resize', set);
+  }, []);
 
   // Pantalla inicial: lo más visto del momento (cambia con el filtro de tipo)
   useEffect(() => {
@@ -102,7 +113,10 @@ export default function HomePage() {
 
   return (
     <div className="page">
-      <SearchBox onSearch={search.run} onClear={search.clear} onType={setTrendType} />
+      {/* El buscador queda fijo arriba para ver o cambiar lo buscado; al cambiar el texto se vuelve al principio */}
+      <div className="search-sticky" ref={stickyRef}>
+        <SearchBox onSearch={search.run} onClear={search.clear} onType={setTrendType} onText={() => window.scrollTo({ top: 0 })} />
+      </div>
 
       {searching ? (
         <section aria-live="polite">
@@ -174,6 +188,7 @@ export default function HomePage() {
           )}
         </>
       )}
+      <ScrollTop />
     </div>
   );
 }

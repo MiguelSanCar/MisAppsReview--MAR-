@@ -5,7 +5,7 @@ import type { Me } from '../types';
 
 export interface NotificationItem {
   id: number;
-  kind: 'season_announced' | 'season_released' | 'related_movie';
+  kind: 'season_announced' | 'season_released' | 'related_movie' | 'season_removed' | 'movie_removed';
   /** Texto del aviso (lo compone el servidor). */
   text: string;
   /** Contenido de tu lista que lo origina. */

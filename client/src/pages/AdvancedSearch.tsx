@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { api, errorText, isAbort } from '../api';
 import { PosterCard } from '../components/PosterCard';
+import { ScrollTop } from '../components/ScrollTop';
 import { ErrorBox, Spinner } from '../components/ui';
 import type { Content, UserState } from '../types';
 
@@ -262,6 +263,7 @@ export default function AdvancedSearchPage() {
           </div>
         )}
       </section>
+      <ScrollTop />
     </div>
   );
 }

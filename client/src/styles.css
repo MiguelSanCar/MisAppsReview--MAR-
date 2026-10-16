@@ -604,3 +604,13 @@ html, body { overscroll-behavior-x: none; }
 @media (min-width: 900px) { .notif-panel { right: 16px; } }
 /* Aviso emergente compacto y opaco (en el móvil se solapa un momento con el logotipo, a propósito: va a la izquierda de la campana) */
 .bell-toast { white-space: normal; width: 168px; text-align: left; line-height: 1.25; background: var(--bg-2); z-index: 60; }
+
+/* ---------- volver arriba y buscador fijo de la portada ---------- */
+.scroll-top {
+  position: fixed; right: max(18px, env(safe-area-inset-right, 0px)); bottom: max(18px, env(safe-area-inset-bottom, 0px)); z-index: 40;
+  width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  background: var(--accent); color: #fff; border: 0; box-shadow: 0 4px 14px rgba(0, 0, 0, .4);
+}
+.scroll-top:hover { filter: brightness(1.1); }
+.search-sticky { position: sticky; top: var(--topbar-h, 53px); z-index: 15; background: var(--bg); padding: 10px 0 4px; margin-bottom: 14px; }
+.search-sticky .searchbox { margin-bottom: 0; }

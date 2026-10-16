@@ -37,7 +37,7 @@
 - **Búsqueda avanzada** con filtros combinables: plataforma (Netflix, HBO, Prime…), género, estudio, años, puntuación mínima y orden.
 
 **Novedades**
-- **Campana de notificaciones** con las novedades de lo que hay en la lista: nuevas temporadas (anunciadas o ya disponibles) y películas relacionadas (secuelas de una saga o spin-offs de una serie). Se calcula en segundo plano, sin ralentizar la aplicación; puede limitarse a los favoritos.
+- **Campana de notificaciones** con las novedades de lo que hay en la lista: nuevas temporadas (anunciadas o ya disponibles) y películas relacionadas (secuelas de una saga o spin-offs de una serie). Se calcula en segundo plano, sin ralentizar la aplicación; puede limitarse a los favoritos. Si una serie gana una temporada ya estrenada, el contenido finalizado vuelve a «Por ver» conservando lo visto; si TMDB retira una temporada o una película, se ajusta el progreso o se quita de las listas con un aviso.
 
 **Estadísticas y social**
 - Perfil con tiempo total visto (horas → días → semanas → meses → años), episodios, **temporadas vistas**, **revisiones** (veces que se ha vuelto a ver algo, con sus horas y episodios), contadores por estado y top 10 de favoritas.
