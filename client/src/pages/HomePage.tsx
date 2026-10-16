@@ -39,7 +39,13 @@ export default function HomePage() {
   // El buscador se pega justo debajo de la barra superior (su altura cambia con el móvil y la zona segura)
   useLayoutEffect(() => {
     const bar = document.querySelector<HTMLElement>('.topbar');
-    const set = () => stickyRef.current?.style.setProperty('--topbar-h', `${bar?.offsetHeight ?? 53}px`);
+    const set = () => {
+      const el = stickyRef.current;
+      if (!el) return;
+      el.style.setProperty('--topbar-h', `${bar?.offsetHeight ?? 53}px`);
+      // Altura fija con los filtros visibles: pasar a la barra compacta no mueve nada de lo que hay debajo
+      if (!el.classList.contains('stuck')) { el.style.minHeight = ''; el.style.minHeight = `${el.offsetHeight}px`; }
+    };
     set();
     // «Pegado»: al bajar, el buscador pasa a una barra compacta (solo cuadro de texto y botón)
     const onScroll = () => setStuck((anchorRef.current?.getBoundingClientRect().top ?? 1) < (bar?.offsetHeight ?? 53));

@@ -2129,7 +2129,7 @@
     {
       "id": "f26",
       "name": "Fase 26 — Cambios en temporadas y navegación de la portada",
-      "release": "1.13.1",
+      "release": "1.13.2",
       "summary": "El contenido, el perfil, las comparaciones y las listas conjuntas siguen los cambios de temporadas y de películas en TMDB; botón para volver arriba y buscador fijo en la portada",
       "features": [
         {
@@ -2189,7 +2189,13 @@
           "tasks": [
             {
               "id": "26.8",
-              "title": "Al bajar, el buscador de la portada pasa a una píldora translúcida con bordes redondeados, solo con el cuadro de texto y el botón (sin filtros de tipo)",
+              "title": "Al bajar, el buscador de la portada pasa a una barra translúcida con bordes redondeados, solo con el cuadro de texto y el botón (sin filtros de tipo)",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "26.9",
+              "title": "Buscador compacto estable: sin parpadeos al subir ni al bajar un poco (la altura no cambia al pasar a la barra) y esquinas menos redondeadas",
               "status": "hecho",
               "eta": "2026-10-16"
             }
@@ -2211,6 +2217,6 @@
       ]
     }
   ],
-  "release": "1.13.1",
+  "release": "1.13.2",
   "etaNote": "Cada tarea indica su fecha de entrega: la real si está completada o la estimada si está pendiente. Las que dependen de un recurso externo no tienen fecha y llevan una nota con el motivo y el esfuerzo estimado."
 }

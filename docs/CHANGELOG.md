@@ -2,9 +2,16 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.13.2 · 2026-10-16 · Buscador compacto estable
+### Corregido
+- Portada: el buscador dudaba entre la versión básica y la compacta al bajar un poco o al volver arriba. El cambio alteraba la altura del contenedor, movía el contenido y volvía a disparar el cambio. Ahora el contenedor conserva su altura y los filtros solo se ocultan.
+
+### Cambiado
+- Esquinas de la barra compacta menos redondeadas.
+
 ## 1.13.1 · 2026-10-16 · Buscador compacto
 ### Cambiado
-- Portada: al bajar, el buscador fijo pasa a una barra compacta (píldora de bordes redondeados y fondo translúcido) con solo el cuadro de texto y el botón «Buscar»; los filtros Todo/Series/Películas/Anime se ocultan y reaparecen al volver arriba.
+- Portada: al bajar, el buscador fijo pasa a una barra compacta (barra de bordes redondeados y fondo translúcido) con solo el cuadro de texto y el botón «Buscar»; los filtros Todo/Series/Películas/Anime se ocultan y reaparecen al volver arriba.
 
 ## 1.13.0 · 2026-10-16 · Estructura de temporadas sincronizada
 ### Añadido
