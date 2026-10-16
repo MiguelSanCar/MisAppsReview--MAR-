@@ -59,9 +59,10 @@ server/src
 ├─ profile.ts, compare.ts  Estadísticas y comparación de perfiles
 ├─ recommendations.ts   Recomendaciones por géneros
 ├─ news.ts              Motor de novedades (notificaciones) en segundo plano
+├─ structure.ts         Sincroniza temporadas y películas retiradas de TMDB con el progreso (desde el motor de novedades)
 ├─ runtimes.ts          Duración real de los episodios (medias por temporada) en segundo plano
 ├─ listLife.ts, mailer.ts, roadmap.ts
-├─ domain/              Reglas puras sin red ni BD: rules, time, recommend, seasons, news, runtimes
+├─ domain/              Reglas puras sin red ni BD: rules, time, recommend, seasons, news, structure, runtimes
 └─ routes/              auth, account, library, discover, recommendations, friends, invites, profiles, lists
 ```
 
@@ -123,6 +124,9 @@ sequenceDiagram
 - **Qué avisa**: temporada nueva *anunciada* o *disponible* de una serie, y película nueva de la misma saga (si el contenido es una película) o **película relacionada** de una serie (spin-off), esta última por una heurística de título (ver DECISIONES).
 - **Base de comparación**: al empezar a seguir un contenido se guarda lo que ya existía (`news_base`); solo lo posterior es novedad, así que añadir una serie con diez temporadas no genera diez avisos.
 - **Rendimiento**: la lectura es una consulta indexada; el cálculo nunca bloquea una petición. Cola con límite global de peticiones simultáneas a TMDB, rondas pequeñas que ceden el turno, instantánea compartida entre personas y caducidades por tipo (series en emisión 12 h; terminadas y películas 7 días; búsqueda de películas relacionadas 7 días). Un fallo se reintenta a los 15 min.
+- **Estructura de temporadas** (`structure.ts`, reglas puras en `domain/structure.ts`): una vez por contenido, sin peticiones extra. Si una serie gana una temporada ya estrenada (con episodios y fecha pasada), se actualizan `content.seasons` y `total_episodes` y, en cada persona y cada lista conjunta que la tiene, lo Finalizado pasa a «Por ver» conservando los episodios vistos (Viendo/Por ver no cambian, Dejado se respeta, el favorito se conserva). Si TMDB retira una temporada, se restan solo sus episodios vistos y, si no falta ninguno, pasa a Finalizado, con el aviso `season_removed`. Solo cuentan cambios de temporadas, no los episodios sueltos que sume una temporada en emisión; las temporadas solo anunciadas siguen siendo un aviso.
+- **Película retirada**: si TMDB responde 404, `removeMovie` la quita de `user_content` y `joint_list_items` y crea el aviso `movie_removed`; el contenido sigue en `content`.
+- **Contenidos solo en listas conjuntas**: el motor también los refresca, sin generar avisos de novedades para ellos.
 - **Ajustes**: «solo favoritos» se aplica al leer (no al calcular), por lo que activarlo o quitarlo es inmediato.
 
 ## Seguridad

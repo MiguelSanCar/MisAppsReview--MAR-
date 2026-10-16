@@ -2,6 +2,18 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.13.0 · 2026-10-16 · Estructura de temporadas sincronizada
+### Añadido
+- **Temporadas sincronizadas con TMDB** dentro del motor de novedades: si una serie gana una temporada ya estrenada (con episodios y fecha pasada), se actualizan `content.seasons` y `total_episodes` (ficha, perfil y comparaciones) y, para cada persona y cada lista conjunta que la tiene, lo Finalizado pasa a «Por ver» conservando los episodios vistos. «Viendo» y «Por ver» no cambian, «Dejado» se respeta y el favorito se conserva.
+- Si TMDB retira una temporada, se restan solo sus episodios vistos y, si ya no falta ninguno, el contenido pasa a Finalizado. Aviso nuevo `season_removed` («Temporada N eliminada»).
+- Película que TMDB ya no tiene (404): se quita de las listas y de las listas conjuntas (deja de contar en perfil y comparaciones) con el aviso `movie_removed`, que la campana muestra aunque ya no esté en la lista. El contenido sigue en la tabla `content`.
+- Botón fijo «Volver arriba» en la portada y en la búsqueda filtrada.
+
+### Cambiado
+- El motor de novedades también refresca los contenidos que una persona solo tiene en una lista conjunta (sin generar avisos de novedades para ellos).
+- Portada: el buscador queda fijo bajo la barra superior y, al cambiar el texto, se vuelve arriba del todo.
+- `GET /api/notifications`: `kind` incluye `season_removed` y `movie_removed`.
+
 ## 1.12.3 · 2026-10-16 · Portada con scroll infinito
 ### Cambiado
 - Portada: «Series/Películas que has podido ver» sigue cargando recomendaciones al llegar al final sin el tope de 5 páginas; solo se detiene cuando TMDB no devuelve más (límite de 500 páginas). `GET /api/recommendations` acepta `page` de 1 a 500.

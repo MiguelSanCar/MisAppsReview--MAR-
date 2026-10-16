@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-15",
+  "updatedAt": "2026-10-16",
   "title": "MAR · Mis Apps Review",
   "subtitle": "Registro personal de series, películas y anime",
   "phases": [
@@ -2125,8 +2125,79 @@
           ]
         }
       ]
+    },
+    {
+      "id": "f26",
+      "name": "Fase 26 — Cambios en temporadas y navegación de la portada",
+      "release": "1.13.0",
+      "summary": "El contenido, el perfil, las comparaciones y las listas conjuntas siguen los cambios de temporadas y de películas en TMDB; botón para volver arriba y buscador fijo en la portada",
+      "features": [
+        {
+          "id": "f26-temporadas",
+          "title": "Temporadas añadidas o eliminadas",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "26.1",
+              "title": "Temporada nueva ya estrenada: se actualiza la estructura y los episodios totales; lo Finalizado pasa a «Por ver» hasta que la persona lo cambie",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "26.2",
+              "title": "Temporada eliminada: se restan sus episodios y, si ya no falta ninguno por ver, pasa a «Finalizado»; se avisa en la campana",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "26.3",
+              "title": "Película eliminada de TMDB: sale de la lista y de las listas conjuntas (el perfil y las comparaciones dejan de contarla) y se avisa",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "26.4",
+              "title": "Mismo comportamiento en las listas conjuntas (también para contenidos que solo están en una lista conjunta)",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            }
+          ]
+        },
+        {
+          "id": "f26-portada",
+          "title": "Navegación de la portada",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "26.5",
+              "title": "Botón fijo abajo a la derecha para volver arriba, en la portada y en la búsqueda filtrada",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "26.6",
+              "title": "Buscador fijo arriba en la portada; al cambiar el texto se vuelve al principio",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            }
+          ]
+        },
+        {
+          "id": "f26-cierre",
+          "title": "Cierre",
+          "category": "Infra",
+          "tasks": [
+            {
+              "id": "26.7",
+              "title": "Pruebas, comprobación en navegador, documentación y versión 1.13.0",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            }
+          ]
+        }
+      ]
     }
   ],
-  "release": "1.12.3",
+  "release": "1.13.0",
   "etaNote": "Cada tarea indica su fecha de entrega: la real si está completada o la estimada si está pendiente. Las que dependen de un recurso externo no tienen fecha y llevan una nota con el motivo y el esfuerzo estimado."
 }

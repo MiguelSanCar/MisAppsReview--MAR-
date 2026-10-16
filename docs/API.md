@@ -120,7 +120,7 @@ Novedades de los contenidos de la lista (temporadas anunciadas o disponibles; pe
 
 | Método y ruta | Descripción |
 |---|---|
-| `GET /` | `{ items, unseen, favoritesOnly, introSeen, checking }`. Cada item: `id`, `kind` (`season_announced` \| `season_released` \| `related_movie`), `text`, `title` (contenido de la lista que lo origina), `createdAt`, `seen`, `contentId` (a dónde lleva: la película nueva si la hay) y `posterUrl`. Máximo 50, de más a menos reciente. Solo los contenidos que siguen en la lista y, con `favoritesOnly`, solo los favoritos. `checking: true` indica que hay un cálculo en marcha y conviene volver a preguntar en unos segundos |
+| `GET /` | `{ items, unseen, favoritesOnly, introSeen, checking }`. Cada item: `id`, `kind` (`season_announced` \| `season_released` \| `related_movie` \| `season_removed` \| `movie_removed`), `text`, `title` (contenido de la lista que lo origina), `createdAt`, `seen`, `contentId` (a dónde lleva: la película nueva si la hay) y `posterUrl`. Máximo 50, de más a menos reciente. Solo los contenidos que siguen en la lista (salvo `movie_removed`, que se muestra aunque la película ya se haya quitado) y, con `favoritesOnly`, solo los favoritos. `checking: true` indica que hay un cálculo en marcha y conviene volver a preguntar en unos segundos |
 | `POST /seen` | Marca todo como visto (al abrir la campana): `{ ok, marked }` |
 
 ## Roadmap (`/api/roadmap`, público)

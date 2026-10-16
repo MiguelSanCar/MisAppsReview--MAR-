@@ -165,6 +165,19 @@
 | **Ventana inicial con elección** | La primera vez que se abre la campana se explica el ajuste y se pide elegir entre todos y solo favoritos; se guarda en la cuenta y no vuelve a salir. |
 | **Panel y ventana en un portal** | La cabecera usa `backdrop-filter`, que convierte a la cabecera en el bloque contenedor de todo lo «fixed» de su interior y lo recortaría. |
 
+## Estructura de temporadas sincronizada (fase 26)
+
+| Decisión | Motivo |
+|---|---|
+| **Solo cuentan los cambios de temporadas, no los episodios sueltos** | Una temporada en emisión suma episodios cada semana; reabrir la serie a cada uno sería ruido. Solo se reajusta cuando aparece o desaparece una temporada. |
+| **Solo se añaden temporadas ya estrenadas** | Con episodios y fecha pasada. Las anunciadas (futuras) siguen siendo solo un aviso: no se puede ver algo que no existe aún. |
+| **Lo Finalizado pasa a «Por ver» conservando lo visto** | La serie ya no está completa, pero el progreso es real. Viendo y Por ver no cambian. |
+| **«Dejado» se respeta** | Nadie pidió retomarlo; se actualizan los episodios pero no el estado. |
+| **El favorito se conserva** | Quitarlo solo lo decide la persona; no se pierde por un cambio externo. |
+| **Temporada eliminada: se restan solo sus episodios vistos** | Se supone que se ven seguidos desde el principio; si ya no falta ninguno, pasa a Finalizado. Si TMDB dejara la serie sin temporadas se ignora (más probable un fallo que un cambio real). |
+| **Película que TMDB ya no tiene: se quita de las listas, con aviso** | Deja de contar en perfil y comparaciones. El aviso `movie_removed` se muestra aunque ya no esté en la lista (la campana usa `LEFT JOIN`). El contenido se conserva en `content`. |
+| **Las listas conjuntas se ajustan igual y sin contar como actividad** | Su progreso es de la lista; un cambio de TMDB no debe posponer su borrado por inactividad. |
+
 ## Duración real de los episodios (fase 24)
 
 | Decisión | Motivo |
