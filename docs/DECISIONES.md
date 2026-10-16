@@ -107,7 +107,7 @@
 3. **Presencia en el mercado** = qué parte de los ~60 títulos más populares de TMDB (series o películas) tienen ese género; se calcula una vez al día. Mínimo 0,03 para que un género casi inexistente no dispare la cuenta.
 4. **Lift** = presencia propia suavizada ÷ presencia en el mercado. La suavización `(peso + 3·mercado) / (total + 3)` acerca el resultado a la media del mercado cuando hay pocos datos (con un solo contenido no se concluye que «le encanta» ese género).
 5. **Puntuación del género** = `log2(1 + lift) × log2(1 + peso)`. El primer factor corrige el efecto «hay más Drama que Terror»; el segundo premia la cantidad (con rendimientos decrecientes).
-6. Se toman los **3 géneros con más puntuación**, se piden a TMDB títulos de cada uno (nota ≥ 6,5 y ≥ 200 votos), se **excluye lo que ya tienes** y se ordenan por `suma de afinidad de sus géneros × (0,6 + 0,4 × calidad)`, con la popularidad como desempate. Cada recomendación indica el género que la motiva.
+6. Se toman los **3 géneros con más puntuación**, se piden a TMDB títulos de cada uno (nota ≥ 6,5 y ≥ 200 votos), se **excluye lo que ya tienes** y se conservan solo los que encajan (`suma de afinidad de sus géneros × (0,6 + 0,4 × calidad)` > 0). Desde la v1.14.0 se ordenan por nota con preferencia por lo popular (ver más abajo) y ese encaje solo desempata. Cada recomendación indica el género que la motiva.
 
 | Decisión | Motivo |
 |---|---|
@@ -177,6 +177,19 @@
 | **Temporada eliminada: se restan solo sus episodios vistos** | Se supone que se ven seguidos desde el principio; si ya no falta ninguno, pasa a Finalizado. Si TMDB dejara la serie sin temporadas se ignora (más probable un fallo que un cambio real). |
 | **Película que TMDB ya no tiene: se quita de las listas, con aviso** | Deja de contar en perfil y comparaciones. El aviso `movie_removed` se muestra aunque ya no esté en la lista (la campana usa `LEFT JOIN`). El contenido se conserva en `content`. |
 | **Las listas conjuntas se ajustan igual y sin contar como actividad** | Su progreso es de la lista; un cambio de TMDB no debe posponer su borrado por inactividad. |
+
+## Contenido sin estrenar y orden de resultados (v1.14.0)
+
+| Decisión | Motivo |
+|---|---|
+| **Sin fecha de estreno = no se bloquea** | No se restringe lo que no se sabe: un dato ausente no debe impedir marcar algo ya visto. |
+| **Anime sin restricción** | Jikan no aporta fecha de estreno en nuestra consulta. |
+| **Los estados guardados antes no se tocan** | Quien ya tenía algo en Viendo o Finalizado conserva su progreso; la regla solo frena cambios nuevos. |
+| **«Finalizado» manual llega hasta lo estrenado** | En una serie con temporadas por estrenar, completar la serie no es posible aún; se marcan los episodios disponibles. |
+| **Al salir una temporada, lo Finalizado pasa a «Por ver»** | Mismo criterio que una temporada nueva (fase 26). |
+| **Búsqueda: coincidencia con el nombre + popularidad** | Coincidencia exacta 3 · empieza por 2 · contiene la palabra 1 · contiene el texto 0,5, más hasta 2 puntos de popularidad (1 si no coincide en absoluto). La popularidad de TMDB va en escala logarítmica (~500 ya es «muy popular»; en anime, miembros de MyAnimeList ÷ 3000). Así un título conocido que coincide algo peor puede adelantar a uno desconocido, pero no a uno que coincide mucho mejor. |
+| **Recomendaciones: 60 % nota, 40 % popularidad** | Lo popular es más probable que se haya visto. El encaje con los géneros pasa a filtrar y desempatar (antes ordenaba). |
+| **`/api/discover` sin cambios** | No tiene texto y ya ordena por popularidad por defecto. |
 
 ## Duración real de los episodios (fase 24)
 

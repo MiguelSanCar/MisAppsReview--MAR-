@@ -41,6 +41,7 @@ function mapResult(r: any, isMovie: boolean): ProviderItem | null {
     studio: null,
     genres: Array.isArray(r.genre_ids) ? r.genre_ids : undefined,
     voteAverage: typeof r.vote_average === 'number' ? r.vote_average : null,
+    popularity: typeof r.popularity === 'number' ? r.popularity : null,
   };
 }
 

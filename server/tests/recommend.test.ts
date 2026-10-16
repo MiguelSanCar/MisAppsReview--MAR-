@@ -70,7 +70,7 @@ describe('afinidad por género (fórmula pura)', () => {
     expect(s.map((g) => g.id)).toEqual([10759]);
   });
 
-  it('los candidatos se ordenan por encaje, con algo más de peso a la nota y la popularidad como desempate', () => {
+  it('los candidatos se ordenan por nota con preferencia por lo popular; el encaje solo filtra y desempata', () => {
     const scores = genreAffinity([it_([18]), it_([18]), it_([80])], 'serie', { 18: 0.5, 80: 0.1 });
     const ranked = rankCandidates(
       [
@@ -82,7 +82,13 @@ describe('afinidad por género (fórmula pura)', () => {
       ],
       scores,
     );
-    expect(ranked.map((c) => c.index)).toEqual([1, 2, 3, 0]);
+    expect(ranked.map((c) => c.index)).toEqual([2, 3, 1, 0]);
+    // lo muy popular adelanta a algo con mejor nota pero desconocido
+    const pop = rankCandidates(
+      [{ index: 0, genres: [18], voteAverage: 8.4, popularity: 1 }, { index: 1, genres: [18], voteAverage: 7.4, popularity: 400 }],
+      scores,
+    );
+    expect(pop.map((c) => c.index)).toEqual([1, 0]);
     expect(candidateScore({ index: 0, genres: [], voteAverage: 9 }, new Map())).toBe(0);
   });
 });

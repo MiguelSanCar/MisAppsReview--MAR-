@@ -62,13 +62,13 @@ server/src
 ├─ structure.ts         Sincroniza temporadas y películas retiradas de TMDB con el progreso (desde el motor de novedades)
 ├─ runtimes.ts          Duración real de los episodios (medias por temporada) en segundo plano
 ├─ listLife.ts, mailer.ts, roadmap.ts
-├─ domain/              Reglas puras sin red ni BD: rules, time, recommend, seasons, news, structure, runtimes
+├─ domain/              Reglas puras sin red ni BD: rules, time, recommend, ranking, release, seasons, news, structure, runtimes
 └─ routes/              auth, account, library, discover, recommendations, friends, invites, profiles, lists
 ```
 
 ## Datos
 
-SQLite con `sql.js` (WebAssembly): la base vive **en memoria** y se vuelca a `data/mar.db` 300 ms después de cada escritura. Por eso solo puede haber **un proceso por fichero**. Las migraciones están numeradas (hoy 13) y nunca se edita una publicada.
+SQLite con `sql.js` (WebAssembly): la base vive **en memoria** y se vuelca a `data/mar.db` 300 ms después de cada escritura. Por eso solo puede haber **un proceso por fichero**. Las migraciones están numeradas (hoy 14) y nunca se edita una publicada.
 
 | Tabla | Contenido |
 |---|---|
@@ -95,6 +95,8 @@ SQLite con `sql.js` (WebAssembly): la base vive **en memoria** y se vuelca a `da
 - **Episodios**: enteros; llegar o superar el total fija el máximo y finaliza. Una película cuenta como 1 episodio.
 - **Tiempo visto** = minutos de los episodios vistos. Series: se suma la media de cada temporada (`Season.minutes`, ver «Duración de los episodios»); película y anime: su duración; si falta el dato o `USE_REAL_RUNTIME=false`, la fija (serie 50 min, película 90, anime 23). Se muestra en horas → días → semanas → meses → años.
 - **Duración de los episodios**: TMDB no da una duración fiable por serie, sino por episodio y temporada. Para no hacer decenas de peticiones se muestrea (`domain/runtimes.ts`): en una temporada «larga» (más de 3N episodios) se toman sus primeros N episodios y su media es la de esa temporada; las temporadas «cortas» no se consultan una a una: se toman N episodios de las primeras y su media vale para todas ellas. N = `RUNTIME_SAMPLE` (4). Lo que no se pudo medir usa la media de lo medido y, si no hay nada, la duración fija. Se calcula en segundo plano (`runtimes.ts`: concurrencia global de 2, máximo 12 peticiones por serie, caché de 30 días) al abrir la ficha de una serie y al ver un perfil con series sin calcular; nada espera a ello.
+- **Contenido sin estrenar** (migración 14, `content.release_date`; reglas puras en `domain/release.ts`): la fecha viene de TMDB (película: estreno; serie: primer episodio) y se guarda al buscar y al abrir la ficha, y el motor de novedades la refresca con cada consulta. `ContentDto` expone `releaseDate`, `unreleased` y `watchable`. `releaseGate` (`library.ts`) responde 409 en los endpoints de estado, favorito y episodios de «Mi lista» y de las listas conjuntas, y devuelve el total efectivo para el «Finalizado». `structure.ts` mantiene al día las fechas de las temporadas y, cuando una sale, aplica el mismo reajuste que a una temporada nueva.
+- **Orden de resultados** (`domain/ranking.ts`, reglas puras): `rankSearch` ordena la búsqueda del inicio por coincidencia con el texto más popularidad; `ratingWithPopularity` (60 % nota, 40 % popularidad) ordena las recomendaciones.
 - **Revisionado**: volver a ver algo finalizado lo pasa a «Por ver» con los episodios a 0 y se muestra «Reviendo»; lo ya visto se conserva en `prev_episodes` y sigue contando en las estadísticas.
 - **Temporadas**: el progreso sigue siendo un número de episodios; las temporadas son una vista sobre él. «Temporadas vistas» cuenta las completas.
 - **Perfiles**: `/perfil/<usuario>`, solo para amigos por defecto o públicos; la lista solo si se permite; los amigos de alguien nunca son públicos. Todo el acceso se decide en `resolve()` (`routes/profiles.ts`).

@@ -39,9 +39,20 @@ API JSON bajo `/api`. Todas las respuestas de error tienen la forma `{ "error": 
 
 | Método y ruta | Descripción |
 |---|---|
-| `GET /api/search?q=&type=` | Búsqueda unificada (TMDB + Jikan). `q` ≥ 2 caracteres; `type` = `todo` \| `serie` \| `pelicula` \| `anime`. Devuelve `results`, `states` (estado de la persona en cada resultado), `warnings` y `tookMs` |
+| `GET /api/search?q=&type=` | Búsqueda unificada (TMDB + Jikan). `q` ≥ 2 caracteres; `type` = `todo` \| `serie` \| `pelicula` \| `anime`. Devuelve `results`, `states` (estado de la persona en cada resultado), `warnings` y `tookMs`. Orden: primero lo que más coincide con el texto (exacto > empieza por > contiene la palabra > contiene el texto) y, a igualdad, lo más popular (popularidad de TMDB en escala logarítmica; en anime, miembros de MyAnimeList ÷ 3000) |
 | `GET /api/search/trending?type=` | Lo más visto del momento |
 | `GET /api/content/:id` | Ficha: datos, puntuaciones (IMDb, Rotten Tomatoes o MyAnimeList), `seasons` y el `state` de la persona |
+
+Campos de estreno del contenido (en la ficha, los resultados y la lista):
+
+| Campo | Descripción |
+|---|---|
+| `releaseDate` | AAAA-MM-DD: estreno de la película o primer episodio de la serie; `null` si no se conoce (anime incluido) |
+| `unreleased` | `true` si `releaseDate` es futura: solo admite «Por ver» |
+| `watchable` | Episodios ya marcables: `0` si no se ha estrenado, menos que el total si hay temporadas por estrenar, `null` = todos |
+| `seasons[].air` | Fecha de estreno de la temporada |
+
+Sin fecha no se bloquea nada.
 
 ### Búsqueda avanzada (`/api/discover`, sesión)
 
@@ -54,7 +65,7 @@ API JSON bajo `/api`. Todas las respuestas de error tienen la forma `{ "error": 
 
 ### Recomendaciones (`/api/recommendations`, sesión)
 
-`GET /?type=serie|pelicula|anime&page=1..500` (scroll sin fin; TMDB no sirve más) — títulos de los géneros con más afinidad, sin repetir lo que ya está en la lista.
+`GET /?type=serie|pelicula|anime&page=1..500` (scroll sin fin; TMDB no sirve más) — títulos de los géneros con más afinidad, sin repetir lo que ya está en la lista. Orden: por nota con preferencia por lo popular (60 % nota, 40 % popularidad); el encaje con los géneros solo decide qué candidatos entran y desempata.
 
 ```json
 {
@@ -76,6 +87,8 @@ API JSON bajo `/api`. Todas las respuestas de error tienen la forma `{ "error": 
 | `PUT /:id/favorite` | `{ value }` | Favorito (máximo 10) |
 | `PUT /:id/later` | `{ value }` | Alterna «Por ver» |
 | `PUT /:id/episodes` | `{ watched }` | Episodios vistos; llegar al total finaliza |
+
+`PUT /:id/status`, `/:id/favorite` y `/:id/episodes` responden **409** si el contenido no se ha estrenado (`unreleased`) y se pide algo distinto de «Por ver», o si se marcan episodios de una temporada por estrenar (más de `watchable`). Un «Finalizado» en una serie con temporadas por estrenar llega solo hasta los episodios estrenados.
 | `POST /:id/rewatch` | — | Volver a ver algo finalizado |
 | `DELETE /:id` · `POST /delete` | — · `{ ids }` | Quitar de la lista (uno o hasta 500); resta sus episodios y minutos |
 
@@ -111,7 +124,7 @@ El acceso se decide en `resolve()`: `self`, `friend`, `public` o `private` (solo
 | `POST /` | `{ friendId, name? }` — crear (una por pareja) |
 | `GET /:id` · `DELETE /:id` | Detalle / borrar |
 | `POST /:id/leave` · `POST /:id/join` | Salir sin borrarla / volver a unirse |
-| `POST /:id/items` · `PUT /:id/items/:contentId` · `DELETE /:id/items/:contentId` | Añadir (`{ contentId }`), cambiar estado o episodios, quitar |
+| `POST /:id/items` · `PUT /:id/items/:contentId` · `DELETE /:id/items/:contentId` | Añadir (`{ contentId }`), cambiar estado o episodios (el `PUT` responde 409 con las mismas reglas de estreno que «Mi lista»), quitar |
 | `GET /:id/history` · `GET /:id/items/:contentId/history` · `POST /:id/items/:contentId/rollback` | Historial y rollback (`{ historyId }`) |
 
 ## Notificaciones (`/api/notifications`, sesión)

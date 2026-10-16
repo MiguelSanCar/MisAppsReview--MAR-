@@ -2,6 +2,19 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.14.0 · 2026-10-16 · Contenido sin estrenar y orden de resultados
+### Añadido
+- **Contenido sin estrenar**: lo que aún no ha salido (película con estreno futuro o serie cuyo primer episodio es futuro) solo admite «Por ver». Migración 14: `content.release_date`, que se rellena desde la búsqueda y el detalle de TMDB. En series, las temporadas por estrenar no dejan marcar episodios y un «Finalizado» manual llega solo hasta los episodios ya estrenados.
+- `ContentDto` devuelve `releaseDate`, `unreleased` y `watchable`; las temporadas llevan `air`.
+- Cuando una temporada por estrenar sale, quien tenía la serie Finalizada pasa a «Por ver» (como con una temporada nueva); el motor de novedades mantiene al día la fecha de estreno del contenido y las de sus temporadas.
+- Cliente: en las tarjetas de búsqueda, ojo y ✔ quedan desactivados y oscuros; en «Mi lista», ♥ y flecha; en la ficha y en el modal de la lista conjunta, Viendo/Finalizado/Dejado y el contador, con aviso de estreno; las temporadas por estrenar salen oscuras, con su fecha y sin poder marcar episodios; el contador muestra «(N estrenados)».
+
+### Cambiado
+- `GET /api/search` (búsqueda del inicio): primero lo que más coincide con el nombre escrito (exacto, empieza por, contiene la palabra, contiene el texto) y, a igualdad, lo más popular. La búsqueda filtrada (`/api/discover`) no cambia.
+- Recomendaciones de la portada: se ordenan por nota con preferencia por lo popular (60 % nota, 40 % popularidad); el encaje con los géneros solo filtra qué candidatos entran y desempata.
+- `PUT /api/library/:id/{status,favorite,episodes}` y `PUT /api/lists/:id/items/:contentId` responden 409 si el cambio no es posible por falta de estreno.
+- Sin cambios: el anime (Jikan) no tiene fecha de estreno y no se restringe; los estados guardados antes no se modifican.
+
 ## 1.13.2 · 2026-10-16 · Buscador compacto estable
 ### Corregido
 - Portada: el buscador dudaba entre la versión básica y la compacta al bajar un poco o al volver arriba. El cambio alteraba la altura del contenedor, movía el contenido y volvía a disparar el cambio. Ahora el contenedor conserva su altura y los filtros solo se ocultan.

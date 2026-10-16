@@ -2,6 +2,7 @@ import { all, get, run } from './db';
 import { HttpError } from './http';
 import type { ContentType } from './domain/rules';
 import { normalizeSeasons, parseSeasons, Season } from './domain/seasons';
+import { rankSearch } from './domain/ranking';
 import { isFuture, watchableEpisodes } from './domain/release';
 import { scheduleRuntimes } from './runtimes';
 import { config } from './config';
@@ -259,7 +260,8 @@ async function searchProviders(q: string, type: SearchType) {
 
 export async function search(q: string, type: SearchType) {
   const { items, warnings } = await searchProviders(q, type);
-  return { results: items.map((i) => toDto(upsertFromProvider(i))), warnings };
+  // Primero lo que más coincide con lo escrito y, entre ello, lo más popular
+  return { results: rankSearch(items, q).map((i) => toDto(upsertFromProvider(i))), warnings };
 }
 
 /** Lo más visto del momento: series (por defecto), películas o anime. Sin clave de TMDB, la portada cae en anime. */

@@ -24,6 +24,8 @@ export interface ProviderItem {
   seasons?: { number: number; episodes: number; air?: string }[];
   /** Nota media de TMDB (0-10) en resultados de descubrimiento. */
   voteAverage?: number | null;
+  /** Popularidad (escala de TMDB; en anime, miembros de MyAnimeList ÷ 3000) para ordenar resultados. */
+  popularity?: number | null;
 }
 
 export interface Ratings {

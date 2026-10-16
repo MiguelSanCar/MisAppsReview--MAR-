@@ -45,6 +45,7 @@ function map(a: any): ProviderItem {
     runtimeMinutes: parseMinutes(a.duration),
     studio: (a.studios ?? []).map((s: any) => s.name).join(' · ') || null,
     malScore: typeof a.score === 'number' ? a.score : null,
+    popularity: typeof a.members === 'number' ? a.members / 3000 : null,
   };
 }
 

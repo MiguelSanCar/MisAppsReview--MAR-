@@ -2215,8 +2215,92 @@
           ]
         }
       ]
+    },
+    {
+      "id": "f27",
+      "name": "Fase 27 — Estrenos y orden de resultados",
+      "release": "1.14.0",
+      "summary": "Lo que aún no se ha estrenado solo admite «Por ver», y las búsquedas y recomendaciones ponen primero lo más relevante y popular",
+      "features": [
+        {
+          "id": "f27-estrenos",
+          "title": "Contenido sin estrenar",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "27.1",
+              "title": "Fecha de estreno de películas y series (migración 14) y de cada temporada, tomada de TMDB y mantenida al día",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "27.2",
+              "title": "Películas y series sin estrenar: solo «Por ver» (el servidor rechaza Viendo, Finalizado, Dejado, favorito y episodios), también en listas conjuntas",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "27.3",
+              "title": "Series con temporadas por estrenar: no se pueden marcar sus episodios y «Finalizado» llega hasta lo ya estrenado; al estrenarse la temporada, quien la tenía finalizada pasa a «Por ver»",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            }
+          ]
+        },
+        {
+          "id": "f27-interfaz",
+          "title": "Opciones desactivadas",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "27.4",
+              "title": "Tarjetas de búsqueda, «Mi lista», ficha y lista conjunta: opciones no disponibles oscuras y sin poder pulsarse, con la fecha de estreno",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "27.5",
+              "title": "Lista de temporadas: las temporadas por estrenar salen oscuras, con su fecha y número de episodios, sin poder marcarse",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            }
+          ]
+        },
+        {
+          "id": "f27-orden",
+          "title": "Orden de resultados",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "27.6",
+              "title": "Búsqueda del inicio: primero lo que más coincide con el nombre y, a igualdad, lo más popular (la búsqueda filtrada ya ordena por popularidad por defecto)",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "27.7",
+              "title": "Recomendaciones de la portada ordenadas por nota con preferencia por lo popular",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            }
+          ]
+        },
+        {
+          "id": "f27-cierre",
+          "title": "Cierre",
+          "category": "Infra",
+          "tasks": [
+            {
+              "id": "27.8",
+              "title": "Pruebas, comprobación en navegador, documentación y versión 1.14.0",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            }
+          ]
+        }
+      ]
     }
   ],
-  "release": "1.13.2",
+  "release": "1.14.0",
   "etaNote": "Cada tarea indica su fecha de entrega: la real si está completada o la estimada si está pendiente. Las que dependen de un recurso externo no tienen fecha y llevan una nota con el motivo y el esfuerzo estimado."
 }

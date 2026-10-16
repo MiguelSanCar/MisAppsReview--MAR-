@@ -1,3 +1,4 @@
+import { ratingWithPopularity } from './ranking';
 import type { Status } from './rules';
 
 /**
@@ -92,6 +93,8 @@ export interface Candidate {
   index: number;
   genres: number[];
   voteAverage: number | null;
+  /** Popularidad de TMDB. */
+  popularity?: number | null;
 }
 
 /** Cuánto encaja un candidato: suma la afinidad de sus géneros, algo más si tiene buena nota. */
@@ -101,11 +104,14 @@ export function candidateScore(c: Candidate, affinity: Map<number, number>): num
   return fit * (0.6 + 0.4 * quality);
 }
 
-/** Ordena candidatos por encaje (mayor primero), con la popularidad de TMDB como desempate. */
+/**
+ * Ordena candidatos por nota con preferencia por lo popular (es más probable que se hayan visto): 60 % nota, 40 %
+ * popularidad. El encaje con tus géneros decide qué candidatos entran (solo los que encajan) y desempata.
+ */
 export function rankCandidates<T extends Candidate>(cands: T[], scores: GenreScore[]): (T & { score: number })[] {
   const aff = new Map(scores.map((s) => [s.id, s.score]));
   return cands
     .map((c) => ({ ...c, score: candidateScore(c, aff) }))
     .filter((c) => c.score > 0)
-    .sort((a, b) => b.score - a.score || a.index - b.index);
+    .sort((a, b) => ratingWithPopularity(b.voteAverage, b.popularity) - ratingWithPopularity(a.voteAverage, a.popularity) || b.score - a.score || a.index - b.index);
 }

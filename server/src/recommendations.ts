@@ -86,12 +86,12 @@ export async function recommend(userId: number, kind: 'serie' | 'pelicula' | 'an
 
   const owned = new Set(rows.map((r) => r.external_id));
   const seen = new Set<string>();
-  const cands: { index: number; genres: number[]; voteAverage: number | null; item: ProviderItem }[] = [];
+  const cands: { index: number; genres: number[]; voteAverage: number | null; popularity: number | null; item: ProviderItem }[] = [];
   let index = 0;
   for (const it of lists.flat()) {
     if (owned.has(it.externalId) || seen.has(it.externalId) || !it.genres?.length) continue;
     seen.add(it.externalId);
-    cands.push({ index: index++, genres: it.genres, voteAverage: it.voteAverage ?? null, item: it });
+    cands.push({ index: index++, genres: it.genres, voteAverage: it.voteAverage ?? null, popularity: it.popularity ?? null, item: it });
   }
 
   const names = await genreNamesTmdb(TK[kind]).catch(() => ({} as Record<number, string>));
