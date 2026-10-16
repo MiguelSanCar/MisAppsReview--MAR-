@@ -27,7 +27,7 @@ Visión general: `README.md` (orientado a GitHub: no se dirige al autor ni menci
 ```bash
 npm run dev                       # API :3001 (también sirve client/dist) + Vite :5173 con proxy /api
 npm run share                     # túnel Cloudflare a :3001 (requiere `npm run dev` y tools/cloudflared); se niega con el JWT_SECRET por defecto
-npm test                          # Vitest del servidor (161 tests)
+npm test                          # Vitest del servidor
 npm run build                     # client/dist y server/dist
 npm run dev:mock -w server        # app con TMDB/Jikan/OMDb simulados en :3101 (necesita build del cliente; `MOCK_SEED=300` crea el usuario «carga», `MOCK_DEMO=1 MOCK_PORT=3102` el modo demostración para `scripts/capturas.js`); JOINT_INACTIVITY_DAYS / JOINT_WARNING_DAYS cortos para probar avisos
 npm run mail:test -w server -- tu@correo.com   # comprueba SMTP (base lista, aún sin usar)
