@@ -2,6 +2,10 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.13.1 · 2026-10-16 · Buscador compacto
+### Cambiado
+- Portada: al bajar, el buscador fijo pasa a una barra compacta (píldora de bordes redondeados y fondo translúcido) con solo el cuadro de texto y el botón «Buscar»; los filtros Todo/Series/Películas/Anime se ocultan y reaparecen al volver arriba.
+
 ## 1.13.0 · 2026-10-16 · Estructura de temporadas sincronizada
 ### Añadido
 - **Temporadas sincronizadas con TMDB** dentro del motor de novedades: si una serie gana una temporada ya estrenada (con episodios y fecha pasada), se actualizan `content.seasons` y `total_episodes` (ficha, perfil y comparaciones) y, para cada persona y cada lista conjunta que la tiene, lo Finalizado pasa a «Por ver» conservando los episodios vistos. «Viendo» y «Por ver» no cambian, «Dejado» se respeta y el favorito se conserva.

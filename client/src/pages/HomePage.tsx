@@ -33,14 +33,20 @@ export default function HomePage() {
   const recoEnd = useRef<HTMLDivElement>(null);
   const trendCtrl = useRef<AbortController | null>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const [stuck, setStuck] = useState(false);
 
   // El buscador se pega justo debajo de la barra superior (su altura cambia con el móvil y la zona segura)
   useLayoutEffect(() => {
     const bar = document.querySelector<HTMLElement>('.topbar');
     const set = () => stickyRef.current?.style.setProperty('--topbar-h', `${bar?.offsetHeight ?? 53}px`);
     set();
+    // «Pegado»: al bajar, el buscador pasa a una barra compacta (solo cuadro de texto y botón)
+    const onScroll = () => setStuck((anchorRef.current?.getBoundingClientRect().top ?? 1) < (bar?.offsetHeight ?? 53));
+    onScroll();
     window.addEventListener('resize', set);
-    return () => window.removeEventListener('resize', set);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { window.removeEventListener('resize', set); window.removeEventListener('scroll', onScroll); };
   }, []);
 
   // Pantalla inicial: lo más visto del momento (cambia con el filtro de tipo)
@@ -114,7 +120,8 @@ export default function HomePage() {
   return (
     <div className="page">
       {/* El buscador queda fijo arriba para ver o cambiar lo buscado; al cambiar el texto se vuelve al principio */}
-      <div className="search-sticky" ref={stickyRef}>
+      <div ref={anchorRef} aria-hidden="true" />
+      <div className={`search-sticky ${stuck ? 'stuck' : ''}`} ref={stickyRef}>
         <SearchBox onSearch={search.run} onClear={search.clear} onType={setTrendType} onText={() => window.scrollTo({ top: 0 })} />
       </div>
 
