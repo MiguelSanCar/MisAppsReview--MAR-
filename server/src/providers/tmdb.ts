@@ -234,11 +234,17 @@ export async function newsTv(externalId: string, prev: TvSnap | null, relatedTtl
 export async function newsMovie(externalId: string): Promise<MovieSnap> {
   const id = externalId.split('-')[1];
   if (!/^\d+$/.test(id ?? '')) throw new HttpError(400, 'Identificador TMDB no válido');
-  const d = await call(`/movie/${id}`);
+  let d: any;
+  try {
+    d = await call(`/movie/${id}`);
+  } catch (e) {
+    if (e instanceof HttpError && e.status === 404) { const gone = new HttpError(404, 'La película ya no existe en TMDB'); gone.code = 'gone'; throw gone; }
+    throw e;
+  }
   const self = relOf({ ...d, id: Number(id) });
   const cid = d.belongs_to_collection?.id;
   if (!cid) return { kind: 'movie', parts: [self] };
-  const col = await call(`/collection/${cid}`);
+  const col = await call(`/collection/${cid}`).catch((e) => { if (e instanceof HttpError && e.status === 404) return { parts: [] }; throw e; });
   const parts: RelMovie[] = (col.parts ?? []).map(relOf);
   if (!parts.some((p) => p.id === self.id)) parts.push(self);
   return { kind: 'movie', parts };

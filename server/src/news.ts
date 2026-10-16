@@ -1,6 +1,8 @@
 import { all, get, run, transaction } from './db';
 import { config } from './config';
 import { upsertFromProvider } from './content';
+import { HttpError } from './http';
+import { removeMovie, syncTvStructure } from './structure';
 import { baseOf, diffNews, isDue, parseBase, parseSnap, Snap, TvSnap } from './domain/news';
 import { movieItemFromRel, newsMovie, newsTv, tmdbAvailable } from './providers/tmdb';
 
@@ -24,6 +26,8 @@ interface Row {
   news_base: string | null;
   is_favorite: number;
   status: string;
+  /** 1 = está en la lista de la persona (genera avisos); 0 = solo en una lista conjunta (solo se mantiene al día). */
+  personal: number;
 }
 
 const MAX_ROUNDS = 40;
@@ -58,10 +62,17 @@ let halted = false; //                                    true = no se programa 
 
 const rowsOf = (userId: number) =>
   all<Row>(
-    `SELECT c.id AS content_id, c.external_id, c.type, c.title, c.news, c.news_at, uc.news_base, uc.is_favorite, uc.status
+    `SELECT c.id AS content_id, c.external_id, c.type, c.title, c.news, c.news_at, uc.news_base, uc.is_favorite, uc.status, 1 AS personal
      FROM user_content uc JOIN content c ON c.id = uc.content_id
-     WHERE uc.user_id = ? AND c.source = 'tmdb' AND c.type IN ('serie', 'pelicula')`,
-    [userId],
+     WHERE uc.user_id = ? AND c.source = 'tmdb' AND c.type IN ('serie', 'pelicula')
+     UNION
+     SELECT c.id, c.external_id, c.type, c.title, c.news, c.news_at, NULL, 0, 'POR_VER', 0
+     FROM joint_list_items ji
+     JOIN joint_list_members m ON m.list_id = ji.list_id AND m.user_id = ? AND m.left_at IS NULL
+     JOIN content c ON c.id = ji.content_id
+     WHERE c.source = 'tmdb' AND c.type IN ('serie', 'pelicula')
+       AND ji.content_id NOT IN (SELECT content_id FROM user_content WHERE user_id = ?)`,
+    [userId, userId, userId],
   );
 
 /** Prioridad: lo que nunca se ha consultado, luego favoritos y lo que se está viendo, luego lo más antiguo. */
@@ -78,7 +89,9 @@ function fetchOne(r: Row): Promise<void> {
         : await newsMovie(r.external_id);
       run('UPDATE content SET news = ?, news_at = ? WHERE id = ?', [JSON.stringify(snap), new Date().toISOString(), r.content_id]);
       failedAt.delete(r.content_id);
+      if (snap.kind === 'tv') syncTvStructure(r.content_id, snap);
     } catch (e) {
+      if (e instanceof HttpError && e.code === 'gone' && r.type === 'pelicula') removeMovie(r.content_id);
       if (process.env.NEWS_DEBUG) console.error('[novedades] falló', r.external_id, (e as Error).message);
       failedAt.set(r.content_id, Date.now());
     }
@@ -95,6 +108,7 @@ export function evaluateNews(userId: number): number {
   let created = 0;
   transaction(() => {
     for (const r of rowsOf(userId)) {
+      if (!r.personal) continue;
       const snap = parseSnap(r.news);
       if (!snap) continue;
       const base = parseBase(r.news_base);

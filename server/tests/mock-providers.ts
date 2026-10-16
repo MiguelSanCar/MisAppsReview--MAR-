@@ -11,6 +11,10 @@ export interface MockState {
   status: Record<number, string>;
   /** Sagas: id de película → { id de colección, partes }. */
   collections: Record<number, { id: number; parts: any[] }>;
+  /** Ids de TMDB de películas que TMDB ya no tiene (responden 404). */
+  removedMovies: number[];
+  /** Ids de colección (saga) que responden 404. */
+  removedCollections: number[];
   /** Resultados de /search/movie (se devuelven tal cual). */
   movieSearch: any[];
   /** Duración de cada episodio de una temporada («idSerie:temporada» → minutos). Por defecto 40 + 2 × nº de temporada. */
@@ -23,7 +27,7 @@ export interface MockState {
 
 export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ base: string; close: () => Promise<void>; calls: string[]; state: MockState }> {
   const calls: string[] = [];
-  const state: MockState = { extraSeasons: {}, status: {}, collections: {}, movieSearch: [], seasonRuntimes: {}, delayMs: 0, active: 0, maxActive: 0 };
+  const state: MockState = { extraSeasons: {}, status: {}, collections: {}, removedMovies: [], removedCollections: [], movieSearch: [], seasonRuntimes: {}, delayMs: 0, active: 0, maxActive: 0 };
   const movies = Array.from({ length: 12 }, (_, i) => ({
     id: 101 + i, media_type: 'movie', title: `Pelicula ${i + 1}`, poster_path: '/p.jpg',
     release_date: '2010-01-01', overview: `Sinopsis ${i + 1}`, original_language: 'en', genre_ids: [28],
@@ -64,6 +68,7 @@ export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ bas
         });
       }
       let m = /^\/tmdb\/movie\/(\d+)$/.exec(p);
+      if (m && state.removedMovies.includes(Number(m[1]))) return send(404, { status_message: 'No encontrada' });
       if (m) {
         return send(200, {
           title: `Pelicula ${Number(m[1]) - 100}`, overview: 'Detalle', runtime: 100, imdb_id: `tt00${m[1]}`,
@@ -73,6 +78,7 @@ export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ bas
         });
       }
       const col = /^\/tmdb\/collection\/(\d+)$/.exec(p);
+      if (col && state.removedCollections.includes(Number(col[1]))) return send(404, {});
       if (col) {
         const entry = Object.values(state.collections).find((c) => c.id === Number(col[1]));
         return entry ? send(200, { id: entry.id, name: 'Saga', parts: entry.parts }) : send(404, {});

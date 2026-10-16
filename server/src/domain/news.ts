@@ -50,7 +50,7 @@ export interface Base {
   related: number[];
 }
 
-export type NewsKind = 'season_announced' | 'season_released' | 'related_movie';
+export type NewsKind = 'season_announced' | 'season_released' | 'related_movie' | 'season_removed' | 'movie_removed';
 
 export interface NewsEvent {
   kind: NewsKind;
@@ -152,6 +152,8 @@ const fmt = (iso: string) => new Date(iso + 'T12:00:00Z').toLocaleDateString('es
 /** Texto del aviso. `fromMovie`: el contenido de origen es una película (entonces lo relacionado es de su saga). */
 export function newsText(ev: Pick<NewsEvent, 'kind' | 'season' | 'airDate'> & { title?: string }, today: string, fromMovie = false): string {
   if (ev.kind === 'season_announced') return `Temporada ${ev.season} anunciada${ev.airDate ? ` · estreno ${fmt(ev.airDate)}` : ''}`;
+  if (ev.kind === 'season_removed') return `Temporada ${ev.season} eliminada`;
+  if (ev.kind === 'movie_removed') return 'Película eliminada de TMDB: se ha quitado de tu lista';
   if (ev.kind === 'season_released') return `Temporada ${ev.season} ya disponible`;
   const when = ev.airDate ? (ev.airDate <= today ? ` · estrenada ${fmt(ev.airDate)}` : ` · estreno ${fmt(ev.airDate)}`) : '';
   return `${fromMovie ? 'Nueva película de la saga' : 'Película relacionada'}: «${ev.title ?? ''}»${when}`;

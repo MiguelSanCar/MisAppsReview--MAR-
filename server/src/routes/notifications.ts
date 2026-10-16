@@ -32,10 +32,10 @@ const LIMIT = 50;
 
 /** Una persona ve los avisos de los contenidos que SIGUE teniendo en su lista (y, si lo pide, solo de sus favoritos). */
 const FROM = `FROM notifications n
-  JOIN user_content uc ON uc.user_id = n.user_id AND uc.content_id = n.content_id
+  LEFT JOIN user_content uc ON uc.user_id = n.user_id AND uc.content_id = n.content_id
   JOIN content c ON c.id = n.content_id
   LEFT JOIN content rc ON rc.id = n.related_content_id
-  WHERE n.user_id = ?`;
+  WHERE n.user_id = ? AND (uc.user_id IS NOT NULL OR n.kind = 'movie_removed')`;
 
 notificationsRouter.get('/', (req, res) => {
   const me = uid(req);
