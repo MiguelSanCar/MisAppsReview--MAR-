@@ -11,8 +11,8 @@ const TK: Record<Kind, TmdbKind> = { serie: 'tv', pelicula: 'movie' };
 const BACKFILL_MAX = 8;
 const TOP_GENRES = 3;
 const RESULTS = 20;
-/** Páginas de TMDB que se recorren como máximo por género (60 títulos por página y 3 géneros). */
-export const MAX_RECO_PAGES = 5;
+/** Páginas de TMDB que se recorren como máximo (TMDB no sirve más de 500): en la práctica, scroll sin fin. */
+export const MAX_RECO_PAGES = 500;
 
 interface Row { id: number; source: string; external_id: string; type: ContentType; genres: string | null; status: Status; is_favorite: number }
 

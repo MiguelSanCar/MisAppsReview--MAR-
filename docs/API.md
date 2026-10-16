@@ -54,7 +54,7 @@ API JSON bajo `/api`. Todas las respuestas de error tienen la forma `{ "error": 
 
 ### Recomendaciones (`/api/recommendations`, sesión)
 
-`GET /?type=serie|pelicula|anime&page=1..5` — títulos de los géneros con más afinidad, sin repetir lo que ya está en la lista.
+`GET /?type=serie|pelicula|anime&page=1..500` (scroll sin fin; TMDB no sirve más) — títulos de los géneros con más afinidad, sin repetir lo que ya está en la lista.
 
 ```json
 {

@@ -2,6 +2,10 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.12.3 · 2026-10-16 · Portada con scroll infinito
+### Cambiado
+- Portada: «Series/Películas que has podido ver» sigue cargando recomendaciones al llegar al final sin el tope de 5 páginas; solo se detiene cuando TMDB no devuelve más (límite de 500 páginas). `GET /api/recommendations` acepta `page` de 1 a 500.
+
 ## 1.12.2 · 2026-10-16 · Portada estable y scroll infinito
 ### Corregido
 - Portada: «Series/Películas que has podido ver» ya no se recalcula al marcar contenidos; solo se actualiza al recargar la página (o al cambiar entre Series y Películas). Sustituye al recálculo diferido de la 1.11.1.
