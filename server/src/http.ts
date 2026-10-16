@@ -21,7 +21,7 @@ export function getJson<T = any>(
 ): Promise<T> {
   return new Promise((resolve, reject) => {
     const lib = url.startsWith('https:') ? https : http;
-    const req = lib.get(url, { headers: { Accept: 'application/json', ...opts.headers } }, (res) => {
+    const req = lib.get(url, { headers: { Accept: 'application/json', 'User-Agent': 'MAR-MisAppsReview/1.0 (+https://mar.fly.dev)', ...opts.headers } }, (res) => {
       const chunks: Buffer[] = [];
       res.on('data', (c) => chunks.push(c));
       res.on('end', () => {

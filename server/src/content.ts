@@ -203,7 +203,7 @@ export const searchStatus = (): SearchStatus => ({ tmdb: tmdbAvailable(), omdb: 
 
 export type SearchType = "todo" | ContentType;
 
-type Settled<T> = { ok: true; value: T } | { ok: false; reason: "error" | "slow" | "down" };
+type Settled<T> = { ok: true; value: T } | { ok: false; reason: "error" | "slow" | "down"; detail?: string };
 
 /** Espera a un proveedor como mucho `ms`; si tarda más, se sigue sin él (su respuesta quedará en caché para la siguiente). */
 function settle<T>(p: Promise<T>, ms: number): Promise<Settled<T>> {
@@ -214,7 +214,7 @@ function settle<T>(p: Promise<T>, ms: number): Promise<Settled<T>> {
       (e) => {
         clearTimeout(t);
         // 503 «temporalmente» = el corte automático ya sabía que este proveedor no responde
-        resolve({ ok: false, reason: e instanceof HttpError && e.status === 503 && /temporalmente/.test(e.message) ? "down" : "error" });
+        resolve({ ok: false, reason: e instanceof HttpError && e.status === 503 && /temporalmente/.test(e.message) ? "down" : "error", detail: e instanceof HttpError ? `${e.status} ${e.message}` : String(e?.message ?? e) });
       },
     );
   });
@@ -233,8 +233,10 @@ async function gather(jobs: Job[], warnings: string[]) {
   const lists: ProviderItem[][] = [];
   settled.forEach((s, i) => {
     const label = jobs[i].label;
-    if (s.ok) lists.push(s.value);
-    else if (s.reason === "slow") warnings.push(`${label} tarda más de lo normal; sus resultados aparecerán en la siguiente búsqueda.`);
+    if (s.ok) { lists.push(s.value); return; }
+    // Queda en el registro del servidor (`fly logs`) para saber por qué un proveedor no responde
+    if (process.env.NODE_ENV !== "test") console.warn(`[búsqueda] ${label}: ${s.reason}${s.detail ? ` (${s.detail})` : ""}`);
+    if (s.reason === "slow") warnings.push(`${label} tarda más de lo normal; sus resultados aparecerán en la siguiente búsqueda.`);
     else if (s.reason === "down") warnings.push(`${label} no responde ahora mismo (¿red bloqueada?); se omite un rato y se volverá a probar solo.`);
     else warnings.push(`No se pudo consultar ${label}. Inténtalo de nuevo más tarde.`);
   });

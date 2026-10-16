@@ -2,6 +2,13 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.14.1 · 2026-10-16 · Diagnóstico de Jikan en el servidor
+### Corregido
+- Las peticiones a los proveedores (TMDB, Jikan, OMDb) envían ahora un `User-Agent` (algunos servicios rechazan las peticiones sin él).
+
+### Cambiado
+- Cuando un proveedor falla o tarda demasiado en una búsqueda, el motivo queda en el registro del servidor (`fly logs`, líneas «[búsqueda]»).
+
 ## 1.14.0 · 2026-10-16 · Contenido sin estrenar y orden de resultados
 ### Añadido
 - **Contenido sin estrenar**: lo que aún no ha salido (película con estreno futuro o serie cuyo primer episodio es futuro) solo admite «Por ver». Migración 14: `content.release_date`, que se rellena desde la búsqueda y el detalle de TMDB. En series, las temporadas por estrenar no dejan marcar episodios y un «Finalizado» manual llega solo hasta los episodios ya estrenados.

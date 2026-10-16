@@ -2219,7 +2219,7 @@
     {
       "id": "f27",
       "name": "Fase 27 — Estrenos y orden de resultados",
-      "release": "1.14.0",
+      "release": "1.14.1",
       "summary": "Lo que aún no se ha estrenado solo admite «Por ver», y las búsquedas y recomendaciones ponen primero lo más relevante y popular",
       "features": [
         {
@@ -2282,6 +2282,12 @@
               "title": "Recomendaciones de la portada ordenadas por nota con preferencia por lo popular",
               "status": "hecho",
               "eta": "2026-10-16"
+            },
+            {
+              "id": "27.9",
+              "title": "Anime en el servidor remoto: las peticiones a proveedores envían User-Agent y los fallos de búsqueda quedan en el registro del servidor para diagnosticar Jikan",
+              "status": "hecho",
+              "eta": "2026-10-16"
             }
           ]
         },
@@ -2301,6 +2307,6 @@
       ]
     }
   ],
-  "release": "1.14.0",
+  "release": "1.14.1",
   "etaNote": "Cada tarea indica su fecha de entrega: la real si está completada o la estimada si está pendiente. Las que dependen de un recurso externo no tienen fecha y llevan una nota con el motivo y el esfuerzo estimado."
 }
