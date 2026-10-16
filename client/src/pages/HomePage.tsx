@@ -45,7 +45,8 @@ export default function HomePage() {
     return () => c.abort();
   }, [trendType]);
 
-  // Recomendaciones: «Todo» y «Series» → series; «Películas» → películas; «Anime» → aviso
+  // Recomendaciones: solo se recalculan al cargar la página (o al cambiar de tipo), no al marcar contenidos.
+  // «Todo» y «Series» → series; «Películas» → películas; «Anime» → aviso
   const recoType = trendType === 'todo' ? 'serie' : trendType;
   useEffect(() => {
     const c = new AbortController();
@@ -66,6 +67,7 @@ export default function HomePage() {
     const my = recoGen.current;
     api.get<Recommendations>(`/api/recommendations?type=${recoType}&page=${reco.page + 1}`)
       .then((r) => {
+        recoBusy.current = false; // antes de pintar: el observador se recrea con el lote nuevo y debe poder disparar
         if (my !== recoGen.current) return;
         setReco((cur) => {
           if (!cur) return r;
@@ -83,30 +85,16 @@ export default function HomePage() {
     const io = new IntersectionObserver((e) => { if (e[0].isIntersecting) loadMoreReco(); }, { rootMargin: '600px 0px' });
     io.observe(el);
     return () => io.disconnect();
-  }, [reco?.hasMore, reco?.items.length, loadMoreReco]);
+  }, [reco?.hasMore, reco?.items.length, recoMoreLoading, loadMoreReco]);
 
   useEffect(() => {
     api.get<{ items: LibraryItem[] }>('/api/library?status=VIENDO&limit=8').then((r) => setWatching(r.items.slice(0, 8))).catch(() => {});
   }, []);
 
-  // Al añadir o cambiar algo, las recomendaciones se recalculan (sin parpadeo) cuando se deja de tocar durante un momento
-  const refreshTimer = useRef<number>();
-  const scheduleRecoRefresh = () => {
-    window.clearTimeout(refreshTimer.current);
-    refreshTimer.current = window.setTimeout(() => {
-      const my = recoGen.current;
-      api.get<Recommendations>(`/api/recommendations?type=${recoType}`)
-        .then((r) => { if (my === recoGen.current) setReco(r); })
-        .catch(() => {});
-    }, 2500);
-  };
-  useEffect(() => () => window.clearTimeout(refreshTimer.current), []);
-
   const onState = (id: number, state: UserState | null) => {
     search.setData((d) => (d ? { ...d, states: { ...d.states, [id]: state } } : d));
     setTrend((t) => (t ? { ...t, states: { ...t.states, [id]: state } } : t));
     setReco((r) => (r ? { ...r, states: { ...r.states, [id]: state } } : r));
-    scheduleRecoRefresh();
   };
 
   const searching = !!(search.data || search.loading || search.error);

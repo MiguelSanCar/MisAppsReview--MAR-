@@ -141,6 +141,7 @@ export function ListGrid({
     const my = gen.current;
     api.get<LibraryPage>(query(cursor))
       .then((r) => {
+        busyRef.current = false; // antes de pintar: el observador se recrea con el lote nuevo y debe poder disparar
         if (my !== gen.current) return;
         setItems((l) => { const have = new Set(l.map((i) => i.id)); return [...l, ...r.items.filter((i) => !have.has(i.id))]; });
         setCursor(r.nextCursor);
@@ -158,7 +159,7 @@ export function ListGrid({
     const io = new IntersectionObserver((e) => { if (e[0].isIntersecting) loadMore(); }, { rootMargin: '600px 0px' });
     io.observe(el);
     return () => io.disconnect();
-  }, [cursor, items.length, loadMore, error, loaded]);
+  }, [cursor, items.length, loadMore, error, loaded, loadingMore]);
 
   const refreshCounts = useCallback(() => {
     api.get<LibraryPage>(`${endpoint}?limit=1`).then((r) => r.counts && setCounts(r.counts)).catch(() => {});

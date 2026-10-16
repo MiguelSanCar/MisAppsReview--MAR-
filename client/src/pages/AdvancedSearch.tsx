@@ -147,6 +147,7 @@ export default function AdvancedSearchPage() {
     const next = page + 1;
     api.get<DiscoverResponse>(query(next))
       .then((r) => {
+        busy.current = false; // antes de pintar: el observador se recrea con el lote nuevo y debe poder disparar
         if (my !== gen.current) return;
         setItems((l) => { const have = new Set(l.map((i) => i.id)); return [...l, ...r.results.filter((i) => !have.has(i.id))]; });
         setStates((s) => ({ ...s, ...r.states }));
@@ -162,7 +163,7 @@ export default function AdvancedSearchPage() {
     const io = new IntersectionObserver((e) => { if (e[0].isIntersecting) loadMore(); }, { rootMargin: '600px 0px' });
     io.observe(el);
     return () => io.disconnect();
-  }, [hasMore, items.length, loadMore, error, loaded]);
+  }, [hasMore, items.length, loadMore, error, loaded, loadingMore]);
 
   const onState = useCallback((id: number, s: UserState | null) => setStates((m) => ({ ...m, [id]: s })), []);
   const clear = () => { setStudioText(''); setSp(new URLSearchParams({ type, sort }), { replace: true }); };

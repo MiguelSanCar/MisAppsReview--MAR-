@@ -2,6 +2,11 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.12.2 · 2026-10-16 · Portada estable y scroll infinito
+### Corregido
+- Portada: «Series/Películas que has podido ver» ya no se recalcula al marcar contenidos; solo se actualiza al recargar la página (o al cambiar entre Series y Películas). Sustituye al recálculo diferido de la 1.11.1.
+- Scroll infinito (portada, búsqueda filtrada y listas): al llegar al final tras el primer lote no se pedían más resultados. El indicador de «petición en curso» se liberaba después de pintar el lote, así que el observador, recreado al pintar, veía la petición como activa y no volvía a disparar. Ahora se libera antes de pintar y el observador se recrea al terminar la carga.
+
 ## 1.12.1 · 2026-10-15 · Revisión de redacción del roadmap
 ### Cambiado
 - Roadmap: revisión de redacción de fases, funcionalidades y tareas con un tono profesional y neutro (sin dirigirse al autor), nota de fechas reformulada y emojis sustituidos por la descripción de los iconos.

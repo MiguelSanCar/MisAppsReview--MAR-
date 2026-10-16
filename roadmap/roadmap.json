@@ -2079,8 +2079,48 @@
           ]
         }
       ]
+    },
+    {
+      "id": "f25",
+      "name": "Fase 25 · Portada estable y scroll infinito",
+      "release": "1.12.2",
+      "summary": "Las recomendaciones de la portada solo se recalculan al recargar y el scroll infinito deja de quedarse parado",
+      "features": [
+        {
+          "id": "f25-portada",
+          "title": "Portada y listas",
+          "category": "Frontend",
+          "tasks": [
+            {
+              "id": "25.1",
+              "title": "Portada: «Series/Películas que has podido ver» solo se actualiza al recargar la página (o al cambiar de tipo), no al marcar contenidos; sustituye a 23.4",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            },
+            {
+              "id": "25.2",
+              "title": "Scroll infinito: corregir que al llegar al final no se cargaran más resultados tras el primer lote (portada, búsqueda filtrada y listas)",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            }
+          ]
+        },
+        {
+          "id": "f25-cierre",
+          "title": "Cierre",
+          "category": "Infra",
+          "tasks": [
+            {
+              "id": "25.3",
+              "title": "Comprobación en navegador, documentación, versión 1.12.2 y despliegue",
+              "status": "hecho",
+              "eta": "2026-10-16"
+            }
+          ]
+        }
+      ]
     }
   ],
-  "release": "1.12.1",
+  "release": "1.12.2",
   "etaNote": "Cada tarea indica su fecha de entrega: la real si está completada o la estimada si está pendiente. Las que dependen de un recurso externo no tienen fecha y llevan una nota con el motivo y el esfuerzo estimado."
 }
