@@ -13,6 +13,25 @@ export interface UserContentRow extends ContentRow {
   rewatch: number;
 }
 
+/**
+ * Comprueba que un cambio es posible según lo estrenado y devuelve el total «efectivo» (los episodios que ya se pueden
+ * marcar; un Finalizado manual llega hasta ahí). Lo que no ha salido solo admite «Por ver»; en una serie con temporadas
+ * por estrenar no se pueden marcar episodios de ellas.
+ */
+export function releaseGate(row: ContentRow, change: { status?: Status; watched?: number; favorite?: boolean }): number | null {
+  const { unreleased, watchable } = toDto(row);
+  if (unreleased || watchable === 0) {
+    if ((change.status && change.status !== 'POR_VER') || change.favorite || (change.watched ?? 0) > 0) {
+      throw new HttpError(409, 'Todavía no se ha estrenado: de momento solo puedes dejarlo en «Por ver».');
+    }
+  }
+  const total = row.total_episodes;
+  if (watchable != null && total != null && watchable < total && (change.watched ?? 0) > watchable) {
+    throw new HttpError(409, `Esos episodios todavía no se han estrenado: ahora hay ${watchable} disponibles.`);
+  }
+  return watchable ?? total;
+}
+
 export interface UserState {
   status: Status;
   /** Episodios vistos en el visionado actual. */

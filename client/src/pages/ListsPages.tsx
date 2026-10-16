@@ -157,8 +157,8 @@ function ItemPanel({ listId, item, onChanged, onClose }: { listId: number; item:
           <div>
             <h2 className="h2">{item.title}</h2>
             <p className="muted small">{[item.year, item.studio].filter(Boolean).join(' · ')}</p>
-            <StatusPicker value={state.status} disabled={busy} onChange={(s: Status) => change({ status: s })} />
-            <EpisodeCounter value={state.watched} total={total} disabled={busy} onSet={(n) => change({ watched: n })} />
+            <StatusPicker value={state.status} disabled={busy} onlyTodo={!!item.unreleased || item.watchable === 0} lockedTitle="Aún no se ha estrenado: de momento solo «Por ver»" onChange={(s: Status) => change({ status: s })} />
+            <EpisodeCounter value={state.watched} total={total} max={item.watchable} disabled={busy || !!item.unreleased || item.watchable === 0} onSet={(n) => change({ watched: n })} />
             <button className="btn ghost danger" onClick={remove}>Quitar de la lista</button>
           </div>
         </div>

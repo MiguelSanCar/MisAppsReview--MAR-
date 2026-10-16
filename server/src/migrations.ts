@@ -229,4 +229,12 @@ export const MIGRATIONS: { version: number; name: string; sql: string }[] = [
       CREATE INDEX idx_notifications_user ON notifications(user_id, created_at DESC);
     `,
   },
+  {
+    version: 14,
+    name: 'fecha de estreno',
+    sql: `
+      -- Estreno de la película o primer episodio de la serie (AAAA-MM-DD): lo que aún no ha salido solo admite «Por ver».
+      ALTER TABLE content ADD COLUMN release_date TEXT;
+    `,
+  },
 ];

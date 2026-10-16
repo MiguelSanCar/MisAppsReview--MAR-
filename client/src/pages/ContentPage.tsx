@@ -8,7 +8,7 @@ import { SeasonList } from '../components/SeasonList';
 import { EpisodeCounter, RatingBadges, StatusPicker } from '../components/Tracker';
 import { useToast } from '../components/Toast';
 import { ErrorBox, Icon, Spinner } from '../components/ui';
-import { Content, Status, THIS_TYPE, TYPE_TEXT, UserState } from '../types';
+import { Content, dateEs, Status, THIS_TYPE, TYPE_TEXT, UserState } from '../types';
 
 interface Loaded { content: Content; state: UserState | null }
 interface Reply { state: UserState | null; totalEpisodes: number | null }
@@ -62,6 +62,8 @@ export default function ContentPage() {
   if (!data) return <Spinner />;
 
   const { content: c, state } = data;
+  const blocked = !!c.unreleased || c.watchable === 0; // sin estrenar: solo «Por ver»
+  const lockedTitle = c.releaseDate ? `Aún no se ha estrenado (${dateEs(c.releaseDate)}): de momento solo «Por ver»` : 'Aún no se ha estrenado: de momento solo «Por ver»';
   return (
     <div className="page content-page">
       <button className="back" onClick={() => nav(-1)}>← Volver</button>
@@ -71,12 +73,13 @@ export default function ContentPage() {
         <div className="detail-main">
           <h1>{c.title}</h1>
           <p className="muted">{[TYPE_TEXT[c.type], c.year, c.studio].filter(Boolean).join(' · ')}</p>
+          {blocked && <p className="release-note">Aún no se ha estrenado{c.releaseDate ? ` · estreno ${dateEs(c.releaseDate)}` : ''}. De momento solo puedes dejarlo en «Por ver».</p>}
           <RatingBadges ratings={c.ratings} type={c.type} omdbOn={omdbOn} />
           {c.imdbUrl && <a className="small" href={c.imdbUrl} target="_blank" rel="noreferrer">Ver en IMDb ↗</a>}
           <p className="synopsis">{c.synopsis || 'Sin sinopsis disponible.'}</p>
 
           <div className="detail-actions">
-            <button className={`btn ${state?.favorite ? 'fav-on' : 'ghost'}`} disabled={busy} aria-pressed={!!state?.favorite} onClick={() => update('favorite', { value: !state?.favorite })}>
+            <button className={`btn ${state?.favorite ? 'fav-on' : 'ghost'}`} disabled={busy || (blocked && !state?.favorite)} aria-pressed={!!state?.favorite} onClick={() => update('favorite', { value: !state?.favorite })}>
               <Icon name="heart" /> {state?.favorite ? 'En favoritos' : 'Favorito'}
             </button>
             <button className={`btn ${state?.status === 'POR_VER' ? 'later-on' : 'ghost'}`} disabled={busy} aria-pressed={state?.status === 'POR_VER'} onClick={() => update('later', { value: state?.status !== 'POR_VER' })}>
@@ -89,6 +92,8 @@ export default function ContentPage() {
             value={state?.status ?? null}
             rewatch={state?.rewatch ?? 0}
             disabled={busy}
+            onlyTodo={blocked}
+            lockedTitle={lockedTitle}
             onChange={(s: Status) => update('status', { status: s })}
             onDelete={() => setConfirmDelete(true)}
             canDelete={!!state}
@@ -101,7 +106,7 @@ export default function ContentPage() {
             </div>
           )}
 
-          <EpisodeCounter value={state?.watched ?? 0} total={c.totalEpisodes} disabled={busy} onSet={(n) => update('episodes', { watched: n })} />
+          <EpisodeCounter value={state?.watched ?? 0} total={c.totalEpisodes} max={c.watchable} disabled={busy || blocked} onSet={(n) => update('episodes', { watched: n })} />
           <p className="muted small">
             {c.type === 'pelicula' ? 'Una película cuenta como 1 episodio.' : 'Si escribes un número mayor al total, se fija el máximo y pasa a Finalizado.'}
           </p>

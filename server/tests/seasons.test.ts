@@ -86,7 +86,7 @@ describe('temporadas en la API', () => {
   it('la ficha de una serie trae sus temporadas (sin especiales) y su suma coincide con el total', async () => {
     const r = await ana.get(`/api/content/${bb.id}`);
     expect(r.status).toBe(200);
-    expect(r.body.content.seasons).toEqual(S(7, 13, 13, 13, 16));
+    expect(r.body.content.seasons.map((s: any) => ({ number: s.number, episodes: s.episodes }))).toEqual(S(7, 13, 13, 13, 16));
     expect(r.body.content.seasons.reduce((n: number, s: any) => n + s.episodes, 0)).toBe(r.body.content.totalEpisodes);
   });
 
@@ -98,8 +98,8 @@ describe('temporadas en la API', () => {
   it('completa las temporadas de series guardadas antes de existir la columna', async () => {
     run('UPDATE content SET seasons = NULL WHERE id = ?', [bb.id]);
     const r = await ana.get(`/api/content/${bb.id}`);
-    expect(r.body.content.seasons).toEqual(S(7, 13, 13, 13, 16));
-    expect(JSON.parse(get<{ seasons: string }>('SELECT seasons FROM content WHERE id = ?', [bb.id])!.seasons)).toEqual(S(7, 13, 13, 13, 16));
+    expect(r.body.content.seasons.map((s: any) => ({ number: s.number, episodes: s.episodes }))).toEqual(S(7, 13, 13, 13, 16));
+    expect(JSON.parse(get<{ seasons: string }>('SELECT seasons FROM content WHERE id = ?', [bb.id])!.seasons).map((s: any) => ({ number: s.number, episodes: s.episodes }))).toEqual(S(7, 13, 13, 13, 16));
   });
 
   it('el progreso por episodios marca las temporadas vistas en el perfil', async () => {

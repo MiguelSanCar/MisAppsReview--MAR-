@@ -28,9 +28,20 @@ export interface Content {
   imdbUrl: string | null;
   /** Temporadas de la serie (ajustadas a su total); null si no hay estructura. */
   seasons?: Season[] | null;
+  /** Estreno (AAAA-MM-DD). */
+  releaseDate?: string | null;
+  /** Aún no se ha estrenado: solo admite «Por ver». */
+  unreleased?: boolean;
+  /** Episodios que ya se pueden marcar (menos que el total si hay temporadas por estrenar); null = todos. */
+  watchable?: number | null;
 }
 
-export interface Season { number: number; episodes: number }
+export interface Season { number: number; episodes: number; air?: string }
+
+/** Fecha AAAA-MM-DD → «16/10/2026». */
+export const dateEs = (d: string) => d.split('-').reverse().join('/');
+/** ¿Es posterior a hoy? */
+export const isFutureDate = (d?: string | null) => !!d && d > new Date().toISOString().slice(0, 10);
 
 export interface UserState {
   status: Status;

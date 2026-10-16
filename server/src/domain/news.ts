@@ -39,6 +39,8 @@ export interface MovieSnap {
   kind: 'movie';
   /** Películas de la misma saga (colección de TMDB), incluida la propia. */
   parts: RelMovie[];
+  /** Estreno de la propia película (AAAA-MM-DD). */
+  date?: string | null;
 }
 
 export type Snap = TvSnap | MovieSnap;

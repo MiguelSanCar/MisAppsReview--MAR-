@@ -7,6 +7,7 @@ import { applyEpisodes, applyStatus, ItemState, STATUSES } from '../domain/rules
 import { ah, HttpError, parse } from '../http';
 import { inactivityInfo } from '../listLife';
 import { getUser, getUserByName, publicUser } from '../users';
+import { releaseGate } from '../library';
 import { requireAuth, uid } from './auth';
 import { areFriends } from './friends';
 
@@ -252,12 +253,14 @@ listsRouter.put(
     );
     const item = getItem(list.id, contentId);
     if (!item) throw new HttpError(404, 'Ese contenido no está en la lista');
-    const total = (await loadCore(contentId)).total_episodes;
+    const row = await loadCore(contentId);
+    const total = row.total_episodes;
+    const eff = releaseGate(row, { status: body.status, watched: body.watched });
     const before = snap(item)!;
     const after =
       body.watched !== undefined
         ? applyEpisodes(before, total, body.watched)
-        : applyStatus(before, total, body.status!);
+        : applyStatus(before, eff, body.status!);
     if (after.status !== before.status || after.watched !== before.watched) {
       transaction(() => {
         putItem(list.id, contentId, after);

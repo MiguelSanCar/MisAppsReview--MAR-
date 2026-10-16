@@ -30,7 +30,7 @@ export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ bas
   const state: MockState = { extraSeasons: {}, status: {}, collections: {}, removedMovies: [], removedCollections: [], movieSearch: [], seasonRuntimes: {}, delayMs: 0, active: 0, maxActive: 0 };
   const movies = Array.from({ length: 12 }, (_, i) => ({
     id: 101 + i, media_type: 'movie', title: `Pelicula ${i + 1}`, poster_path: '/p.jpg',
-    release_date: '2010-01-01', overview: `Sinopsis ${i + 1}`, original_language: 'en', genre_ids: [28],
+    release_date: i === 0 && process.env.MOCK_FUTURE ? '2099-01-01' : '2010-01-01', overview: `Sinopsis ${i + 1}`, original_language: 'en', genre_ids: [28],
   }));
 
   const handle = (req: http.IncomingMessage, res: http.ServerResponse) => {
@@ -72,7 +72,7 @@ export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ bas
       if (m) {
         return send(200, {
           title: `Pelicula ${Number(m[1]) - 100}`, overview: 'Detalle', runtime: 100, imdb_id: `tt00${m[1]}`,
-          release_date: '2010-01-01', poster_path: '/p.jpg', production_companies: [{ name: 'Studio X' }],
+          release_date: m[1] === '101' && process.env.MOCK_FUTURE ? '2099-01-01' : '2010-01-01', poster_path: '/p.jpg', production_companies: [{ name: 'Studio X' }],
           genres: [{ id: 28, name: 'Acción' }],
           belongs_to_collection: state.collections[Number(m[1])] ? { id: state.collections[Number(m[1])].id, name: 'Saga' } : null,
         });

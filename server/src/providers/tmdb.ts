@@ -1,6 +1,7 @@
 import { config } from '../config';
 import { cached, memCached } from '../cache';
 import { getJson, guarded, HttpError } from '../http';
+import { cleanDate } from '../domain/release';
 import { isRelatedMovie, MovieSnap, RelMovie, TvSnap } from '../domain/news';
 import type { ProviderItem } from './types';
 
@@ -34,6 +35,7 @@ function mapResult(r: any, isMovie: boolean): ProviderItem | null {
     posterUrl: poster(r.poster_path),
     synopsis: r.overview || null,
     year: yearOf(isMovie ? r.release_date : r.first_air_date),
+    releaseDate: cleanDate(isMovie ? r.release_date : r.first_air_date),
     totalEpisodes: isMovie ? 1 : null,
     runtimeMinutes: null,
     studio: null,
@@ -84,6 +86,7 @@ export async function detailTmdb(externalId: string): Promise<ProviderItem> {
     posterUrl: poster(r.poster_path),
     synopsis: r.overview || null,
     year: yearOf(isMovie ? r.release_date : r.first_air_date),
+    releaseDate: cleanDate(isMovie ? r.release_date : r.first_air_date),
     totalEpisodes: total,
     runtimeMinutes: runtime > 0 ? runtime : null,
     studio,
@@ -91,7 +94,7 @@ export async function detailTmdb(externalId: string): Promise<ProviderItem> {
     genres: Array.isArray(r.genres) ? r.genres.map((g: any) => g.id).filter((n: any) => Number.isInteger(n)) : undefined,
     seasons: isMovie ? undefined : (Array.isArray(r.seasons) ? r.seasons : [])
       .filter((s: any) => s.season_number > 0 && s.episode_count > 0)
-      .map((s: any) => ({ number: s.season_number, episodes: s.episode_count })),
+      .map((s: any) => ({ number: s.season_number, episodes: s.episode_count, ...(cleanDate(s.air_date) ? { air: s.air_date } : {}) })),
   };
 }
 
@@ -202,6 +205,7 @@ export const movieItemFromRel = (m: RelMovie): ProviderItem => ({
   posterUrl: m.poster ?? null,
   synopsis: m.overview ?? null,
   year: yearOf(m.date ?? undefined),
+  releaseDate: cleanDate(m.date),
   totalEpisodes: 1,
   runtimeMinutes: null,
   studio: null,
@@ -243,9 +247,10 @@ export async function newsMovie(externalId: string): Promise<MovieSnap> {
   }
   const self = relOf({ ...d, id: Number(id) });
   const cid = d.belongs_to_collection?.id;
-  if (!cid) return { kind: 'movie', parts: [self] };
+  const date = cleanDate(d.release_date);
+  if (!cid) return { kind: 'movie', parts: [self], date };
   const col = await call(`/collection/${cid}`).catch((e) => { if (e instanceof HttpError && e.status === 404) return { parts: [] }; throw e; });
   const parts: RelMovie[] = (col.parts ?? []).map(relOf);
   if (!parts.some((p) => p.id === self.id)) parts.push(self);
-  return { kind: 'movie', parts };
+  return { kind: 'movie', parts, date };
 }

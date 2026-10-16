@@ -10,7 +10,7 @@ import {
   applyEpisodes, applyFavorite, applyStatus, CONTENT_TYPES, ItemState, STATUSES,
 } from '../domain/rules';
 import {
-  assertCanFavorite, getState, libraryCounts, pageLibrary, removeState, saveState,
+  assertCanFavorite, getState, libraryCounts, pageLibrary, releaseGate, removeState, saveState,
 } from '../library';
 
 export const searchRouter = Router();
@@ -117,7 +117,8 @@ libraryRouter.put(
     if (value) {
       if (!cur.favorite) assertCanFavorite(u, false);
       const row = await loadCore(id);
-      saveState(u, id, applyFavorite(cur.item, row.total_episodes), true);
+      const eff = releaseGate(row, { favorite: true });
+      saveState(u, id, applyFavorite(cur.item, eff), true);
     } else if (cur.exists) {
       saveState(u, id, cur.item, false);
     }
@@ -157,7 +158,8 @@ libraryRouter.put(
     const u = uid(req);
     const row = await loadCore(id);
     const cur = current(u, id);
-    saveState(u, id, applyStatus(cur.item, row.total_episodes, status), cur.favorite);
+    const eff = releaseGate(row, { status });
+    saveState(u, id, applyStatus(cur.item, eff, status), cur.favorite);
     reply(u, id, res);
   }),
 );
@@ -173,6 +175,7 @@ libraryRouter.put(
     const u = uid(req);
     const row = await loadCore(id);
     const cur = current(u, id);
+    releaseGate(row, { watched });
     saveState(u, id, applyEpisodes(cur.item, row.total_episodes, watched), cur.favorite);
     reply(u, id, res);
   }),

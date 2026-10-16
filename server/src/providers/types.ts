@@ -14,12 +14,14 @@ export interface ProviderItem {
   totalEpisodes: number | null;
   runtimeMinutes: number | null;
   studio: string | null;
+  /** Estreno (AAAA-MM-DD): de la película o del primer episodio de la serie. */
+  releaseDate?: string | null;
   imdbId?: string | null;
   malScore?: number | null;
   /** Ids de género de TMDB (series y películas; Jikan no los aporta). */
   genres?: number[];
   /** Temporadas de una serie de TMDB (sin la 0, que son especiales). */
-  seasons?: { number: number; episodes: number }[];
+  seasons?: { number: number; episodes: number; air?: string }[];
   /** Nota media de TMDB (0-10) en resultados de descubrimiento. */
   voteAverage?: number | null;
 }

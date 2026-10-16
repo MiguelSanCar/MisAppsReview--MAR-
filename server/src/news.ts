@@ -89,6 +89,8 @@ function fetchOne(r: Row): Promise<void> {
         : await newsMovie(r.external_id);
       run('UPDATE content SET news = ?, news_at = ? WHERE id = ?', [JSON.stringify(snap), new Date().toISOString(), r.content_id]);
       failedAt.delete(r.content_id);
+      const released = snap.kind === 'tv' ? snap.firstAir : snap.date;
+      if (released) run('UPDATE content SET release_date = ? WHERE id = ?', [released, r.content_id]);
       if (snap.kind === 'tv') syncTvStructure(r.content_id, snap);
     } catch (e) {
       if (e instanceof HttpError && e.code === 'gone' && r.type === 'pelicula') removeMovie(r.content_id);

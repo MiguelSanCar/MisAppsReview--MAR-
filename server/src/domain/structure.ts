@@ -31,7 +31,7 @@ export function diffStructure(current: Season[] | null, remote: SeasonInfo[], to
   if (!added.length && !removed.length) return null;
   const next: Season[] = [
     ...current.filter((s) => live.has(s.number)),
-    ...added.map((n) => ({ number: n, episodes: live.get(n)!.eps })),
+    ...added.map((n) => ({ number: n, episodes: live.get(n)!.eps, ...(live.get(n)!.air ? { air: live.get(n)!.air! } : {}) })),
   ].sort((a, b) => a.number - b.number);
   if (!next.length) return null; // la serie se quedaría sin temporadas: más probable un fallo de TMDB que un cambio real
   return { next, total: next.reduce((n, s) => n + s.episodes, 0), added, removed };

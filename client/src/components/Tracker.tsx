@@ -3,7 +3,7 @@ import { Ratings, Status, statusLabel, STATUSES, ContentType } from '../types';
 import { Icon } from './ui';
 
 export function StatusPicker({
-  value, onChange, disabled, rewatch = 0, onDelete, canDelete,
+  value, onChange, disabled, rewatch = 0, onDelete, canDelete, onlyTodo, lockedTitle,
 }: {
   value: Status | null;
   onChange: (s: Status) => void;
@@ -13,11 +13,22 @@ export function StatusPicker({
   onDelete?: () => void;
   /** «Eliminar» solo se activa si el contenido está en la lista (en cualquier estado). */
   canDelete?: boolean;
+  /** Contenido sin estrenar: solo «Por ver» está activo; el resto, oscuro y sin poder pulsarse. */
+  onlyTodo?: boolean;
+  lockedTitle?: string;
 }) {
   return (
     <div className="seg" role="group" aria-label="Estado">
       {STATUSES.map((s) => (
-        <button key={s} type="button" disabled={disabled} className={`seg-btn st-${s} ${value === s ? 'on' : ''}`} aria-pressed={value === s} onClick={() => onChange(s)}>
+        <button
+          key={s}
+          type="button"
+          disabled={disabled || (!!onlyTodo && s !== 'POR_VER')}
+          className={`seg-btn st-${s} ${value === s ? 'on' : ''} ${onlyTodo && s !== 'POR_VER' ? 'locked' : ''}`}
+          aria-pressed={value === s}
+          title={onlyTodo && s !== 'POR_VER' ? lockedTitle : undefined}
+          onClick={() => onChange(s)}
+        >
           {statusLabel(s, rewatch)}
         </button>
       ))}
@@ -42,8 +53,9 @@ export function StatusPicker({
  * que solo admite dígitos. Si se supera el total, el servidor fija el máximo y marca Finalizado.
  */
 export function EpisodeCounter({
-  value, total, onSet, disabled,
-}: { value: number; total: number | null; onSet: (n: number) => void; disabled?: boolean }) {
+  value, total, onSet, disabled, max,
+}: { value: number; total: number | null; onSet: (n: number) => void; disabled?: boolean; /** Episodios ya estrenados (si son menos que el total). */ max?: number | null }) {
+  const limit = max != null && max > 0 && total != null && max < total ? max : null;
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
   const input = useRef<HTMLInputElement>(null);
@@ -82,11 +94,11 @@ export function EpisodeCounter({
             {value}
           </button>
         )}
-        <span className="muted">/ {total ?? '?'}</span>
+        <span className="muted">/ {total ?? '?'}{limit !== null && <> ({limit} estrenados)</>}</span>
       </div>
       <div className="counter-btns">
         <button type="button" className="btn round" disabled={disabled || value <= 0} onClick={() => onSet(value - 1)} aria-label="Quitar un episodio">−</button>
-        <button type="button" className="btn round" disabled={disabled || (total !== null && value >= total)} onClick={() => onSet(value + 1)} aria-label="Añadir un episodio">+</button>
+        <button type="button" className="btn round" disabled={disabled || (total !== null && value >= total) || (limit !== null && value >= limit)} onClick={() => onSet(value + 1)} aria-label="Añadir un episodio">+</button>
       </div>
     </div>
   );

@@ -25,7 +25,7 @@ describe('estructura de temporadas: reglas puras', () => {
     expect(diffStructure(cur, [...base, ...R([4, null, 0])], TODAY)).toBeNull();
     const c = diffStructure(cur, [...base, ...R([4, '2026-10-16', 8])], TODAY)!;
     expect(c).toMatchObject({ added: [4], removed: [], total: 41 });
-    expect(c.next).toEqual(S(7, 13, 13, 8));
+    expect(c.next).toEqual([...S(7, 13, 13), { number: 4, episodes: 8, air: "2026-10-16" }]);
   });
 
   it('una temporada que TMDB ya no publica se elimina; si se quedara sin ninguna, se ignora', () => {
@@ -39,7 +39,7 @@ describe('estructura de temporadas: reglas puras', () => {
   it('conserva las duraciones ya calculadas de las temporadas que siguen', () => {
     const withMin = [{ number: 1, episodes: 7, minutes: 47 }, { number: 2, episodes: 13, minutes: 48 }];
     const c = diffStructure(withMin, R([1, '2008-01-01', 7], [2, '2009-01-01', 13], [3, '2010-01-01', 5]), TODAY)!;
-    expect(c.next).toEqual([...withMin, { number: 3, episodes: 5 }]);
+    expect(c.next).toEqual([...withMin, { number: 3, episodes: 5, air: "2010-01-01" }]);
   });
 
   it('episodios vistos por temporada', () => {

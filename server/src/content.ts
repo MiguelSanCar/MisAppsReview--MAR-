@@ -2,6 +2,7 @@ import { all, get, run } from './db';
 import { HttpError } from './http';
 import type { ContentType } from './domain/rules';
 import { normalizeSeasons, parseSeasons, Season } from './domain/seasons';
+import { isFuture, watchableEpisodes } from './domain/release';
 import { scheduleRuntimes } from './runtimes';
 import { config } from './config';
 import { detailJikan, searchJikan, trendingJikan } from './providers/jikan';
@@ -19,6 +20,8 @@ export interface ContentRow {
   synopsis: string | null;
   year: number | null;
   total_episodes: number | null;
+  /** Estreno (AAAA-MM-DD); null = sin dato. */
+  release_date: string | null;
   runtime_minutes: number | null;
   studio: string | null;
   imdb_id: string | null;
@@ -48,12 +51,22 @@ export interface ContentDto {
   imdbUrl: string | null;
   /** Temporadas de la serie ajustadas a su total de episodios; null si no hay estructura (anime, películas, sin datos). */
   seasons: Season[] | null;
+  /** Estreno (AAAA-MM-DD) de la película o de la serie. */
+  releaseDate: string | null;
+  /** Aún no se ha estrenado: solo admite «Por ver». */
+  unreleased: boolean;
+  /** Episodios que ya se pueden marcar (menos que el total si hay temporadas por estrenar); null = todos. */
+  watchable: number | null;
 }
 
 const nowIso = () => new Date().toISOString();
 const DAY = 86400_000;
 
+export const todayIso = () => new Date().toISOString().slice(0, 10);
+
 export function toDto(r: ContentRow): ContentDto {
+  const seasons = normalizeSeasons(parseSeasons(r.seasons), r.total_episodes);
+  const unreleased = isFuture(r.release_date, todayIso());
   return {
     id: r.id,
     source: r.source,
@@ -68,7 +81,10 @@ export function toDto(r: ContentRow): ContentDto {
     studio: r.studio,
     ratings: r.ratings ? JSON.parse(r.ratings) : {},
     imdbUrl: r.imdb_id ? `https://www.imdb.com/title/${r.imdb_id}/` : null,
-    seasons: normalizeSeasons(parseSeasons(r.seasons), r.total_episodes),
+    seasons,
+    releaseDate: r.release_date,
+    unreleased,
+    watchable: watchableEpisodes({ unreleased, total: r.total_episodes, seasons }, todayIso()),
   };
 }
 
@@ -86,13 +102,13 @@ export function upsertFromProvider(i: ProviderItem): ContentRow {
     !((!ex.poster_url && i.posterUrl) || (!ex.synopsis && i.synopsis) || (!ex.year && i.year) ||
       (ex.total_episodes == null && i.totalEpisodes != null) || (ex.studio == null && i.studio) ||
       (ex.runtime_minutes == null && i.runtimeMinutes != null) || (!ex.ratings && malText(i.malScore)) ||
-      (ex.genres == null && i.genres?.length))
+      (ex.genres == null && i.genres?.length) || (i.releaseDate && ex.release_date !== i.releaseDate))
   ) {
     return ex;
   }
   run(
-    `INSERT INTO content (source, external_id, type, title, poster_url, synopsis, year, total_episodes, runtime_minutes, studio, imdb_id, genres)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `INSERT INTO content (source, external_id, type, title, poster_url, synopsis, year, total_episodes, runtime_minutes, studio, imdb_id, genres, release_date)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(source, external_id) DO UPDATE SET
        title = excluded.title,
        poster_url = COALESCE(excluded.poster_url, content.poster_url),
@@ -101,8 +117,9 @@ export function upsertFromProvider(i: ProviderItem): ContentRow {
        total_episodes = COALESCE(content.total_episodes, excluded.total_episodes),
        runtime_minutes = COALESCE(content.runtime_minutes, excluded.runtime_minutes),
        studio = COALESCE(content.studio, excluded.studio),
-       genres = COALESCE(content.genres, excluded.genres)`,
-    [i.source, i.externalId, i.type, i.title, i.posterUrl, i.synopsis, i.year, i.totalEpisodes, i.runtimeMinutes, i.studio, i.imdbId ?? null, i.genres?.length ? JSON.stringify(i.genres) : null],
+       genres = COALESCE(content.genres, excluded.genres),
+       release_date = COALESCE(excluded.release_date, content.release_date)`,
+    [i.source, i.externalId, i.type, i.title, i.posterUrl, i.synopsis, i.year, i.totalEpisodes, i.runtimeMinutes, i.studio, i.imdbId ?? null, i.genres?.length ? JSON.stringify(i.genres) : null, i.releaseDate ?? null],
   );
   const row = get<ContentRow>('SELECT * FROM content WHERE source = ? AND external_id = ?', [i.source, i.externalId])!;
   const mal = malText(i.malScore);
@@ -120,8 +137,8 @@ export async function ensureCore(row: ContentRow): Promise<ContentRow> {
   run(
     `UPDATE content SET title = ?, poster_url = COALESCE(?, poster_url), synopsis = COALESCE(?, synopsis),
        year = COALESCE(?, year), total_episodes = ?, runtime_minutes = ?, studio = ?, imdb_id = COALESCE(?, imdb_id),
-       genres = COALESCE(?, genres), seasons = COALESCE(?, seasons), detailed_at = ? WHERE id = ?`,
-    [d.title, d.posterUrl, d.synopsis, d.year, d.totalEpisodes, d.runtimeMinutes, d.studio, d.imdbId ?? null, d.genres?.length ? JSON.stringify(d.genres) : null, d.seasons ? JSON.stringify(d.seasons) : null, nowIso(), row.id],
+       genres = COALESCE(?, genres), seasons = COALESCE(?, seasons), release_date = COALESCE(?, release_date), detailed_at = ? WHERE id = ?`,
+    [d.title, d.posterUrl, d.synopsis, d.year, d.totalEpisodes, d.runtimeMinutes, d.studio, d.imdbId ?? null, d.genres?.length ? JSON.stringify(d.genres) : null, d.seasons ? JSON.stringify(d.seasons) : null, d.releaseDate ?? null, nowIso(), row.id],
   );
   const mal = malText(d.malScore);
   if (mal) run('UPDATE content SET ratings = ?, ratings_at = ? WHERE id = ?', [JSON.stringify({ mal }), nowIso(), row.id]);

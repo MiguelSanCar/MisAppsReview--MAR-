@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api, errorText } from '../api';
-import { Content, SOURCE_TEXT, Status, STATUS_TEXT, statusLabel, TYPE_TEXT, UserState } from '../types';
+import { Content, dateEs, SOURCE_TEXT, Status, STATUS_TEXT, statusLabel, TYPE_TEXT, UserState } from '../types';
 import { Emoji } from './Emoji';
 import { Icon } from './ui';
 import { useToast } from './Toast';
@@ -92,6 +92,9 @@ export function PosterCard({
     }
   }
 
+  // Lo que aún no se ha estrenado solo admite «Por ver»
+  const locked = !!content.unreleased || content.watchable === 0;
+  const lockedTitle = content.releaseDate ? `Aún no se ha estrenado (${dateEs(content.releaseDate)}): solo «Por ver»` : 'Aún no se ha estrenado: solo «Por ver»';
   const progress = state && content.totalEpisodes && content.type !== 'pelicula' ? `${state.watched}/${content.totalEpisodes}` : null;
   const poster = <PosterImage content={content} />;
   const advanceTitle = advance ? ('rewatch' in advance ? 'Volver a ver (episodios a 0; tus estadísticas se conservan)' : `Pasar a ${STATUS_TEXT[advance.to]}`) : '';
@@ -146,9 +149,9 @@ export function PosterCard({
               type="button"
               className={`poster-btn mid st-btn watching ${state?.status === 'VIENDO' ? 'on' : ''}`}
               onClick={() => setStatus('VIENDO')}
-              disabled={busy}
+              disabled={busy || locked}
               aria-pressed={state?.status === 'VIENDO'}
-              title="Marcar como «Viendo»"
+              title={locked ? lockedTitle : 'Marcar como «Viendo»'}
               aria-label={`Marcar como Viendo: ${content.title}`}
             >
               <Emoji name="ojo" />
@@ -157,9 +160,9 @@ export function PosterCard({
               type="button"
               className={`poster-btn right st-btn done ${state?.status === 'FINALIZADO' ? 'on' : ''}`}
               onClick={() => setStatus('FINALIZADO')}
-              disabled={busy}
+              disabled={busy || locked}
               aria-pressed={state?.status === 'FINALIZADO'}
-              title="Marcar como «Finalizado» (todos los episodios vistos)"
+              title={locked ? lockedTitle : 'Marcar como «Finalizado» (todos los episodios vistos)'}
               aria-label={`Marcar como Finalizado: ${content.title}`}
             >
               <Emoji name="tick" />
@@ -174,7 +177,7 @@ export function PosterCard({
               type="button"
               className={`poster-btn left ${state?.favorite ? 'on fav' : ''}`}
               onClick={() => act('favorite')}
-              disabled={busy}
+              disabled={busy || (locked && !state?.favorite)}
               aria-pressed={!!state?.favorite}
               title={state?.favorite ? 'Quitar de favoritos' : 'Favorito (se marca como visto)'}
             >
@@ -185,8 +188,8 @@ export function PosterCard({
                 type="button"
                 className={`poster-btn right advance ${'rewatch' in advance ? 'again' : ''}`}
                 onClick={moveOn}
-                disabled={busy}
-                title={advanceTitle}
+                disabled={busy || locked}
+                title={locked ? lockedTitle : advanceTitle}
                 aria-label={`${advanceTitle}: «${content.title}»`}
               >
                 <Icon name="later" />

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import type { Season } from '../types';
+import { dateEs, isFutureDate, type Season } from '../types';
 
 /**
  * Episodios por temporadas. Los botones + y − del contador siguen mandando; esto es su reflejo (y un atajo): los
@@ -10,8 +10,8 @@ export function SeasonList({
   seasons, total, watched, disabled, onSet,
 }: { seasons: Season[] | null; total: number | null; watched: number; disabled?: boolean; onSet: (n: number) => void }) {
   const sections = useMemo(() => {
-    if (seasons?.length) return seasons.map((s) => ({ key: s.number, label: `Temporada ${s.number}`, episodes: s.episodes }));
-    return total && total > 1 ? [{ key: 0, label: 'Episodios', episodes: total }] : [];
+    if (seasons?.length) return seasons.map((s) => ({ key: s.number, label: `Temporada ${s.number}`, episodes: s.episodes, air: isFutureDate(s.air) ? s.air : undefined }));
+    return total && total > 1 ? [{ key: 0, label: 'Episodios', episodes: total, air: undefined as string | undefined }] : [];
   }, [seasons, total]);
 
   // Se abre por defecto la temporada en la que toca ver el siguiente episodio (o la última si ya se ha visto todo)
@@ -32,11 +32,12 @@ export function SeasonList({
         offset += s.episodes;
         const seen = Math.min(Math.max(watched - start, 0), s.episodes);
         const done = seen === s.episodes;
+        const future = !!s.air; // temporada por estrenar: se ve oscura y no se puede marcar
         const isOpen = open.has(s.key);
         return (
           <details
             key={s.key}
-            className={`season ${done ? 'done' : ''}`}
+            className={`season ${done ? 'done' : ''} ${future ? 'future' : ''}`}
             open={isOpen}
             onToggle={(e) => {
               const now = (e.currentTarget as HTMLDetailsElement).open;
@@ -45,7 +46,7 @@ export function SeasonList({
           >
             <summary>
               <span className="season-name">{s.label}</span>
-              <span className="season-progress" aria-label={`${seen} de ${s.episodes} episodios vistos`}>{done ? '✓ ' : ''}{seen}/{s.episodes}</span>
+              <span className="season-progress" aria-label={`${seen} de ${s.episodes} episodios vistos`}>{future ? `Estreno ${dateEs(s.air!)} · ${s.episodes} ep.` : <>{done ? '✓ ' : ''}{seen}/{s.episodes}</>}</span>
             </summary>
             {isOpen && (
               <div className="eps" role="group" aria-label={`Episodios de ${s.label}`}>
@@ -58,8 +59,8 @@ export function SeasonList({
                       type="button"
                       className={`ep ${on ? 'on' : ''}`}
                       aria-pressed={on}
-                      disabled={disabled}
-                      title={`${s.label} · episodio ${i + 1}${on ? ' (visto)' : ''}`}
+                      disabled={disabled || future}
+                      title={future ? `${s.label}: aún no se ha estrenado` : `${s.label} · episodio ${i + 1}${on ? ' (visto)' : ''}`}
                       aria-label={`${s.label}, episodio ${i + 1}`}
                       onClick={() => onSet(global === watched ? global - 1 : global)}
                     >
