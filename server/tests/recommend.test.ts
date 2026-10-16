@@ -172,6 +172,32 @@ describe('GET /api/recommendations', () => {
     expect(last.body.hasMore).toBe(false); // límite de páginas
   });
 
+  it('hasMore sigue true hasta la penúltima página y la última (500) aún devuelve la forma correcta', async () => {
+    const p499 = await ana.get('/api/recommendations?type=serie&page=499');
+    expect(p499.status).toBe(200);
+    expect(p499.body).toMatchObject({ page: 499, hasMore: true });
+    const p500 = await ana.get('/api/recommendations?type=serie&page=500');
+    expect(p500.body).toMatchObject({ page: 500, hasMore: false, reason: null });
+    expect(Array.isArray(p500.body.items)).toBe(true);
+  });
+
+  it('varias páginas seguidas no repiten ids y lo que añades a la lista desaparece de las siguientes', async () => {
+    const seen = new Set<number>();
+    let first: any;
+    for (let p = 1; p <= 4; p++) {
+      const r = await ana.get(`/api/recommendations?type=serie&page=${p}`);
+      for (const i of r.body.items) {
+        expect(seen.has(i.id), `id ${i.id} repetido en la página ${p}`).toBe(false);
+        seen.add(i.id);
+      }
+      first ??= r.body.items[0];
+    }
+    expect(first).toBeTruthy();
+    await ana.put(`/api/library/${first.id}/status`, { status: 'POR_VER' });
+    const again = await ana.get('/api/recommendations?type=serie');
+    expect(again.body.items.map((i: any) => i.id)).not.toContain(first.id);
+  });
+
   it('valida la página', async () => {
     for (const q of ['page=0', 'page=501', 'page=x', 'page=1.5', 'page=-1']) expect((await ana.get('/api/recommendations?type=serie&' + q)).status, q).toBe(400);
   });
