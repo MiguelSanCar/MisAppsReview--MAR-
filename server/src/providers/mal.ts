@@ -2,6 +2,7 @@ import { config } from '../config';
 import { cached, memCached } from '../cache';
 import { getJson, guarded, HttpError } from '../http';
 import type { ProviderItem } from './types';
+import type { MalEntry } from '../importTypes';
 
 // API oficial de MyAnimeList (v2). Solo lectura de datos públicos: basta el Client ID (cabecera X-MAL-CLIENT-ID).
 // Sustituye a Jikan, cuya API pública cerró el 1 de octubre de 2026.
@@ -73,6 +74,16 @@ export async function searchMal(query: string): Promise<ProviderItem[]> {
 export async function trendingMal(): Promise<ProviderItem[]> {
   const data = await memCached('mal:trending', 3600, () => call('/anime/ranking', { ranking_type: 'airing', limit: '20' }));
   return nodes(data);
+}
+
+/**
+ * Lista de anime pública de un usuario de MAL (CONTRATO: el agente del proveedor lo implementa). Valida el nombre
+ * (/^[A-Za-z0-9_-]{2,16}$/) sin tocar la red; pagina con offset propio (máx. 10 páginas de 1000, sin seguir
+ * `paging.next`), nsfw=true y timeout de 15 s. 404 → HttpError(404, 'No existe ese usuario en MyAnimeList');
+ * lista privada (401/403) → HttpError(403, 'La lista de ese usuario es privada…').
+ */
+export async function fetchUserAnimeList(user: string): Promise<MalEntry[]> {
+  throw new Error('sin implementar');
 }
 
 export async function detailMal(externalId: string): Promise<ProviderItem> {

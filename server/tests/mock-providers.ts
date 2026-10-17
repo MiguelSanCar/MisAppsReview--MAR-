@@ -179,6 +179,17 @@ export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ bas
         setTimeout(() => send(200, { data: [{ node: anime(20, 'Naruto', 220, 'tv') }] }), 700);
         return;
       }
+      // Listas de usuarios (importación): «lector» pública (paginada de 2 en 2 si limit=2), «privado» → 403, otro → 404
+      const ul = /^\/mal\/users\/([^/]+)\/animelist$/.exec(p);
+      if (ul) {
+        if (ul[1] === 'privado') return send(403, { error: 'forbidden' });
+        if (ul[1] !== 'lector') return send(404, { error: 'not_found' });
+        const all = MAL_USER_LIST.filter((e) => url.searchParams.get('nsfw') === 'true' || !e.nsfw);
+        const offset = Number(url.searchParams.get('offset') ?? 0);
+        const limit = Number(url.searchParams.get('limit') ?? 100);
+        const page = all.slice(offset, offset + limit);
+        return send(200, { data: page.map((e) => ({ node: anime(e.id, e.title, e.episodes, e.type), list_status: e.list })), paging: offset + limit < all.length ? { next: 'https://evil.example/next' } : {} });
+      }
       if (p === '/mal/anime/ranking') return send(200, { data: [{ node: anime(9001, 'Anime en emisión', 12, 'tv'), ranking: { rank: 1 } }] });
       if (p === '/mal/anime') return send(200, { data: [{ node: anime(20, 'Naruto', 220, 'tv') }], paging: {} });
       if (p === '/mal/anime/20') return send(200, anime(20, 'Naruto', 220, 'tv'));
@@ -221,6 +232,16 @@ export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ bas
     });
   });
 }
+
+/** Lista pública simulada del usuario «lector» de MAL (importación). */
+export const MAL_USER_LIST: { id: number; title: string; episodes: number; type: string; nsfw?: boolean; list: any }[] = [
+  { id: 20, title: 'Naruto', episodes: 220, type: 'tv', list: { status: 'watching', num_episodes_watched: 100, is_rewatching: false, num_times_rewatched: 0, updated_at: '2026-09-01T10:00:00+00:00', score: 8 } },
+  { id: 5114, title: 'Pelicula anime', episodes: 1, type: 'movie', list: { status: 'completed', num_episodes_watched: 1, is_rewatching: false, num_times_rewatched: 2, updated_at: '2026-08-01T10:00:00+00:00', score: 9 } },
+  { id: 9001, title: 'Anime en emisión', episodes: 0, type: 'tv', list: { status: 'on_hold', num_episodes_watched: 5, is_rewatching: false, num_times_rewatched: 0, updated_at: '2026-07-01T10:00:00+00:00', score: 0 } },
+  { id: 9002, title: 'Anime dejado', episodes: 12, type: 'ova', list: { status: 'dropped', num_episodes_watched: 3, is_rewatching: false, num_times_rewatched: 0, updated_at: '2026-06-01T10:00:00+00:00', score: 4 } },
+  { id: 9003, title: 'Anime pendiente', episodes: 24, type: 'tv', list: { status: 'plan_to_watch', num_episodes_watched: 0, is_rewatching: false, num_times_rewatched: 0, updated_at: '2026-05-01T10:00:00+00:00', score: 0 } },
+  { id: 9004, title: 'Anime adulto', episodes: 2, type: 'ova', nsfw: true, list: { status: 'completed', num_episodes_watched: 2, is_rewatching: false, num_times_rewatched: 0, updated_at: '2026-04-01T10:00:00+00:00', score: 0 } },
+];
 
 /** Anime con el formato de la API v2 de MyAnimeList (`media_type`: tv, movie, ova…; duración en segundos). */
 function anime(id: number, title: string, episodes: number, mediaType: string) {

@@ -3,6 +3,7 @@ import { api, errorText } from '../api';
 import { useAuth } from '../auth/AuthContext';
 import { copyText } from '../clipboard';
 import { AvatarCropper } from '../components/AvatarCropper';
+import { MalImport } from '../components/MalImport';
 import { useToast } from '../components/Toast';
 import { Avatar } from '../components/ui';
 import { useNotifications } from '../notifications/NotificationsContext';
@@ -123,6 +124,7 @@ export default function SettingsPage() {
         {window.location.hostname.match(/^(localhost|127\.)/) && (
           <p className="muted small">Ahora mismo la app solo es accesible en tu equipo (o por el túnel); la URL funcionará para otras personas cuando se despliegue.</p>
         )}
+        <MalImport />
       </section>
 
       <section className="panel">

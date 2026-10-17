@@ -40,6 +40,26 @@ export class Client {
   post = (p: string, b?: unknown) => this.req('POST', p, b ?? {});
   put = (p: string, b?: unknown) => this.req('PUT', p, b ?? {});
   del = (p: string) => this.req('DELETE', p);
+  /** POST con cuerpo en bruto (subida de ficheros). */
+  raw(path: string, buf: Buffer, contentType: string) {
+    return new Promise<{ status: number; body: any; headers: http.IncomingHttpHeaders }>((resolve, reject) => {
+      const r = http.request(
+        { host: '127.0.0.1', port: Client.port, method: 'POST', path, headers: { 'Content-Type': contentType, 'Content-Length': buf.length, ...(this.cookie ? { Cookie: this.cookie } : {}) } },
+        (res) => {
+          const chunks: Buffer[] = [];
+          res.on('data', (c) => chunks.push(c));
+          res.on('end', () => {
+            let parsed: any = null;
+            try { parsed = JSON.parse(Buffer.concat(chunks).toString()); } catch { /* sin JSON */ }
+            resolve({ status: res.statusCode!, body: parsed, headers: res.headers });
+          });
+        },
+      );
+      r.on('error', reject);
+      r.write(buf);
+      r.end();
+    });
+  }
 }
 
 /** Arranca app + proveedores simulados con BD en memoria. Devuelve la función para apagarlo todo. */

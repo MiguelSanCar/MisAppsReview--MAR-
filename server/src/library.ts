@@ -3,6 +3,7 @@ import { config } from './config';
 import { ContentDto, ContentRow, toDto } from './content';
 import { HttpError } from './http';
 import { ItemState, Status } from './domain/rules';
+import type { FullState } from './importTypes';
 
 export interface UserContentRow extends ContentRow {
   status: Status;
@@ -75,6 +76,18 @@ export function saveState(userId: number, contentId: number, s: ItemState, favor
        status = excluded.status, watched_episodes = excluded.watched_episodes,
        is_favorite = excluded.is_favorite, updated_at = excluded.updated_at`,
     [userId, contentId, s.status, s.watched, favorite, new Date().toISOString()],
+  );
+}
+
+/** Escribe el estado completo (progreso, revisionados y favorito) de una vez: lo usa la importación desde MAL. */
+export function saveFullState(userId: number, contentId: number, s: FullState, favorite: boolean, updatedAt: string) {
+  run(
+    `INSERT INTO user_content (user_id, content_id, status, watched_episodes, prev_episodes, rewatch, is_favorite, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT(user_id, content_id) DO UPDATE SET
+       status = excluded.status, watched_episodes = excluded.watched_episodes, prev_episodes = excluded.prev_episodes,
+       rewatch = excluded.rewatch, is_favorite = excluded.is_favorite, updated_at = excluded.updated_at`,
+    [userId, contentId, s.status, s.watched, s.prev, s.rewatch, favorite, updatedAt],
   );
 }
 

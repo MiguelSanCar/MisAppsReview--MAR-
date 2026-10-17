@@ -12,6 +12,7 @@ import { profilesRouter } from './routes/profiles';
 import { invitesRouter } from './routes/invites';
 import { contentRouter, libraryRouter, searchRouter } from './routes/library';
 import { listsRouter } from './routes/lists';
+import { importRouter } from './routes/import';
 import { discoverRouter } from './routes/discover';
 import { notificationsRouter } from './routes/notifications';
 import { recoRouter } from './routes/recommendations';
@@ -59,6 +60,7 @@ export function createApp() {
   app.use('/api/invites', invitesRouter);
   app.use('/api/profiles', profilesRouter);
   app.use('/api/lists', listsRouter);
+  app.use('/api/import', importRouter);
   app.use('/api', (_req, _res, next) => next(new HttpError(404, 'Ruta no encontrada')));
 
   // En producción el servidor también sirve el cliente compilado.
