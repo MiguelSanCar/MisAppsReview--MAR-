@@ -31,6 +31,7 @@
 - **Episodios por temporadas**: contador con − / + y la lista de episodios de cada temporada; pulsar uno fija el progreso.
 - Fichas con sinopsis, estudio y puntuaciones de IMDb y Rotten Tomatoes.
 - «Mi lista» con filtros por estado, tipo y título, y **scroll infinito** (carga por lotes, pensado para listas de cientos de contenidos).
+- **Importar de MyAnimeList**: la lista de anime por nombre de usuario (listas públicas) o con el fichero de exportación de MAL (`.xml` / `.xml.gz`, también listas privadas). Vista previa con lo que se añade, se actualiza o queda igual antes de confirmar; si un anime ya estaba, se conserva lo más avanzado, y los revisionados de MAL cuentan en las estadísticas.
 
 **Descubrir**
 - **Recomendaciones** según los géneros con más afinidad: combinan la presencia del género en el mercado, en la lista de la persona y la cantidad de contenidos (los favoritos pesan más).
@@ -112,7 +113,8 @@ Variables de entorno principales (todas en `.env.example`):
 | `PUBLIC_URL`, `CLIENT_ORIGIN` | URL pública y origen permitido (CORS) | `http://localhost:5173` |
 | `DB_FILE` | Fichero SQLite | `data/mar.db` |
 | `TMDB_REGION` | País para la disponibilidad en plataformas | `ES` |
-| `MAL_CLIENT_ID` | Client ID de la API de MyAnimeList (anime); sin él no hay búsqueda de anime | — |
+| `MAL_CLIENT_ID` | Client ID de la API de MyAnimeList (anime); sin él no hay búsqueda de anime ni importación por nombre | — |
+| `IMPORT_RATE_LIMIT` | Importaciones de MyAnimeList (vista previa, fichero o confirmación) por persona cada 15 minutos | `10` |
 | `USE_REAL_RUNTIME` | Usar la duración real de las fuentes (por temporada en las series) en lugar de 50 / 90 / 23 min | `true` |
 
 La lista completa está en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).

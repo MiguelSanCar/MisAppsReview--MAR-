@@ -53,17 +53,20 @@ server/src
 ├─ config.ts            Configuración (se lee en cada uso: los tests la modifican)
 ├─ db.ts, migrations.ts SQLite con sql.js y migraciones numeradas
 ├─ cache.ts, http.ts    Cachés, cliente HTTP con tiempos límite y corte de proveedores caídos
-├─ providers/           tmdb.ts, mal.ts, omdb.ts (resultados normalizados)
+├─ providers/           tmdb.ts, mal.ts (también fetchUserAnimeList: lista pública de un usuario), omdb.ts (resultados normalizados)
 ├─ content.ts           Búsqueda, tendencias, ficha, géneros y temporadas
-├─ library.ts           Biblioteca personal (paginación por cursor, contadores)
+├─ library.ts           Biblioteca personal (paginación por cursor, contadores; saveFullState para la importación)
+├─ importTypes.ts       Tipos de la importación desde MyAnimeList (MalEntry, FullState, ImportPreview, ImportResult)
+├─ malXml.ts            Lector del fichero de exportación de MyAnimeList (.xml / .xml.gz)
+├─ malImport.ts         Importación: vista previa con token, confirmación y fichas pendientes en segundo plano
 ├─ profile.ts, compare.ts  Estadísticas y comparación de perfiles
 ├─ recommendations.ts   Recomendaciones por géneros
 ├─ news.ts              Motor de novedades (notificaciones) en segundo plano
 ├─ structure.ts         Sincroniza temporadas y películas retiradas de TMDB con el progreso (desde el motor de novedades)
 ├─ runtimes.ts          Duración real de los episodios (medias por temporada) en segundo plano
 ├─ listLife.ts, mailer.ts, roadmap.ts
-├─ domain/              Reglas puras sin red ni BD: rules, time, recommend, ranking, release, seasons, news, structure, runtimes
-└─ routes/              auth, account, library, discover, recommendations, friends, invites, profiles, lists
+├─ domain/              Reglas puras sin red ni BD: rules, time, recommend, ranking, release, seasons, news, structure, runtimes, malImport
+└─ routes/              auth, account, library, discover, recommendations, friends, invites, profiles, lists, import
 ```
 
 ## Datos
@@ -130,6 +133,15 @@ sequenceDiagram
 - **Película retirada**: si TMDB responde 404, `removeMovie` la quita de `user_content` y `joint_list_items` y crea el aviso `movie_removed`; el contenido sigue en `content`.
 - **Contenidos solo en listas conjuntas**: el motor también los refresca, sin generar avisos de novedades para ellos.
 - **Ajustes**: «solo favoritos» se aplica al leer (no al calcular), por lo que activarlo o quitarlo es inmediato.
+
+## Importación desde MyAnimeList
+
+Desde Ajustes › Mi perfil. Endpoints en [API.md](API.md#importar-desde-myanimelist-apiimport-sesión); motivos en [DECISIONES.md](DECISIONES.md#importar-desde-myanimelist-v1160).
+
+- **Entrada**: por nombre (`providers/mal.ts` → `fetchUserAnimeList`: solo listas públicas, nombre validado, paginación con `offset` propio sin seguir `paging.next`) o con el fichero de exportación (`malXml.ts` → `parseMalExport`: gzip detectado por sus bytes, sin DTD ni entidades, tope de 20 MB descomprimido y 10 000 entradas). Ambos producen `MalEntry[]` (`importTypes.ts`); las del fichero vienen sin ficha (`item: null`).
+- **Reglas puras** (`domain/malImport.ts`): `mapMalStatus` (Watching y On-Hold → Viendo; Completed → Finalizado; Dropped → Dejado; Plan to Watch → Por ver), `toFullState` (revisionados de MAL → `rewatch` y `prev_episodes`), `gateRelease` (lo no estrenado solo como «Por ver» con 0 episodios), `rankKey` y `mergeMostAdvanced` (veces terminado > episodios totales > estado; empate = se queda lo de MAR; se copia la tupla entera).
+- **Servicio** (`malImport.ts`): `previewImport` calcula el plan sin escribir y lo guarda en memoria con un token por persona (10 min, un solo uso); `confirmImport` recalcula la mezcla con el estado actual y la aplica en una única transacción con `saveFullState` (`library.ts`), que conserva el favorito. `updated_at` en ISO con `Z`: altas con la fecha de MAL (topada a ahora), actualizaciones con ahora. Las entradas sin ficha se completan después en una cola en segundo plano.
+- **Alcance**: todos los tipos de MAL entran como anime; no se importan favoritos ni notas; las listas conjuntas no se tocan. Un anime guardado como serie de TMDB no se empareja y quedaría duplicado.
 
 ## Seguridad
 

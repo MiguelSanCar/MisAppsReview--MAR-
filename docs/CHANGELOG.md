@@ -2,6 +2,17 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.16.0 · 2026-10-17 · Importar desde MyAnimeList
+### Añadido
+- **Importar la lista de anime de MyAnimeList** a «Mi lista» desde Ajustes › Mi perfil › «Importar de MyAnimeList», de dos formas: por **nombre de usuario** (solo listas públicas) o subiendo el **fichero de exportación** de MAL (`myanimelist.net/panel.php?go=export`, `.xml` o `.xml.gz`), que sirve también para listas privadas. Antes de escribir nada se muestra una vista previa con los recuentos (se añaden, se actualizan, sin cambios y ajustados por no estrenados) y unos ejemplos; la importación se confirma aparte. Es puntual y se puede repetir.
+- Estados: Watching y On-Hold → Viendo; Completed → Finalizado; Dropped → Dejado; Plan to Watch → Por ver. Los revisionados de MAL pasan al contador de revisionados y a los episodios previos, y cuentan en las estadísticas.
+- Si un anime ya estaba en MAR se queda lo más avanzado (veces terminado, luego episodios vistos en total, luego estado; en empate no se toca) y el favorito se conserva. Lo no estrenado solo entra como «Por ver». Se importan todos los tipos (TV, película, OVA, ONA, especial, música…) como anime. Las entradas del fichero completan su póster y su ficha en segundo plano.
+- Endpoints `POST /api/import/mal/preview`, `POST /api/import/mal/file` y `POST /api/import/mal/confirm` (sesión; límite de 10 cada 15 minutos por persona, `IMPORT_RATE_LIMIT`).
+
+### Sin cambios
+- No se importan los favoritos (la API de listas de MAL no los da) ni las notas (MAR no tiene). Las listas conjuntas no se tocan.
+- Limitación conocida: un anime guardado en MAR como serie de TMDB no se empareja con el de MAL y quedaría duplicado.
+
 ## 1.15.0 · 2026-10-17 · Anime desde la API oficial de MyAnimeList
 ### Cambiado
 - **El anime pasa a la API oficial de MyAnimeList (v2)**. La API pública de Jikan cerró el 1 de octubre de 2026, y desde entonces no se podía buscar anime, la portada de anime salía vacía y las fichas sin caché fallaban. Requiere la variable `MAL_CLIENT_ID` (gratuita, https://myanimelist.net/apiconfig).

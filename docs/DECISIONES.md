@@ -203,6 +203,26 @@
 | **Estreno solo con fecha completa** | MAL a veces da «2027» o «2027-04»; con una fecha parcial no se bloquea (mismo criterio que «sin fecha = no se bloquea»). |
 | **Géneros de MAL sin usar** | Son ids propios, no los de TMDB en los que se basan las recomendaciones; el anime sigue sin recomendaciones. |
 
+## Importar desde MyAnimeList (v1.16.0)
+
+| Decisión | Motivo |
+|---|---|
+| **Por nombre (lista pública) o con el fichero de exportación (privada)** | La API con Client ID solo lee listas públicas; las privadas exigirían OAuth (registro de redirección, guardar tokens de terceros), descartado. El fichero de exportación de MAL cubre ese caso sin acceder a la cuenta. |
+| **Vista previa con token y confirmación aparte** | Importar cientos de entradas no debe ser un clic irreversible. El plan se guarda en memoria con un token de un solo uso por persona que caduca a los 10 minutos (404 si no existe o es de otra persona, 410 si ya se usó o caducó). |
+| **La mezcla se recalcula al confirmar, en una sola transacción** | Entre la vista previa y la confirmación la persona puede haber cambiado algo; se parte del estado actual y o se aplica todo o nada. |
+| **Se queda lo más avanzado** | Orden: veces terminado, después episodios vistos en total (previos + actuales), después estado (Por ver < Dejado < Viendo < Finalizado). En empate gana lo que hay en MAR. Se copia la tupla entera del ganador (estado, episodios, previos, revisionados) para no mezclar datos incoherentes. El favorito nunca se toca. |
+| **Watching y On-Hold → Viendo** | MAR no tiene «en pausa»; lo empezado y sin terminar es «Viendo». |
+| **Revisionados → `rewatch` y `prev_episodes`** | Completed con *t* revisiones = Finalizado con *t* revisionados y total·*t* episodios previos; «rewatching» = un revisionado más en curso. Así cuentan en las estadísticas igual que los hechos en MAR. |
+| **Lo no estrenado solo entra como «Por ver»** | Misma regla que el resto de la aplicación; se cuenta como «ajustado» en la vista previa. |
+| **Todos los tipos de MAL como anime** | Películas, OVA, ONA, especiales o música son anime con ficha en MAL; separarlos obligaría a emparejarlos con TMDB sin un id común. |
+| **Sin favoritos ni notas** | La API de listas no da los favoritos y MAR no tiene notas. |
+| **No se sigue `paging.next`** | Es una URL absoluta que da MAL: seguirla a ciegas enviaría el Client ID a donde apunte. Se pide la página siguiente con el `offset` propio. El nombre de usuario se valida antes de construir la URL. |
+| **XML endurecido** | Se rechaza cualquier DTD o entidad (sin expansión de entidades), el gzip se descomprime con un tope de 20 MB, se admiten como máximo 10 000 entradas y solo exportaciones de anime. El cuerpo subido está limitado a 2 MB. |
+| **Fichero como cuerpo en bruto con tipos no «simples»** | `application/octet-stream`, `application/gzip` o XML; otro tipo → 415. `application/gzip` y `application/octet-stream` no los envía un formulario HTML, así que la petición entre sitios requiere CORS y no es un CSRF trivial; además no hace falta `multipart`. |
+| **`updated_at` en ISO con `Z`** | El cursor de «Mi lista» compara cadenas: un formato distinto desordenaría la lista. Las altas llevan la fecha de modificación de MAL (topada a ahora) para conservar el orden de la lista original; las actualizaciones, la fecha actual. |
+| **Fichas del fichero en segundo plano** | El XML solo trae id, título, tipo y episodios; el póster y la ficha se piden a MAL después, sin hacer esperar a la confirmación. |
+| **Límite propio (10 cada 15 min por persona)** | Cada vista previa por nombre hace varias peticiones a MAL; el límite protege la cuota del Client ID. |
+
 ## Duración real de los episodios (fase 24)
 
 | Decisión | Motivo |

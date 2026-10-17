@@ -92,6 +92,40 @@ Sin fecha no se bloquea nada.
 | `POST /:id/rewatch` | — | Volver a ver algo finalizado |
 | `DELETE /:id` · `POST /delete` | — · `{ ids }` | Quitar de la lista (uno o hasta 500); resta sus episodios y minutos |
 
+## Importar desde MyAnimeList (`/api/import`, sesión)
+
+Importación puntual y repetible de la lista de anime de MyAnimeList a «Mi lista», en dos pasos: vista previa (no escribe nada) y confirmación con su token. Límite propio: 10 peticiones cada 15 minutos por persona (`IMPORT_RATE_LIMIT`; `429` al superarlo).
+
+| Método y ruta | Cuerpo | Descripción |
+|---|---|---|
+| `POST /mal/preview` | `{ username }` | Lista **pública** de ese usuario de MAL (API con `MAL_CLIENT_ID`) → `ImportPreview` |
+| `POST /mal/file` | fichero en bruto | Exportación de MAL (`myanimelist.net/panel.php?go=export`, `.xml` o `.xml.gz`; sirve para listas privadas) → `ImportPreview`. `Content-Type`: `application/octet-stream`, `application/gzip`, `application/xml` o `text/xml` (otro → `415`); máximo 2 MB (`413`) |
+| `POST /mal/confirm` | `{ token }` | Aplica el plan → `ImportResult`. Token de un solo uso que caduca a los 10 minutos: `404` si no existe o es de otra persona, `410` si ya se usó o caducó |
+
+Errores: `400` nombre o fichero no válido (no es una exportación de anime de MAL, está dañado, supera 20 MB descomprimido o 10 000 entradas) o lista vacía · `403` lista privada (usar el fichero) · `404` el usuario no existe en MAL · `503` falta `MAL_CLIENT_ID`.
+
+`ImportPreview`:
+
+```json
+{
+  "token": "…", "source": "usuario", "malUser": "nombre", "total": 312,
+  "summary": { "add": 280, "update": 20, "same": 12, "adjusted": 3, "byType": { "tv": 250, "movie": 40, "ova": 22 } },
+  "sample": [{ "title": "…", "outcome": "add", "status": "FINALIZADO", "watched": 24 }]
+}
+```
+
+| Campo | Descripción |
+|---|---|
+| `source` | `usuario` (por nombre) \| `fichero` |
+| `malUser` | Usuario de MAL o el que figura en el fichero; `null` si no se conoce |
+| `total` | Entradas leídas |
+| `summary.add` · `update` · `same` | Se añaden · se actualizan (lo de MAL está más avanzado) · sin cambios |
+| `summary.adjusted` | Cambiadas por no estar estrenadas (solo entran como «Por ver») |
+| `summary.byType` | Recuento por tipo de MAL (`tv`, `movie`, `ova`, `ona`, `special`, `music`, `tv_special`, `cm`, `pv`, `unknown`) |
+| `sample` | Hasta 3 ejemplos de lo que se añade o actualiza (`outcome`: `add` \| `update` \| `same`) |
+
+`ImportResult`: `{ added, updated, same, adjusted }`. Las entradas del fichero se guardan al confirmar y completan su póster y ficha en segundo plano. Reglas de la mezcla en [ARQUITECTURA.md](ARQUITECTURA.md#importación-desde-myanimelist).
+
 ## Perfiles (`/api/profiles`)
 
 El acceso se decide en `resolve()`: `self`, `friend`, `public` o `private` (solo se ve que existe).
