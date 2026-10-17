@@ -82,6 +82,8 @@ export const config = {
   favoritesMax: 10,
   jointHistoryLimit: Math.max(15, Number(env.JOINT_HISTORY_LIMIT) || 50),
   authRateLimit: Number(env.AUTH_RATE_LIMIT) || 30,
+  /** Importaciones (vista previa + confirmación) por persona cada 15 minutos. */
+  importRateLimit: Number(env.IMPORT_RATE_LIMIT) || 10,
 
   // Fichero con el roadmap (solo lectura desde la web) y buzón de ideas (solo local).
   roadmapFile: path.resolve(__dirname, '../../roadmap/roadmap.json'),
