@@ -2363,9 +2363,8 @@
             {
               "id": "28.7",
               "title": "Publicar en Fly.io con el secreto MAL_CLIENT_ID",
-              "status": "pendiente",
-              "eta": null,
-              "etaNote": "Depende de la tarea 28.6 y de que el autor dé el visto bueno al despliegue. Unos 10 minutos."
+              "status": "hecho",
+              "eta": "2026-10-17"
             }
           ]
         }
@@ -2403,7 +2402,7 @@
           "category": "Infra",
           "tasks": [
             { "id": "29.7", "title": "Pruebas, comprobación con la API real y en navegador, documentación y versión 1.16.0", "status": "hecho", "eta": "2026-10-17" },
-            { "id": "29.8", "title": "Publicar en Fly.io", "status": "pendiente", "eta": null, "etaNote": "Depende del visto bueno del autor al despliegue. Unos 10 minutos." }
+            { "id": "29.8", "title": "Publicar en Fly.io", "status": "hecho", "eta": "2026-10-17" }
           ]
         }
       ]
