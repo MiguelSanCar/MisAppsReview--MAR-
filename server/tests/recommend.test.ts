@@ -208,7 +208,7 @@ describe('GET /api/recommendations', () => {
     for (const q of ['page=0', 'page=501', 'page=x', 'page=1.5', 'page=-1']) expect((await ana.get('/api/recommendations?type=serie&' + q)).status, q).toBe(400);
   });
 
-  it('anime todavía no (Jikan no da géneros), tipo no válido y sin sesión', async () => {
+  it('anime todavía no (los géneros de MyAnimeList no son los de TMDB), tipo no válido y sin sesión', async () => {
     const r = await ana.get('/api/recommendations?type=anime');
     expect(r.body).toMatchObject({ reason: 'anime', items: [] });
     expect((await ana.get('/api/recommendations?type=cosas')).status).toBe(400);

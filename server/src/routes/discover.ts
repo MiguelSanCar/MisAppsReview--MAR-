@@ -6,7 +6,7 @@ import { getState } from '../library';
 import { discoverFiltered, genreNamesTmdb, providersTmdb, searchCompaniesTmdb, tmdbAvailable, TmdbKind } from '../providers/tmdb';
 import { requireAuth, uid } from './auth';
 
-/** Búsqueda avanzada con filtros (solo series y películas: Jikan no ofrece estos filtros). */
+/** Búsqueda avanzada con filtros (solo series y películas: MyAnimeList no ofrece estos filtros). */
 export const discoverRouter = Router();
 discoverRouter.use(requireAuth);
 

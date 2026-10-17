@@ -60,7 +60,7 @@ const parse = (g: string | null): number[] => { try { const v = JSON.parse(g ?? 
 export async function recommend(userId: number, kind: 'serie' | 'pelicula' | 'anime', page = 1): Promise<Recommendations> {
   const title = kind === 'pelicula' ? 'Películas que has podido ver' : kind === 'anime' ? 'Anime que has podido ver' : 'Series que has podido ver';
   const base = { kind, title, items: [], genres: [], warnings: [] as string[], page, hasMore: false };
-  // Jikan no aporta géneros: por ahora no hay recomendaciones de anime
+  // Los géneros de MyAnimeList no son los de TMDB: por ahora no hay recomendaciones de anime
   if (kind === 'anime') return { ...base, reason: 'anime' };
   if (!tmdbAvailable()) return { ...base, reason: 'sin_tmdb' };
 

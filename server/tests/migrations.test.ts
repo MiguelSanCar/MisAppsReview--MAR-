@@ -31,6 +31,21 @@ describe('migraciones sobre datos existentes', () => {
     expect(left).toBe(0); // todos siguen dentro
   });
 
+  it('15: el anime guardado de Jikan pasa a la fuente «mal» con el mismo id y conserva su progreso', async () => {
+    const SQL = await initSqlJs();
+    const db = new SQL.Database();
+    db.run('PRAGMA foreign_keys = ON');
+    MIGRATIONS.filter((m) => m.version <= 14).forEach((m) => db.exec(m.sql));
+    db.run("INSERT INTO users (username, email, password_hash, created_at) VALUES ('ana','a@t.com','x','2026-01-01')");
+    db.run("INSERT INTO content (source, external_id, type, title) VALUES ('jikan','20','anime','Naruto'), ('tmdb','tv-1396','serie','Breaking Bad')");
+    db.run("INSERT INTO user_content (user_id, content_id, status, watched_episodes, updated_at) VALUES (1, 1, 'VIENDO', 50, '2026-10-01')");
+
+    MIGRATIONS.filter((m) => m.version >= 15).forEach((m) => db.exec(m.sql));
+
+    expect(db.exec('SELECT id, source, external_id FROM content ORDER BY id')[0].values).toEqual([[1, 'mal', '20'], [2, 'tmdb', 'tv-1396']]);
+    expect(db.exec('SELECT content_id, watched_episodes FROM user_content')[0].values).toEqual([[1, 50]]);
+  });
+
   it('las versiones son correlativas y no se repiten', () => {
     expect(MIGRATIONS.map((m) => m.version)).toEqual(MIGRATIONS.map((_, i) => i + 1));
   });

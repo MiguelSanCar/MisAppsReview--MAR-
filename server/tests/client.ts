@@ -50,8 +50,8 @@ export async function startTestApp() {
   config.useRealRuntime = false; // las pruebas parten de las duraciones fijas; las de duración real la activan
   const mock = await startMockProviders();
   Object.assign(config, {
-    tmdbBase: `${mock.base}/tmdb`, jikanBase: `${mock.base}/jikan`, omdbBase: `${mock.base}/omdb`,
-    tmdbKey: 'tmdb-key', omdbKey: 'omdb-key', jikanMinGapMs: 0, authRateLimit: 10_000, jointHistoryLimit: 15,
+    tmdbBase: `${mock.base}/tmdb`, malBase: `${mock.base}/mal`, omdbBase: `${mock.base}/omdb`,
+    tmdbKey: 'tmdb-key', omdbKey: 'omdb-key', malClientId: 'mal-client', malMinGapMs: 0, authRateLimit: 10_000, jointHistoryLimit: 15,
   });
   const server = createApp().listen(0, '127.0.0.1');
   await new Promise((r) => server.once('listening', r));

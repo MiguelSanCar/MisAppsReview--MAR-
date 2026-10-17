@@ -24,6 +24,7 @@ export const config = {
 
   tmdbKey: env.TMDB_API_KEY || '',
   omdbKey: env.OMDB_API_KEY || '',
+  malClientId: env.MAL_CLIENT_ID || '',
   tmdbBase: env.TMDB_BASE_URL || 'https://api.themoviedb.org/3',
   tmdbImageBase: env.TMDB_IMAGE_BASE_URL || 'https://image.tmdb.org/t/p/w342',
   // Región para saber en qué plataformas (Netflix, HBO…) está disponible cada título.
@@ -37,21 +38,20 @@ export const config = {
   newsRoundDelayMs: Number(env.NEWS_ROUND_DELAY_MS ?? 4000), // pausa entre rondas de una misma persona
   newsUserIntervalMs: Number(env.NEWS_USER_INTERVAL_MS ?? 30 * 60_000), // cada cuánto se programa un refresco por persona
   newsRetryMs: Number(env.NEWS_RETRY_MS ?? 15 * 60_000), // espera antes de reintentar un contenido que falló
-  jikanBase: env.JIKAN_BASE_URL || 'https://api.jikan.moe/v4',
+  // Anime: API oficial de MyAnimeList (Client ID de https://myanimelist.net/apiconfig). Sin él no hay anime.
+  malBase: env.MAL_BASE_URL || 'https://api.myanimelist.net/v2',
   omdbBase: env.OMDB_BASE_URL || 'https://www.omdbapi.com',
   providerTimeoutMs: Number(env.PROVIDER_TIMEOUT_MS) || 8000,
-  jikanTimeoutMs: Number(env.JIKAN_TIMEOUT_MS) || 5000,
+  malTimeoutMs: Number(env.MAL_TIMEOUT_MS) || 5000,
   // Tiempo máximo que una búsqueda espera a CADA proveedor antes de devolver lo que ya tenga. TMDB es la fuente
-  // principal (y a través de un proxy corporativo la primera conexión puede tardar); Jikan es opcional y a veces
-  // está bloqueado, así que se le espera menos.
+  // principal (y a través de un proxy corporativo la primera conexión puede tardar); a MyAnimeList, que solo aporta
+  // el anime, se le espera menos.
   tmdbSoftMs: Number(env.TMDB_SOFT_MS) || 6000,
-  jikanSoftMs: Number(env.JIKAN_SOFT_MS) || 2000,
-  // false = no consultar Jikan/MyAnimeList (p. ej. si la red lo bloquea): sin esperas ni avisos.
-  jikanEnabled: env.JIKAN_ENABLED !== 'false',
+  malSoftMs: Number(env.MAL_SOFT_MS) || 3000,
   // Corte de un proveedor caído: primera espera y máximo (se duplica con cada fallo seguido).
   providerDownMs: Number(env.PROVIDER_DOWN_MS ?? 60_000),
   providerDownMaxMs: Number(env.PROVIDER_DOWN_MAX_MS ?? 15 * 60_000),
-  jikanMinGapMs: Number(env.JIKAN_MIN_GAP_MS ?? 400),
+  malMinGapMs: Number(env.MAL_MIN_GAP_MS ?? 300),
 
   // Duración real de las APIs. Por defecto sí; `USE_REAL_RUNTIME=false` vuelve a las fijas por tipo (50 / 90 / 23 min).
   useRealRuntime: env.USE_REAL_RUNTIME !== 'false',

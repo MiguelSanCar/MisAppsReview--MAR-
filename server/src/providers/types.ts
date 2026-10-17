@@ -1,6 +1,6 @@
 import type { ContentType } from '../domain/rules';
 
-export type Source = 'tmdb' | 'jikan';
+export type Source = 'tmdb' | 'mal';
 
 /** Contenido normalizado, independiente del proveedor. */
 export interface ProviderItem {
@@ -18,7 +18,7 @@ export interface ProviderItem {
   releaseDate?: string | null;
   imdbId?: string | null;
   malScore?: number | null;
-  /** Ids de género de TMDB (series y películas; Jikan no los aporta). */
+  /** Ids de género de TMDB (series y películas; los géneros de MyAnimeList son otros y no se usan). */
   genres?: number[];
   /** Temporadas de una serie de TMDB (sin la 0, que son especiales). */
   seasons?: { number: number; episodes: number; air?: string }[];

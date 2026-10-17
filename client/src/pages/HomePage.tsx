@@ -12,7 +12,7 @@ interface TrendingResponse extends SearchResponse { title: string; kind: string 
 const MOMENT: Record<string, string> = { serie: 'Series del momento', pelicula: 'Películas del momento', anime: 'Anime del momento' };
 const RECO_EMPTY: Record<string, string> = {
   sin_datos: 'Marca algunas series o películas (por ver, viendo o finalizadas) y aquí aparecerán recomendaciones según tus géneros favoritos.',
-  anime: 'Las recomendaciones de anime llegarán más adelante: MyAnimeList no ofrece géneros todavía.',
+  anime: 'Las recomendaciones de anime llegarán más adelante.',
   sin_tmdb: 'Las recomendaciones necesitan la clave de TMDB, que no está configurada en este servidor.',
 };
 

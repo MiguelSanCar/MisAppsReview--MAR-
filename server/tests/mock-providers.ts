@@ -2,7 +2,7 @@ import http from 'http';
 import type { AddressInfo } from 'net';
 import { demoTmdb } from './demo-data';
 
-/** Servidor local que imita TMDB, Jikan y OMDb (no hay acceso a las APIs reales en los tests). */
+/** Servidor local que imita TMDB, MyAnimeList y OMDb (no hay acceso a las APIs reales en los tests). */
 /** Estado que las pruebas modifican para simular que TMDB cambia con el tiempo (novedades) y para medir carga. */
 export interface MockState {
   /** Temporadas añadidas a una serie (id de TMDB → [{ season_number, air_date, episode_count }]). */
@@ -169,17 +169,23 @@ export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ bas
       return send(404, {});
     }
 
-    if (p === '/jikan/top/anime') return send(200, { data: [anime(9001, 'Anime en emisión', 12, 'TV')] });
-    if (p === '/slow/anime') {
-      // proveedor lento: tarda más que el límite de espera de la búsqueda
-      setTimeout(() => send(200, { data: [anime(20, 'Naruto', 220, 'TV')] }), 700);
-      return;
+    if (p.startsWith('/mal/') || p.startsWith('/slow/')) {
+      // MAL exige el Client ID en cabecera y rechaza búsquedas de menos de 3 caracteres
+      if (req.headers['x-mal-client-id'] !== 'mal-client') return send(401, { error: 'invalid_client' });
+      const q = url.searchParams.get('q');
+      if (q != null && q.trim().length < 3) return send(400, { error: 'bad_request', message: 'invalid q' });
+      if (p === '/slow/anime') {
+        // proveedor lento: tarda más que el límite de espera de la búsqueda
+        setTimeout(() => send(200, { data: [{ node: anime(20, 'Naruto', 220, 'tv') }] }), 700);
+        return;
+      }
+      if (p === '/mal/anime/ranking') return send(200, { data: [{ node: anime(9001, 'Anime en emisión', 12, 'tv'), ranking: { rank: 1 } }] });
+      if (p === '/mal/anime') return send(200, { data: [{ node: anime(20, 'Naruto', 220, 'tv') }], paging: {} });
+      if (p === '/mal/anime/20') return send(200, anime(20, 'Naruto', 220, 'tv'));
+      if (p === '/mal/anime/5114') return send(200, anime(5114, 'Pelicula anime', 1, 'movie'));
+      if (p === '/mal/anime/7777') return send(200, { ...anime(7777, 'Anime por estrenar', 0, 'tv'), start_date: '2099-04-01', num_episodes: 0 });
+      return send(404, { error: 'not_found' });
     }
-    if (p === '/jikan/anime') {
-      return send(200, { data: [anime(20, 'Naruto', 220, 'TV')] });
-    }
-    if (p === '/jikan/anime/20') return send(200, { data: anime(20, 'Naruto', 220, 'TV') });
-    if (p === '/jikan/anime/5114') return send(200, { data: anime(5114, 'Pelicula anime', 1, 'Movie') });
 
     if (p === '/omdb/') {
       if (url.searchParams.get('apikey') !== 'omdb-key') return send(401, { Response: 'False', Error: 'Invalid API key!' });
@@ -216,9 +222,12 @@ export function startMockProviders(opts: { demo?: boolean } = {}): Promise<{ bas
   });
 }
 
-function anime(id: number, title: string, episodes: number, type: string) {
+/** Anime con el formato de la API v2 de MyAnimeList (`media_type`: tv, movie, ova…; duración en segundos). */
+function anime(id: number, title: string, episodes: number, mediaType: string) {
   return {
-    mal_id: id, title, title_english: title, type, episodes, duration: '23 min per ep', score: 8.01, year: 2002,
-    synopsis: 'Un ninja...', studios: [{ name: 'Pierrot' }], images: { jpg: { image_url: 'https://cdn.myanimelist.net/x.jpg' } },
+    id, title, alternative_titles: { en: title, ja: '', synonyms: [] }, media_type: mediaType, num_episodes: episodes,
+    average_episode_duration: mediaType === 'movie' ? 6600 : 1380, mean: 8.01, start_date: '2002-10-03',
+    start_season: { year: 2002, season: 'fall' }, num_list_users: 3000000, synopsis: 'Un ninja...',
+    studios: [{ id: 1, name: 'Pierrot' }], main_picture: { medium: 'https://cdn.myanimelist.net/x.jpg', large: 'https://cdn.myanimelist.net/xl.jpg' },
   };
 }

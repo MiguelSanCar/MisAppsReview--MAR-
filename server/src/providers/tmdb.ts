@@ -24,7 +24,7 @@ function call(pathname: string, params: Record<string, string> = {}) {
 const poster = (p?: string | null) => (p ? `${config.tmdbImageBase}${p}` : null);
 const yearOf = (d?: string) => (d && /^\d{4}/.test(d) ? Number(d.slice(0, 4)) : null);
 
-/** Resultado de TMDB → contenido normalizado (null si es anime: lo cubre Jikan). */
+/** Resultado de TMDB → contenido normalizado (null si es anime: lo cubre MyAnimeList). */
 function mapResult(r: any, isMovie: boolean): ProviderItem | null {
   if (!isMovie && r.original_language === 'ja' && (r.genre_ids ?? []).includes(16)) return null;
   return {

@@ -51,8 +51,8 @@ beforeAll(async () => {
   config.useRealRuntime = false; // estas pruebas parten de las duraciones fijas
   mock = await startMockProviders();
   Object.assign(config, {
-    tmdbBase: `${mock.base}/tmdb`, jikanBase: `${mock.base}/jikan`, omdbBase: `${mock.base}/omdb`,
-    tmdbKey: 'tmdb-key', omdbKey: 'omdb-key', jikanMinGapMs: 0, authRateLimit: 10_000, jointHistoryLimit: 15,
+    tmdbBase: `${mock.base}/tmdb`, malBase: `${mock.base}/mal`, omdbBase: `${mock.base}/omdb`,
+    tmdbKey: 'tmdb-key', omdbKey: 'omdb-key', malClientId: 'mal-client', malMinGapMs: 0, authRateLimit: 10_000, jointHistoryLimit: 15,
   });
   appServer = createApp().listen(0, '127.0.0.1');
   await new Promise((r) => appServer.once('listening', r));
@@ -118,10 +118,10 @@ describe('cuentas', () => {
 
 describe('búsqueda y proveedores', () => {
   it('informa de qué fuentes están disponibles', async () => {
-    expect((await ana.get('/api/search/status')).body).toEqual({ tmdb: true, omdb: true, jikan: true });
+    expect((await ana.get('/api/search/status')).body).toEqual({ tmdb: true, omdb: true, mal: true });
   });
 
-  it('combina TMDB y Jikan, descarta anime de TMDB y personas', async () => {
+  it('combina TMDB y MyAnimeList, descarta anime de TMDB y personas', async () => {
     const r = await ana.get('/api/search?q=prueba&type=todo');
     expect(r.status).toBe(200);
     const titles = r.body.results.map((x: any) => x.title);
@@ -163,22 +163,107 @@ describe('búsqueda y proveedores', () => {
   });
 
   it('si un proveedor falla devuelve un aviso, no un error', async () => {
-    const base = config.jikanBase;
-    config.jikanBase = 'http://127.0.0.1:1/jikan';
+    const base = config.malBase;
+    config.malBase = 'http://127.0.0.1:1/mal';
     try {
       const r = await ana.get('/api/search?q=fallo&type=todo');
       expect(r.status).toBe(200);
       expect(r.body.warnings.join(' ')).toMatch(/MyAnimeList/);
       expect(r.body.results.length).toBeGreaterThan(0);
       // corte automático: la siguiente búsqueda ya no espera al proveedor caído
-      config.jikanBase = 'http://127.0.0.1:1/jikan';
+      config.malBase = 'http://127.0.0.1:1/mal';
       const t0 = Date.now();
       const again = await ana.get('/api/search?q=fallo2&type=todo');
       expect(again.body.warnings.join(' ')).toMatch(/MyAnimeList/);
       expect(Date.now() - t0).toBeLessThan(1500);
     } finally {
-      config.jikanBase = base;
+      config.malBase = base;
     }
+  });
+});
+
+describe('anime desde la API oficial de MyAnimeList', () => {
+  it('envía el Client ID y normaliza el resultado (título en inglés, duración en minutos, nota de MAL)', async () => {
+    const r = await ana.get('/api/search?q=naruto&type=anime');
+    expect(r.status).toBe(200);
+    expect(r.body.warnings).toEqual([]);
+    const naruto = r.body.results.find((x: any) => x.title === 'Naruto');
+    expect(naruto).toMatchObject({
+      source: 'mal', externalId: '20', type: 'anime', year: 2002, totalEpisodes: 220, runtimeMinutes: 23,
+      studio: 'Pierrot', posterUrl: 'https://cdn.myanimelist.net/xl.jpg', releaseDate: '2002-10-03', ratings: { mal: '8.01/10' },
+    });
+    const ficha = await ana.get(`/api/content/${naruto.id}`);
+    expect(ficha.status).toBe(200);
+    expect(ficha.body.content ?? ficha.body).toBeTruthy();
+  });
+
+  it('una película de anime cuenta como 1 episodio con su duración completa', async () => {
+    const { mapMal } = await import('../src/providers/mal');
+    const movie = mapMal({ id: 5114, title: 'Peli', media_type: 'movie', num_episodes: 1, average_episode_duration: 6600, start_date: '2010' });
+    expect(movie).toMatchObject({ totalEpisodes: 1, runtimeMinutes: 110, year: 2010, releaseDate: null });
+    // Sin episodios conocidos (en emisión) → total desconocido; sin título en inglés → el original
+    expect(mapMal({ id: 1, title: 'Original', alternative_titles: { en: '' }, media_type: 'tv', num_episodes: 0 }))
+      .toMatchObject({ title: 'Original', totalEpisodes: null, runtimeMinutes: null });
+  });
+
+  it('con menos de 3 caracteres no se consulta MAL (lo rechazaría) y no se avisa', async () => {
+    const before = mock.calls.filter((c) => c.startsWith('/mal')).length;
+    const r = await ana.get('/api/search?q=nr&type=todo');
+    expect(r.status).toBe(200);
+    expect(r.body.warnings).toEqual([]);
+    expect(mock.calls.filter((c) => c.startsWith('/mal')).length).toBe(before);
+  });
+
+  it('portada de anime: ranking de lo que está en emisión', async () => {
+    const r = await ana.get('/api/search/trending?type=anime');
+    expect(r.body.warnings).toEqual([]);
+    expect(r.body.results.map((x: any) => x.title)).toContain('Anime en emisión');
+  });
+
+  it('sin MAL_CLIENT_ID no se llama a MAL: aviso claro en anime y nada en «Todo»', async () => {
+    const id = config.malClientId;
+    config.malClientId = '';
+    try {
+      expect((await ana.get('/api/search/status')).body.mal).toBe(false);
+      const before = mock.calls.filter((c) => c.startsWith('/mal')).length;
+      const todo = await ana.get('/api/search?q=sinmal&type=todo');
+      expect(todo.body.warnings).toEqual([]);
+      expect(todo.body.results.length).toBeGreaterThan(0);
+      const anime = await ana.get('/api/search?q=sinmal&type=anime');
+      expect(anime.body.results).toEqual([]);
+      expect(anime.body.warnings.join(' ')).toMatch(/MAL_CLIENT_ID/);
+      expect((await ana.get('/api/search/trending?type=anime')).body.warnings.join(' ')).toMatch(/MAL_CLIENT_ID/);
+      expect(mock.calls.filter((c) => c.startsWith('/mal')).length).toBe(before); // ni una llamada
+    } finally {
+      config.malClientId = id;
+    }
+  });
+
+  it('un Client ID no válido avisa sin cortar el proveedor (es un error de configuración, no una caída)', async () => {
+    const id = config.malClientId;
+    config.malClientId = 'otro';
+    try {
+      const r = await ana.get('/api/search?q=clavemal&type=anime');
+      expect(r.status).toBe(200);
+      expect(r.body.warnings.join(' ')).toMatch(/No se pudo consultar MyAnimeList/);
+      config.malClientId = id;
+      const ok = await ana.get('/api/search?q=clavebien&type=anime');
+      expect(ok.body.warnings).toEqual([]);
+      expect(ok.body.results.length).toBeGreaterThan(0);
+    } finally {
+      config.malClientId = id;
+    }
+  });
+
+  it('un anime por estrenar solo admite «Por ver»', async () => {
+    const { upsertFromProvider } = await import('../src/content');
+    const { mapMal } = await import('../src/providers/mal');
+    const row = upsertFromProvider(mapMal({ id: 7777, title: 'Anime por estrenar', media_type: 'tv', num_episodes: 0, start_date: '2099-04-01' }));
+    const ficha = await ana.get(`/api/content/${row.id}`);
+    expect(JSON.stringify(ficha.body)).toMatch(/"unreleased":true/);
+    expect((await ana.put(`/api/library/${row.id}/status`, { status: 'VIENDO' })).status).toBe(409);
+    expect((await ana.put(`/api/library/${row.id}/status`, { status: 'POR_VER' })).status).toBe(200);
+    expect((await ana.del(`/api/library/${row.id}`)).status).toBe(200); // no altera los recuentos de las pruebas siguientes
   });
 });
 

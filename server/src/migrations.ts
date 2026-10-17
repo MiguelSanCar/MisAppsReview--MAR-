@@ -237,4 +237,13 @@ export const MIGRATIONS: { version: number; name: string; sql: string }[] = [
       ALTER TABLE content ADD COLUMN release_date TEXT;
     `,
   },
+  {
+    version: 15,
+    name: 'anime desde la API oficial de MyAnimeList',
+    sql: `
+      -- La API pública de Jikan cerró: el anime pasa a la API oficial de MAL. Los ids son los mismos (ids de MAL),
+      -- así que solo cambia el nombre de la fuente y todo lo guardado sigue enlazado.
+      UPDATE content SET source = 'mal' WHERE source = 'jikan';
+    `,
+  },
 ];

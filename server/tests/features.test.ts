@@ -42,10 +42,10 @@ describe('búsqueda al escribir: tendencias y rapidez', () => {
   });
 
   it('un proveedor lento no retrasa la respuesta: se devuelve lo que ya hay y se avisa', async () => {
-    const base = config.jikanBase;
-    const soft = config.jikanSoftMs;
-    config.jikanBase = app.mock.base + '/slow';
-    config.jikanSoftMs = 150;
+    const base = config.malBase;
+    const soft = config.malSoftMs;
+    config.malBase = app.mock.base + '/slow';
+    config.malSoftMs = 150;
     try {
       const t0 = Date.now();
       const r = await ana.get('/api/search?q=lento&type=todo');
@@ -53,36 +53,18 @@ describe('búsqueda al escribir: tendencias y rapidez', () => {
       expect(r.body.warnings.join(' ')).toMatch(/tarda más de lo normal/);
       expect(r.body.results.some((x: any) => x.title === 'Breaking Bad')).toBe(true);
     } finally {
-      config.jikanBase = base;
-      config.jikanSoftMs = soft;
+      config.malBase = base;
+      config.malSoftMs = soft;
     }
   });
 
-  it('cada proveedor tiene su propio límite de espera: a TMDB se le espera más que a Jikan', () => {
-    expect(config.tmdbSoftMs).toBeGreaterThan(config.jikanSoftMs);
-  });
-
-  it('con JIKAN_ENABLED=false no se consulta Jikan: sin esperas ni avisos en «Todo», y aviso claro en anime', async () => {
-    config.jikanEnabled = false;
-    try {
-      expect((await ana.get('/api/search/status')).body.jikan).toBe(false);
-      const before = app.mock.calls.filter((c) => c.startsWith('/jikan')).length;
-      const todo = await ana.get('/api/search?q=sinjikan&type=todo');
-      expect(todo.body.warnings).toEqual([]);
-      expect(todo.body.results.length).toBeGreaterThan(0);
-      const anime = await ana.get('/api/search?q=sinjikan&type=anime');
-      expect(anime.body.results).toEqual([]);
-      expect(anime.body.warnings.join(' ')).toMatch(/JIKAN_ENABLED=false/);
-      expect((await ana.get('/api/search/trending?type=anime')).body.warnings.join(' ')).toMatch(/desactivada/);
-      expect(app.mock.calls.filter((c) => c.startsWith('/jikan')).length).toBe(before); // ni una llamada
-    } finally {
-      config.jikanEnabled = true;
-    }
+  it('cada proveedor tiene su propio límite de espera: a TMDB se le espera más que a MyAnimeList', () => {
+    expect(config.tmdbSoftMs).toBeGreaterThan(config.malSoftMs);
   });
 
   it('un proveedor caído se avisa con un mensaje claro y la siguiente búsqueda ya no espera', async () => {
-    const base = config.jikanBase;
-    config.jikanBase = 'http://127.0.0.1:1/jikan-caido';
+    const base = config.malBase;
+    config.malBase = 'http://127.0.0.1:1/mal-caido';
     try {
       const first = await ana.get('/api/search?q=caido1&type=todo');
       expect(first.body.warnings.join(' ')).toMatch(/No se pudo consultar MyAnimeList/);
@@ -92,7 +74,7 @@ describe('búsqueda al escribir: tendencias y rapidez', () => {
       expect(second.body.warnings.join(' ')).toMatch(/no responde ahora mismo/);
       expect(second.body.results.length).toBeGreaterThan(0); // TMDB sigue funcionando
     } finally {
-      config.jikanBase = base;
+      config.malBase = base;
     }
   });
 

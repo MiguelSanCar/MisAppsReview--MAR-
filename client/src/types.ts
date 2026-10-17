@@ -159,7 +159,7 @@ export interface ListSummary {
 }
 
 /** Plataforma de la que se recuperan los datos de un contenido. */
-export const SOURCE_TEXT: Record<string, string> = { tmdb: 'TMDB', jikan: 'MyAnimeList' };
+export const SOURCE_TEXT: Record<string, string> = { tmdb: 'TMDB', mal: 'MyAnimeList' };
 
 /** «Reviendo» mientras dure un nuevo visionado (se vuelve a ver algo ya finalizado). */
 export const statusLabel = (s: Status, rewatch = 0) => (rewatch > 0 && s === 'POR_VER' ? 'Reviendo' : STATUS_TEXT[s]);

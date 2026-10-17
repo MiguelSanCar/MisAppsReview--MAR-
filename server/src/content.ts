@@ -6,14 +6,14 @@ import { rankSearch } from './domain/ranking';
 import { isFuture, watchableEpisodes } from './domain/release';
 import { scheduleRuntimes } from './runtimes';
 import { config } from './config';
-import { detailJikan, searchJikan, trendingJikan } from './providers/jikan';
+import { detailMal, MAL_MIN_QUERY, malAvailable, searchMal, trendingMal } from './providers/mal';
 import { detailTmdb, searchTmdb, tmdbAvailable, trendingTmdb } from './providers/tmdb';
 import { omdbAvailable, ratingsByImdbId } from './providers/omdb';
 import type { ProviderItem, Ratings } from './providers/types';
 
 export interface ContentRow {
   id: number;
-  source: 'tmdb' | 'jikan';
+  source: 'tmdb' | 'mal';
   external_id: string;
   type: ContentType;
   title: string;
@@ -134,7 +134,7 @@ export function upsertFromProvider(i: ProviderItem): ContentRow {
 /** Completa los datos de la ficha (episodios totales, estudio, id de IMDb...) la primera vez. */
 export async function ensureCore(row: ContentRow): Promise<ContentRow> {
   if (row.detailed_at) return row;
-  const d = row.source === 'tmdb' ? await detailTmdb(row.external_id) : await detailJikan(row.external_id);
+  const d = row.source === 'tmdb' ? await detailTmdb(row.external_id) : await detailMal(row.external_id);
   run(
     `UPDATE content SET title = ?, poster_url = COALESCE(?, poster_url), synopsis = COALESCE(?, synopsis),
        year = COALESCE(?, year), total_episodes = ?, runtime_minutes = ?, studio = ?, imdb_id = COALESCE(?, imdb_id),
@@ -197,9 +197,9 @@ export async function loadCore(id: number): Promise<ContentRow> {
 export interface SearchStatus {
   tmdb: boolean;
   omdb: boolean;
-  jikan: boolean;
+  mal: boolean;
 }
-export const searchStatus = (): SearchStatus => ({ tmdb: tmdbAvailable(), omdb: omdbAvailable(), jikan: config.jikanEnabled });
+export const searchStatus = (): SearchStatus => ({ tmdb: tmdbAvailable(), omdb: omdbAvailable(), mal: malAvailable() });
 
 export type SearchType = "todo" | ContentType;
 
@@ -243,9 +243,9 @@ async function gather(jobs: Job[], warnings: string[]) {
   return interleave(lists);
 }
 
-const JIKAN_OFF = "La búsqueda de anime está desactivada (JIKAN_ENABLED=false).";
+const MAL_OFF = "Falta MAL_CLIENT_ID: la búsqueda de anime (MyAnimeList) no está disponible.";
 
-/** Buscador único: combina TMDB (series/películas) y Jikan (anime) y entrelaza resultados. */
+/** Buscador único: combina TMDB (series/películas) y MyAnimeList (anime) y entrelaza resultados. */
 async function searchProviders(q: string, type: SearchType) {
   const warnings: string[] = [];
   const jobs: Job[] = [];
@@ -254,8 +254,9 @@ async function searchProviders(q: string, type: SearchType) {
     else jobs.push({ label: "TMDB", softMs: config.tmdbSoftMs, p: searchTmdb(q, type === "serie" ? "serie" : type === "pelicula" ? "pelicula" : "todo") });
   }
   if (type === "anime" || type === "todo") {
-    if (config.jikanEnabled) jobs.push({ label: "MyAnimeList (Jikan)", softMs: config.jikanSoftMs, p: searchJikan(q) });
-    else if (type === "anime") warnings.push(JIKAN_OFF);
+    // MAL no admite búsquedas de menos de 3 caracteres: con 2 solo se busca en TMDB, sin aviso
+    if (!malAvailable()) { if (type === "anime") warnings.push(MAL_OFF); }
+    else if (q.trim().length >= MAL_MIN_QUERY) jobs.push({ label: "MyAnimeList", softMs: config.malSoftMs, p: searchMal(q) });
   }
   return { items: await gather(jobs, warnings), warnings };
 }
@@ -275,12 +276,12 @@ export async function trending(type: SearchType) {
     else warnings.push("Falta TMDB_API_KEY: no se pueden mostrar series ni películas.");
   }
   let items: ProviderItem[] = [];
-  if (kind === "anime" && !config.jikanEnabled) {
-    warnings.push(JIKAN_OFF);
+  if (kind === "anime" && !malAvailable()) {
+    warnings.push(MAL_OFF);
   } else if (!(kind !== "anime" && !tmdbAvailable())) {
-    const label = kind === "anime" ? "MyAnimeList (Jikan)" : "TMDB";
-    const p = kind === "anime" ? trendingJikan() : trendingTmdb(kind === "pelicula" ? "movie" : "tv");
-    items = await gather([{ label, p, softMs: kind === "anime" ? config.jikanSoftMs : config.tmdbSoftMs }], warnings);
+    const label = kind === "anime" ? "MyAnimeList" : "TMDB";
+    const p = kind === "anime" ? trendingMal() : trendingTmdb(kind === "pelicula" ? "movie" : "tv");
+    items = await gather([{ label, p, softMs: kind === "anime" ? config.malSoftMs : config.tmdbSoftMs }], warnings);
   }
   const title = kind === "serie" ? "Series más vistas del momento" : kind === "pelicula" ? "Películas más vistas del momento" : "Anime más visto del momento";
   return { title, kind, results: items.map((i) => toDto(upsertFromProvider(i))), warnings };

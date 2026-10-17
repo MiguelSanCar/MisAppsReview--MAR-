@@ -1,5 +1,5 @@
 /**
- * Servidor de PRUEBAS: app completa en memoria con TMDB/Jikan/OMDb simulados (títulos falsos).
+ * Servidor de PRUEBAS: app completa en memoria con TMDB/MyAnimeList/OMDb simulados (títulos falsos).
  * No usar para datos reales. Uso: npm run dev:mock -w server  (puerto 3101, sirve client/dist si existe).
  *
  * Variables opcionales:
@@ -83,8 +83,8 @@ async function main() {
   if (Number(process.env.MOCK_SEED) > 0) seedLongList(Number(process.env.MOCK_SEED));
   const mock = await startMockProviders({ demo });
   Object.assign(config, {
-    tmdbBase: `${mock.base}/tmdb`, jikanBase: `${mock.base}/jikan`, omdbBase: `${mock.base}/omdb`,
-    tmdbKey: 'tmdb-key', omdbKey: 'omdb-key', jikanMinGapMs: 0, authRateLimit: 100_000,
+    tmdbBase: `${mock.base}/tmdb`, malBase: `${mock.base}/mal`, omdbBase: `${mock.base}/omdb`,
+    tmdbKey: 'tmdb-key', omdbKey: 'omdb-key', malClientId: 'mal-client', malMinGapMs: 0, authRateLimit: 100_000,
     clientOrigin: origin,
     ...(demo ? { tmdbImageBase: `${origin}/__posters` } : {}),
   });
