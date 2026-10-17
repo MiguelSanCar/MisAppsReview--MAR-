@@ -2383,10 +2383,10 @@
           "category": "Backend",
           "tasks": [
             { "id": "29.1", "title": "Contrato (tipos y firmas) y proveedores simulados de listas de MAL", "status": "hecho", "eta": "2026-10-17" },
-            { "id": "29.2", "title": "Reglas de importación: estados (En pausa → Viendo), revisionados, se queda lo más avanzado y lo no estrenado solo como «Por ver»", "status": "pendiente", "eta": "2026-10-18" },
-            { "id": "29.3", "title": "Lectura de listas públicas de MyAnimeList por nombre de usuario", "status": "pendiente", "eta": "2026-10-18" },
-            { "id": "29.4", "title": "Importación del fichero de exportación de MyAnimeList (.xml o .xml.gz), con las fichas completadas en segundo plano", "status": "pendiente", "eta": "2026-10-18" },
-            { "id": "29.5", "title": "Vista previa y confirmación (/api/import), con límite de uso", "status": "pendiente", "eta": "2026-10-18" }
+            { "id": "29.2", "title": "Reglas de importación: estados (En pausa → Viendo), revisionados, se queda lo más avanzado y lo no estrenado solo como «Por ver»", "status": "hecho", "eta": "2026-10-17" },
+            { "id": "29.3", "title": "Lectura de listas públicas de MyAnimeList por nombre de usuario", "status": "hecho", "eta": "2026-10-17" },
+            { "id": "29.4", "title": "Importación del fichero de exportación de MyAnimeList (.xml o .xml.gz), con las fichas completadas en segundo plano", "status": "hecho", "eta": "2026-10-17" },
+            { "id": "29.5", "title": "Vista previa y confirmación (/api/import), con límite de uso", "status": "hecho", "eta": "2026-10-17" }
           ]
         },
         {
@@ -2394,7 +2394,7 @@
           "title": "Importación en Ajustes",
           "category": "Frontend",
           "tasks": [
-            { "id": "29.6", "title": "Importación sencilla en Ajustes › Mi perfil: usuario o fichero, resumen y confirmación", "status": "pendiente", "eta": "2026-10-18" }
+            { "id": "29.6", "title": "Importación sencilla en Ajustes › Mi perfil: usuario o fichero, resumen y confirmación", "status": "hecho", "eta": "2026-10-17" }
           ]
         },
         {
@@ -2402,13 +2402,13 @@
           "title": "Cierre",
           "category": "Infra",
           "tasks": [
-            { "id": "29.7", "title": "Pruebas, comprobación con la API real y en navegador, documentación y versión 1.16.0", "status": "pendiente", "eta": "2026-10-18" },
+            { "id": "29.7", "title": "Pruebas, comprobación con la API real y en navegador, documentación y versión 1.16.0", "status": "hecho", "eta": "2026-10-17" },
             { "id": "29.8", "title": "Publicar en Fly.io", "status": "pendiente", "eta": null, "etaNote": "Depende del visto bueno del autor al despliegue. Unos 10 minutos." }
           ]
         }
       ]
     }
   ],
-  "release": "1.15.0",
+  "release": "1.16.0",
   "etaNote": "Cada tarea indica su fecha de entrega: la real si está completada o la estimada si está pendiente. Las que dependen de un recurso externo no tienen fecha y llevan una nota con el motivo y el esfuerzo estimado."
 }
