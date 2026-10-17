@@ -2357,9 +2357,8 @@
             {
               "id": "28.6",
               "title": "Crear el Client ID de MyAnimeList y probar la API real",
-              "status": "pendiente",
-              "eta": null,
-              "etaNote": "Depende del autor: dar de alta la aplicación en myanimelist.net/apiconfig y poner MAL_CLIENT_ID en .env. Unos 10 minutos."
+              "status": "hecho",
+              "eta": "2026-10-17"
             },
             {
               "id": "28.7",

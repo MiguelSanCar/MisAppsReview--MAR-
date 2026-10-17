@@ -62,7 +62,7 @@ npm run mail:test -w server -- tu@correo.com   # comprueba SMTP (base lista, aú
 ## Pruebas
 
  - Todo cambio de servidor lleva test en `server/tests` (Vitest; `tests/client.ts` arranca la app con proveedores simulados de `mock-providers.ts` y BD en memoria). Los cambios de interfaz se comprueban en un navegador real: `puppeteer-core` + Edge headless contra `dev:mock`, con capturas, desde el directorio temporal de la sesión (no se añade al repo).
- - Las APIs reales se probaron a mano con las claves del `.env` (TMDB y OMDb); MyAnimeList se prueba en cuanto haya `MAL_CLIENT_ID`.
+ - Las APIs reales se probaron a mano con las claves del `.env` (TMDB y OMDb); MyAnimeList, con el Client ID real el 2026-10-17 (búsqueda, ranking en emisión, ficha y películas).
 
 ## Trampas conocidas
 
