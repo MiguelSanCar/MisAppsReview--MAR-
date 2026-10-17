@@ -640,3 +640,13 @@ html, body { overscroll-behavior-x: none; }
 .season.future summary { background: rgba(0, 0, 0, .25); }
 .season.future .ep:disabled { background: rgba(0, 0, 0, .4); cursor: not-allowed; }
 .release-note { margin: 6px 0 10px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); background: rgba(0, 0, 0, .18); font-size: .92rem; }
+
+/* ---------- Importar de MyAnimeList (Ajustes › Mi perfil) ---------- */
+.mal-import { margin-top: 18px; padding-top: 4px; border-top: 1px solid var(--line); }
+.mal-row input { flex: 1; min-width: 0; }
+.mal-link { background: none; border: 0; padding: 4px 0; color: var(--accent); cursor: pointer; text-decoration: underline; font: inherit; font-size: .9rem; }
+.mal-link:disabled { opacity: .5; cursor: default; }
+.mal-preview { margin: 12px 0; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line); background: rgba(0, 0, 0, .18); }
+.mal-preview p { margin: 0 0 8px; }
+.mal-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 420px) { .mal-row { flex-wrap: wrap; } .mal-row input { flex-basis: 100%; } .mal-row .btn { flex: 1; } }
