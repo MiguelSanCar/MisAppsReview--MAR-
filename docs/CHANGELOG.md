@@ -2,6 +2,17 @@
 
 Versiones 0.x según el roadmap: fase N completada = versión 0.(N+1).0.
 
+## 1.15.0 · 2026-10-17 · Anime desde la API oficial de MyAnimeList
+### Cambiado
+- **El anime pasa a la API oficial de MyAnimeList (v2)**. La API pública de Jikan cerró el 1 de octubre de 2026, y desde entonces no se podía buscar anime, la portada de anime salía vacía y las fichas sin caché fallaban. Requiere la variable `MAL_CLIENT_ID` (gratuita, https://myanimelist.net/apiconfig).
+- Migración 15: el anime guardado cambia de fuente `jikan` a `mal`. Los ids son los mismos, así que fichas, progreso y listas siguen enlazados.
+- `GET /api/search/status` devuelve `mal` en lugar de `jikan`.
+- Las búsquedas de menos de 3 caracteres solo consultan TMDB, porque MyAnimeList no las admite.
+- El anime con fecha de estreno futura solo admite «Por ver», como las series y películas.
+
+### Retirado
+- `JIKAN_ENABLED`, `JIKAN_BASE_URL`, `JIKAN_SOFT_MS`, `JIKAN_TIMEOUT_MS` y `JIKAN_MIN_GAP_MS`. Sus equivalentes son `MAL_CLIENT_ID`, `MAL_BASE_URL`, `MAL_SOFT_MS` (3 s), `MAL_TIMEOUT_MS` y `MAL_MIN_GAP_MS`.
+
 ## 1.14.1 · 2026-10-16 · Diagnóstico de Jikan en el servidor
 ### Corregido
 - Las peticiones a los proveedores (TMDB, Jikan, OMDb) envían ahora un `User-Agent` (algunos servicios rechazan las peticiones sin él).

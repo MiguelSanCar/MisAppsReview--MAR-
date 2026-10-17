@@ -17,4 +17,4 @@
 
 ## Datos y servicios
 - Series y películas: TMDB (aviso de atribución en el pie de página).
-- Puntuaciones: OMDb. Anime: Jikan / MyAnimeList.
+- Puntuaciones: OMDb. Anime: API oficial de MyAnimeList (v2).

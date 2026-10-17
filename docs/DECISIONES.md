@@ -15,7 +15,7 @@
 | **`export()` de sql.js reinicia la conexión** | Se reactiva `PRAGMA foreign_keys = ON` tras cada volcado (si no, se perderían los `ON DELETE CASCADE`). |
 | **Sin `fetch`** (Node 16) | Cliente HTTP propio sobre `http/https` con timeout; sirve también para los servidores simulados de los tests. |
 | **Proveedores externos solo desde el servidor** | Las claves no llegan al navegador; permite caché compartida. |
-| **Caché persistente en BD** | OMDb gratuito da ~1.000 consultas/día; Jikan ~3/s. Si el proveedor falla se sirve el dato caducado. |
+| **Caché persistente en BD** | OMDb gratuito da ~1.000 consultas/día; MyAnimeList no publica su límite. Si el proveedor falla se sirve el dato caducado. |
 | **Rotten Tomatoes vía OMDb** | RT no tiene API pública; OMDb devuelve su Tomatometer en la misma petición que IMDb (a veces falta → "—"). Filmaffinity descartado (sin API, scraping frágil). |
 | **Duración fija por tipo** (50 / 90 / 23 min) | Decisión del usuario para empezar; la real queda tras `USE_REAL_RUNTIME`. |
 | **Contenido guardado al buscar** | Cada resultado se guarda en `content`, así los botones ♥ / ↪ actúan sobre un id local; los datos completos (episodios totales, estudio…) se piden al abrir la ficha o al marcar. |
@@ -48,7 +48,7 @@
 | **SMTP como base sin usar** | `mailer.ts` ya valida, evita inyección de cabeceras y cae a consola sin SMTP; conectarlo (12.12) es sustituir `deliverLink` y añadir el aviso de borrado. |
 | **Flecha de tarjeta según pestaña** | En «Mi lista» avanza de fase solo donde hay fase siguiente (Por ver, Viendo); en la búsqueda sigue siendo «ver más adelante». |
 | **Límite de espera por fuente** | TMDB es la fuente principal y a través del proxy corporativo la primera conexión puede tardar (6 s); Jikan es opcional y a menudo bloqueado (2 s). Un único límite daba avisos falsos sobre TMDB y retrasaba cada búsqueda. |
-| **`JIKAN_ENABLED`** | Salida limpia para redes que bloquean Jikan: ni esperas ni avisos. |
+| ~~**`JIKAN_ENABLED`**~~ | Retirado en 1.15.0 con Jikan: sin `MAL_CLIENT_ID` el anime simplemente no se consulta. |
 | **Autocompletado retirado** | A petición del usuario; se mantiene la búsqueda mientras se escribe. Se eliminó el código, la ruta y los tests (no se deja código muerto). |
 | **Revisionado con `prev_episodes` + `rewatch`** | Volver a ver algo finalizado lo pone en «Por ver» con los episodios a 0, pero las estadísticas se calculan como episodios actuales + de visionados anteriores, así que no se pierde nada. «Reviendo» no es un estado nuevo: es «Por ver» con `rewatch > 0` (la etiqueta se decide en el cliente). Borrar el contenido elimina la fila entera y con ella todo lo anterior. |
 | **Borrado en bloque en el servidor** (`POST /api/library/delete`) | Una sola transacción para la selección múltiple, solo sobre filas propias; ids repetidos o inexistentes se ignoran. |
@@ -183,13 +183,25 @@
 | Decisión | Motivo |
 |---|---|
 | **Sin fecha de estreno = no se bloquea** | No se restringe lo que no se sabe: un dato ausente no debe impedir marcar algo ya visto. |
-| **Anime sin restricción** | Jikan no aporta fecha de estreno en nuestra consulta. |
+| ~~**Anime sin restricción**~~ | Jikan no aportaba fecha de estreno. Desde 1.15.0 MyAnimeList sí la da y el anime sigue la misma regla. |
 | **Los estados guardados antes no se tocan** | Quien ya tenía algo en Viendo o Finalizado conserva su progreso; la regla solo frena cambios nuevos. |
 | **«Finalizado» manual llega hasta lo estrenado** | En una serie con temporadas por estrenar, completar la serie no es posible aún; se marcan los episodios disponibles. |
 | **Al salir una temporada, lo Finalizado pasa a «Por ver»** | Mismo criterio que una temporada nueva (fase 26). |
 | **Búsqueda: coincidencia con el nombre + popularidad** | Coincidencia exacta 3 · empieza por 2 · contiene la palabra 1 · contiene el texto 0,5, más hasta 2 puntos de popularidad (1 si no coincide en absoluto). La popularidad de TMDB va en escala logarítmica (~500 ya es «muy popular»; en anime, miembros de MyAnimeList ÷ 3000). Así un título conocido que coincide algo peor puede adelantar a uno desconocido, pero no a uno que coincide mucho mejor. |
 | **Recomendaciones: 60 % nota, 40 % popularidad** | Lo popular es más probable que se haya visto. El encaje con los géneros pasa a filtrar y desempatar (antes ordenaba). |
 | **`/api/discover` sin cambios** | No tiene texto y ya ordena por popularidad por defecto. |
+
+## Anime desde la API oficial de MyAnimeList (v1.15.0)
+
+| Decisión | Motivo |
+|---|---|
+| **API oficial de MAL (v2) en lugar de Jikan** | La API pública de Jikan cerró el 1/10/2026. Se valoraron AniList (sin clave, pero con su propia nota y un límite de 30 peticiones/minuto), espejos de Jikan de terceros (poco fiables) y una instancia propia de Jikan (MongoDB + Redis, no cabe en la máquina de 512 MB). La oficial mantiene la nota y los ids de MyAnimeList. |
+| **Solo Client ID, sin OAuth** | Para leer datos públicos basta la cabecera `X-MAL-CLIENT-ID`; no se accede a cuentas de MyAnimeList. |
+| **Fuente `mal` con los mismos ids (migración 15)** | Los ids de Jikan eran los de MAL: renombrar la fuente conserva fichas, progreso y listas sin tocar nada más. |
+| **Menos de 3 caracteres: sin consultar MAL** | MAL responde 400 a esas búsquedas; con 2 caracteres solo se busca en TMDB, sin aviso. |
+| **Portada de anime = ranking «airing»** | Es lo equivalente al «top en emisión» que daba Jikan. |
+| **Estreno solo con fecha completa** | MAL a veces da «2027» o «2027-04»; con una fecha parcial no se bloquea (mismo criterio que «sin fecha = no se bloquea»). |
+| **Géneros de MAL sin usar** | Son ids propios, no los de TMDB en los que se basan las recomendaciones; el anime sigue sin recomendaciones. |
 
 ## Duración real de los episodios (fase 24)
 

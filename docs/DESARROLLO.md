@@ -31,7 +31,7 @@ La base de datos se crea sola en `data/mar.db` (ignorada por git). El servidor l
 | `TMDB_API_KEY` | Series y películas (búsqueda, fichas, tendencias, recomendaciones y búsqueda avanzada) | https://www.themoviedb.org/settings/api |
 | `OMDB_API_KEY` | Puntuaciones de IMDb y Rotten Tomatoes (1.000 consultas/día) | https://www.omdbapi.com/apikey.aspx |
 
-Sin claves la aplicación arranca igualmente y lo indica en pantalla y en la consola. El anime (MyAnimeList, vía Jikan) no requiere clave.
+Sin claves la aplicación arranca igualmente y lo indica en pantalla y en la consola. El anime necesita `MAL_CLIENT_ID` (gratuito: https://myanimelist.net/apiconfig, tipo de aplicación «web», sin OAuth); sin él solo falta el anime.
 
 ## Scripts
 
@@ -41,7 +41,7 @@ Sin claves la aplicación arranca igualmente y lo indica en pantalla y en la con
 | `npm run build` | Compila `client/dist` (Vite) y `server/dist` (tsc) |
 | `npm start` | Producción local: sirve API y cliente compilado en :3001 (requiere `build`) |
 | `npm test` | Pruebas del servidor (Vitest) |
-| `npm run dev:mock -w server` | Aplicación completa con TMDB, Jikan y OMDb **simulados** en :3101 (requiere `build`) |
+| `npm run dev:mock -w server` | Aplicación completa con TMDB, MyAnimeList y OMDb **simulados** en :3101 (requiere `build`) |
 | `npm run share` | Túnel temporal de Cloudflare hacia :3001 (ver «Probar desde otras máquinas») |
 | `npm run mail:test -w server -- correo@dominio` | Comprueba la configuración SMTP |
 
@@ -117,7 +117,7 @@ Imprime la dirección en la red local (`http://IP:3001/`) y, si existe `tools/cl
 ## Solución de problemas
 
 ### Avisos «tarda más de lo normal» o «no responde ahora mismo»
-La búsqueda espera como máximo 6 s a TMDB y 2 s a Jikan y devuelve lo que ya tiene. Si una fuente no responde se omite un rato (1 min, luego 2, 4… hasta 15) y se vuelve a probar sola. Jikan (MyAnimeList) suele estar bloqueado en redes corporativas; con `JIKAN_ENABLED=false` en `.env` desaparecen las esperas y los avisos (el anime dejará de buscarse). Ajustes: `TMDB_SOFT_MS`, `JIKAN_SOFT_MS`, `PROVIDER_DOWN_MS`, `PROVIDER_DOWN_MAX_MS`.
+La búsqueda espera como máximo 6 s a TMDB y 3 s a MyAnimeList y devuelve lo que ya tiene. Si una fuente no responde se omite un rato (1 min, luego 2, 4… hasta 15) y se vuelve a probar sola. Sin `MAL_CLIENT_ID` no se consulta MyAnimeList (ni esperas ni avisos fuera del filtro «Anime»). Ajustes: `TMDB_SOFT_MS`, `MAL_SOFT_MS`, `PROVIDER_DOWN_MS`, `PROVIDER_DOWN_MAX_MS`.
 
 ### «self signed certificate in certificate chain» (redes con inspección HTTPS)
 Un proxy de empresa re-firma el tráfico con su propio certificado: el sistema y el navegador lo aceptan, pero Node no usa el almacén del sistema operativo. Sin desactivar nunca la verificación TLS:

@@ -20,14 +20,14 @@ flowchart LR
     end
     subgraph Externos["Proveedores externos"]
         TMDB["TMDB<br/>series y películas"]
-        JIKAN["Jikan / MyAnimeList<br/>anime"]
+        MAL["MyAnimeList (API v2)<br/>anime"]
         OMDB["OMDb<br/>IMDb y Rotten Tomatoes"]
     end
     SPA -- "fetch /api (cookie httpOnly)" --> API
     SPA -- "HTML, JS, CSS" --> STATIC
     API --> DOM
     API --> DB
-    API --> CACHE --> TMDB & JIKAN & OMDB
+    API --> CACHE --> TMDB & MAL & OMDB
 ```
 
 Los proveedores externos **solo se llaman desde el servidor**: el navegador nunca ve las claves de API ni depende de su disponibilidad.
@@ -53,7 +53,7 @@ server/src
 ├─ config.ts            Configuración (se lee en cada uso: los tests la modifican)
 ├─ db.ts, migrations.ts SQLite con sql.js y migraciones numeradas
 ├─ cache.ts, http.ts    Cachés, cliente HTTP con tiempos límite y corte de proveedores caídos
-├─ providers/           tmdb.ts, jikan.ts, omdb.ts (resultados normalizados)
+├─ providers/           tmdb.ts, mal.ts, omdb.ts (resultados normalizados)
 ├─ content.ts           Búsqueda, tendencias, ficha, géneros y temporadas
 ├─ library.ts           Biblioteca personal (paginación por cursor, contadores)
 ├─ profile.ts, compare.ts  Estadísticas y comparación de perfiles
@@ -68,7 +68,7 @@ server/src
 
 ## Datos
 
-SQLite con `sql.js` (WebAssembly): la base vive **en memoria** y se vuelca a `data/mar.db` 300 ms después de cada escritura. Por eso solo puede haber **un proceso por fichero**. Las migraciones están numeradas (hoy 14) y nunca se edita una publicada.
+SQLite con `sql.js` (WebAssembly): la base vive **en memoria** y se vuelca a `data/mar.db` 300 ms después de cada escritura. Por eso solo puede haber **un proceso por fichero**. Las migraciones están numeradas (hoy 15) y nunca se edita una publicada.
 
 | Tabla | Contenido |
 |---|---|
@@ -84,10 +84,10 @@ SQLite con `sql.js` (WebAssembly): la base vive **en memoria** y se vuelca a `da
 
 ## Proveedores externos y resiliencia
 
-- **TMDB** (series y películas): búsqueda, tendencias, ficha (con géneros y temporadas), `/discover` (recomendaciones y búsqueda avanzada), plataformas y estudios. **Jikan** (anime). **OMDb** (IMDb y Rotten Tomatoes).
+- **TMDB** (series y películas): búsqueda, tendencias, ficha (con géneros y temporadas), `/discover` (recomendaciones y búsqueda avanzada), plataformas y estudios. **MyAnimeList** (anime, API oficial v2 con `MAL_CLIENT_ID`; sustituye a Jikan, cuya API pública cerró el 1/10/2026; los ids son los mismos). **OMDb** (IMDb y Rotten Tomatoes).
 - Todos los resultados se normalizan a un mismo formato (`ProviderItem`) y se guardan en `content` para no volver a pedirlos.
 - **Cachés**: las búsquedas y los listados de descubrimiento en memoria (`memCached`, con deduplicación de peticiones en vuelo); las fichas, OMDb, géneros y plataformas en `api_cache` (`cached`; si el proveedor falla se sirve el dato caducado antes que ninguno).
-- **`guarded()`** corta un proveedor caído (1 min, duplicando hasta 15 min; se reinicia al responder) y la búsqueda espera como máximo `tmdbSoftMs` (6 s) y `jikanSoftMs` (2 s) devolviendo lo que ya tenga, con avisos en pantalla.
+- **`guarded()`** corta un proveedor caído (1 min, duplicando hasta 15 min; se reinicia al responder) y la búsqueda espera como máximo `tmdbSoftMs` (6 s) y `malSoftMs` (3 s) devolviendo lo que ya tenga, con avisos en pantalla.
 
 ## Reglas de negocio
 
@@ -95,7 +95,7 @@ SQLite con `sql.js` (WebAssembly): la base vive **en memoria** y se vuelca a `da
 - **Episodios**: enteros; llegar o superar el total fija el máximo y finaliza. Una película cuenta como 1 episodio.
 - **Tiempo visto** = minutos de los episodios vistos. Series: se suma la media de cada temporada (`Season.minutes`, ver «Duración de los episodios»); película y anime: su duración; si falta el dato o `USE_REAL_RUNTIME=false`, la fija (serie 50 min, película 90, anime 23). Se muestra en horas → días → semanas → meses → años.
 - **Duración de los episodios**: TMDB no da una duración fiable por serie, sino por episodio y temporada. Para no hacer decenas de peticiones se muestrea (`domain/runtimes.ts`): en una temporada «larga» (más de 3N episodios) se toman sus primeros N episodios y su media es la de esa temporada; las temporadas «cortas» no se consultan una a una: se toman N episodios de las primeras y su media vale para todas ellas. N = `RUNTIME_SAMPLE` (4). Lo que no se pudo medir usa la media de lo medido y, si no hay nada, la duración fija. Se calcula en segundo plano (`runtimes.ts`: concurrencia global de 2, máximo 12 peticiones por serie, caché de 30 días) al abrir la ficha de una serie y al ver un perfil con series sin calcular; nada espera a ello.
-- **Contenido sin estrenar** (migración 14, `content.release_date`; reglas puras en `domain/release.ts`): la fecha viene de TMDB (película: estreno; serie: primer episodio) y se guarda al buscar y al abrir la ficha, y el motor de novedades la refresca con cada consulta. `ContentDto` expone `releaseDate`, `unreleased` y `watchable`. `releaseGate` (`library.ts`) responde 409 en los endpoints de estado, favorito y episodios de «Mi lista» y de las listas conjuntas, y devuelve el total efectivo para el «Finalizado». `structure.ts` mantiene al día las fechas de las temporadas y, cuando una sale, aplica el mismo reajuste que a una temporada nueva.
+- **Contenido sin estrenar** (migración 14, `content.release_date`; reglas puras en `domain/release.ts`): la fecha viene de TMDB (película: estreno; serie: primer episodio) o de MyAnimeList (anime: `start_date`, solo si es completa) y se guarda al buscar y al abrir la ficha, y el motor de novedades la refresca con cada consulta. `ContentDto` expone `releaseDate`, `unreleased` y `watchable`. `releaseGate` (`library.ts`) responde 409 en los endpoints de estado, favorito y episodios de «Mi lista» y de las listas conjuntas, y devuelve el total efectivo para el «Finalizado». `structure.ts` mantiene al día las fechas de las temporadas y, cuando una sale, aplica el mismo reajuste que a una temporada nueva.
 - **Orden de resultados** (`domain/ranking.ts`, reglas puras): `rankSearch` ordena la búsqueda del inicio por coincidencia con el texto más popularidad; `ratingWithPopularity` (60 % nota, 40 % popularidad) ordena las recomendaciones.
 - **Revisionado**: volver a ver algo finalizado lo pasa a «Por ver» con los episodios a 0 y se muestra «Reviendo»; lo ya visto se conserva en `prev_episodes` y sigue contando en las estadísticas.
 - **Temporadas**: el progreso sigue siendo un número de episodios; las temporadas son una vista sobre él. «Temporadas vistas» cuenta las completas.

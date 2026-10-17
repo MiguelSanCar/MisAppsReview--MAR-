@@ -11,7 +11,7 @@ API JSON bajo `/api`. Todas las respuestas de error tienen la forma `{ "error": 
 | Método y ruta | Descripción |
 |---|---|
 | `GET /api/health` | `{ ok: true }` (fuera de producción añade `devSecret`) |
-| `GET /api/search/status` | Qué proveedores están disponibles: `{ tmdb, omdb, jikan }` |
+| `GET /api/search/status` | Qué proveedores están disponibles: `{ tmdb, omdb, mal }` (`mal` = hay `MAL_CLIENT_ID`) |
 
 ## Cuentas y sesión (`/api/auth`)
 
@@ -39,7 +39,7 @@ API JSON bajo `/api`. Todas las respuestas de error tienen la forma `{ "error": 
 
 | Método y ruta | Descripción |
 |---|---|
-| `GET /api/search?q=&type=` | Búsqueda unificada (TMDB + Jikan). `q` ≥ 2 caracteres; `type` = `todo` \| `serie` \| `pelicula` \| `anime`. Devuelve `results`, `states` (estado de la persona en cada resultado), `warnings` y `tookMs`. Orden: primero lo que más coincide con el texto (exacto > empieza por > contiene la palabra > contiene el texto) y, a igualdad, lo más popular (popularidad de TMDB en escala logarítmica; en anime, miembros de MyAnimeList ÷ 3000) |
+| `GET /api/search?q=&type=` | Búsqueda unificada (TMDB + MyAnimeList; MyAnimeList solo con 3 caracteres o más). `q` ≥ 2 caracteres; `type` = `todo` \| `serie` \| `pelicula` \| `anime`. Devuelve `results`, `states` (estado de la persona en cada resultado), `warnings` y `tookMs`. Orden: primero lo que más coincide con el texto (exacto > empieza por > contiene la palabra > contiene el texto) y, a igualdad, lo más popular (popularidad de TMDB en escala logarítmica; en anime, miembros de MyAnimeList ÷ 3000) |
 | `GET /api/search/trending?type=` | Lo más visto del momento |
 | `GET /api/content/:id` | Ficha: datos, puntuaciones (IMDb, Rotten Tomatoes o MyAnimeList), `seasons` y el `state` de la persona |
 

@@ -20,7 +20,7 @@ Visión general: `README.md` (orientado a GitHub: no se dirige al autor ni menci
  - Git: usar `git`; si no responde, ver `CLAUDE.local.md` (no versionado).
  - Si la red re-firma HTTPS, Node necesita un PEM propio (`scripts/ca.js`, ver README). Nunca desactivar la verificación TLS. Los detalles del equipo concreto están en `CLAUDE.local.md` (ignorado por git; no copiar su contenido a ficheros versionados).
  - PowerShell está en modo restringido (no se pueden llamar métodos .NET): usar cmdlets.
- - El `.env` real tiene `JWT_SECRET`, `TMDB_API_KEY` y `OMDB_API_KEY`: no los imprimas ni los copies a otros ficheros.
+ - El `.env` real tiene `JWT_SECRET`, `TMDB_API_KEY`, `OMDB_API_KEY` y (cuando exista) `MAL_CLIENT_ID`: no los imprimas ni los copies a otros ficheros.
 
 ## Comandos
 
@@ -29,17 +29,17 @@ npm run dev                       # API :3001 (también sirve client/dist) + Vit
 npm run share                     # túnel Cloudflare a :3001 (requiere `npm run dev` y tools/cloudflared); se niega con el JWT_SECRET por defecto
 npm test                          # Vitest del servidor
 npm run build                     # client/dist y server/dist
-npm run dev:mock -w server        # app con TMDB/Jikan/OMDb simulados en :3101 (necesita build del cliente; `MOCK_SEED=300` crea el usuario «carga», `MOCK_DEMO=1 MOCK_PORT=3102` el modo demostración para `scripts/capturas.js`); JOINT_INACTIVITY_DAYS / JOINT_WARNING_DAYS cortos para probar avisos
+npm run dev:mock -w server        # app con TMDB/MyAnimeList/OMDb simulados en :3101 (necesita build del cliente; `MOCK_SEED=300` crea el usuario «carga», `MOCK_DEMO=1 MOCK_PORT=3102` el modo demostración para `scripts/capturas.js`); JOINT_INACTIVITY_DAYS / JOINT_WARNING_DAYS cortos para probar avisos
 npm run mail:test -w server -- tu@correo.com   # comprueba SMTP (base lista, aún sin usar)
 ```
 
 ## Arquitectura
 
- - `server/src`: `app.ts` (middleware, rutas, manejador de errores), `config.ts` (**se lee en cada uso**: los tests lo modifican), `db.ts` + `migrations.ts`, `cache.ts`, `http.ts`, `providers/` (tmdb, jikan, omdb), `content.ts` (búsqueda, tendencias, ficha), `library.ts` (paginación por cursor, `releaseGate`), `profile.ts` (estadísticas), `compare.ts` (comparar perfiles), `recommendations.ts`, `users.ts`, `listLife.ts` (inactividad y borrado), `mailer.ts`, `roadmap.ts`. Motores en segundo plano (nunca bloquean una petición): `news.ts` (novedades/notificaciones), `structure.ts` (temporadas nuevas o retiradas, películas retiradas), `runtimes.ts` (duración real de episodios). `domain/` (reglas puras sin red ni BD: `rules`, `time`, `ranking`, `recommend`, `release`, `seasons`, `structure`, `news`, `runtimes`), `routes/` (auth, account, library, discover, recommendations, notifications, friends, invites, profiles, lists).
+ - `server/src`: `app.ts` (middleware, rutas, manejador de errores), `config.ts` (**se lee en cada uso**: los tests lo modifican), `db.ts` + `migrations.ts`, `cache.ts`, `http.ts`, `providers/` (tmdb, mal, omdb), `content.ts` (búsqueda, tendencias, ficha), `library.ts` (paginación por cursor, `releaseGate`), `profile.ts` (estadísticas), `compare.ts` (comparar perfiles), `recommendations.ts`, `users.ts`, `listLife.ts` (inactividad y borrado), `mailer.ts`, `roadmap.ts`. Motores en segundo plano (nunca bloquean una petición): `news.ts` (novedades/notificaciones), `structure.ts` (temporadas nuevas o retiradas, películas retiradas), `runtimes.ts` (duración real de episodios). `domain/` (reglas puras sin red ni BD: `rules`, `time`, `ranking`, `recommend`, `release`, `seasons`, `structure`, `news`, `runtimes`), `routes/` (auth, account, library, discover, recommendations, notifications, friends, invites, profiles, lists).
  - `client/src`: `App.tsx` (rutas; pantallas poco usadas con `React.lazy`), `auth/`, `theme/`, `profile/` (contexto y envoltorio de `/perfil/:username`), `notifications/` (campana), `pwa/` (registro del SW y aviso de versión), `hooks/` (`useSwipeMenu`), `components/`, `pages/`, `roadmap/`, `config.ts` (`LIVE_SEARCH`), `api.ts` (`ApiError.data`, cancelación), `clipboard.ts`.
- - **BD**: SQLite con `sql.js` (en memoria, se vuelca a `data/mar.db` 300 ms tras escribir). **Un solo proceso por fichero**: dos servidores sobre la misma BD se pisarían. Migraciones numeradas (hoy 14): nunca editar una publicada, añadir otra. `db.export()` reinicia la conexión: se reactiva `PRAGMA foreign_keys` tras cada volcado.
+ - **BD**: SQLite con `sql.js` (en memoria, se vuelca a `data/mar.db` 300 ms tras escribir). **Un solo proceso por fichero**: dos servidores sobre la misma BD se pisarían. Migraciones numeradas (hoy 15): nunca editar una publicada, añadir otra. `db.export()` reinicia la conexión: se reactiva `PRAGMA foreign_keys` tras cada volcado.
  - Express 4: los handlers `async` van envueltos en `ah(...)`; los errores con `HttpError(status, mensaje)` (puede llevar `code`/`extra`); validación con zod vía `parse()`.
- - Los proveedores externos solo se llaman desde el servidor. Búsquedas: caché **en memoria** (`memCached`); fichas y OMDb: caché persistente (`cached`). `guarded()` corta un proveedor caído (1 min, duplicando hasta 15 min; se reinicia al responder) y la búsqueda espera como máximo `tmdbSoftMs` (6 s) / `jikanSoftMs` (2 s). `JIKAN_ENABLED=false` lo desactiva (Jikan está bloqueado en la red corporativa).
+ - Los proveedores externos solo se llaman desde el servidor. Búsquedas: caché **en memoria** (`memCached`); fichas y OMDb: caché persistente (`cached`). `guarded()` corta un proveedor caído (1 min, duplicando hasta 15 min; se reinicia al responder) y la búsqueda espera como máximo `tmdbSoftMs` (6 s) / `malSoftMs` (3 s). Anime = API oficial de MyAnimeList v2 (`MAL_CLIENT_ID`, cabecera `X-MAL-CLIENT-ID`; rechaza búsquedas de < 3 caracteres); la API pública de Jikan cerró el 1/10/2026. Sin `MAL_CLIENT_ID` no se consulta.
 
 ## Reglas de negocio que no son obvias
 
@@ -62,7 +62,7 @@ npm run mail:test -w server -- tu@correo.com   # comprueba SMTP (base lista, aú
 ## Pruebas
 
  - Todo cambio de servidor lleva test en `server/tests` (Vitest; `tests/client.ts` arranca la app con proveedores simulados de `mock-providers.ts` y BD en memoria). Los cambios de interfaz se comprueban en un navegador real: `puppeteer-core` + Edge headless contra `dev:mock`, con capturas, desde el directorio temporal de la sesión (no se añade al repo).
- - Las APIs reales se probaron a mano con las claves del `.env` (TMDB y OMDb); Jikan no se ha podido probar desde esta red.
+ - Las APIs reales se probaron a mano con las claves del `.env` (TMDB y OMDb); MyAnimeList se prueba en cuanto haya `MAL_CLIENT_ID`.
 
 ## Trampas conocidas
 

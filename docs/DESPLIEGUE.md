@@ -48,8 +48,8 @@ Lo siguiente es la preparación original, válida para cualquier hosting.
 | `OMDB_API_KEY` | Para IMDb + Rotten Tomatoes | https://www.omdbapi.com/apikey.aspx (gratis, 1.000/día) |
 | `DB_FILE` | No (`/data/mar.db` en Docker) | Ruta del fichero SQLite |
 | `PORT` | No (`3001`) | Puerto |
-| `JIKAN_ENABLED` | No (`true`) | `false` desactiva la búsqueda de anime (Jikan) |
-| `TMDB_SOFT_MS` / `JIKAN_SOFT_MS` | No (`6000` / `2000`) | Espera máxima de la búsqueda a cada fuente |
+| `MAL_CLIENT_ID` | Para el anime | Client ID de la API de MyAnimeList (https://myanimelist.net/apiconfig); sin él no hay anime |
+| `TMDB_SOFT_MS` / `MAL_SOFT_MS` | No (`6000` / `3000`) | Espera máxima de la búsqueda a cada fuente |
 | `USE_REAL_RUNTIME` | No (`true`) | `false` = duraciones fijas 50/90/23 min en lugar de las reales de las APIs |
 | `RUNTIME_SAMPLE` | No (`4`) | Episodios de muestra por temporada larga (más del triple) o por serie (temporadas cortas) |
 | `RUNTIME_MAX_FETCH` / `RUNTIME_CONCURRENCY` | No (`12` / `2`) | Peticiones máximas a TMDB por serie y peticiones simultáneas globales para calcular duraciones |

@@ -63,7 +63,7 @@
 | Cliente | React 18, React Router 6, TypeScript, Vite 4, Lucide (iconos) |
 | Servidor | Node.js 16, Express 4, TypeScript, zod (validación), helmet, bcrypt, JWT en cookie `httpOnly` |
 | Datos | SQLite con `sql.js` (WebAssembly; sin dependencias nativas) y migraciones numeradas |
-| Fuentes externas | TMDB (series y películas), Jikan / MyAnimeList (anime), OMDb (IMDb y Rotten Tomatoes) |
+| Fuentes externas | TMDB (series y películas), API oficial de MyAnimeList (anime), OMDb (IMDb y Rotten Tomatoes) |
 | Pruebas | Vitest (reglas de dominio, API completa con proveedores simulados, migraciones) |
 | Despliegue | Docker (imagen única) en Fly.io, con volumen persistente |
 | Monorepo | npm workspaces (`client` y `server`) |
@@ -74,7 +74,7 @@
 flowchart LR
     SPA["Cliente React<br/>PWA"] -- "/api (JSON)" --> API["Servidor Express"]
     API --> DB[("SQLite")]
-    API -- "solo desde el servidor" --> EXT["TMDB · Jikan · OMDb"]
+    API -- "solo desde el servidor" --> EXT["TMDB · MyAnimeList · OMDb"]
 ```
 
 El servidor es la única pieza que habla con los proveedores externos (con cachés, tiempos límite y corte automático de proveedores caídos), valida toda entrada y decide los permisos de perfiles y listas. Más detalle en [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md).
@@ -112,7 +112,7 @@ Variables de entorno principales (todas en `.env.example`):
 | `PUBLIC_URL`, `CLIENT_ORIGIN` | URL pública y origen permitido (CORS) | `http://localhost:5173` |
 | `DB_FILE` | Fichero SQLite | `data/mar.db` |
 | `TMDB_REGION` | País para la disponibilidad en plataformas | `ES` |
-| `JIKAN_ENABLED` | `false` desactiva el anime (útil si la red lo bloquea) | `true` |
+| `MAL_CLIENT_ID` | Client ID de la API de MyAnimeList (anime); sin él no hay búsqueda de anime | — |
 | `USE_REAL_RUNTIME` | Usar la duración real de las fuentes (por temporada en las series) en lugar de 50 / 90 / 23 min | `true` |
 
 La lista completa está en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
@@ -175,7 +175,7 @@ Limitaciones conocidas:
 ## Créditos y atribuciones
 
 - Datos de series y películas: [TMDB](https://www.themoviedb.org). *This product uses the TMDB API but is not endorsed or certified by TMDB.*
-- Puntuaciones: [OMDb API](https://www.omdbapi.com). Anime: [Jikan](https://jikan.moe) / [MyAnimeList](https://myanimelist.net).
+- Puntuaciones: [OMDb API](https://www.omdbapi.com). Anime: [API de MyAnimeList](https://myanimelist.net/apiconfig/references/api/v2).
 - Iconos: [Lucide](https://lucide.dev) (licencia ISC).
 - El logotipo usa los glifos de la fuente *Lock Block* de Sronstudio, de uso personal: ver [docs/THIRD_PARTY_LICENSES.md](docs/THIRD_PARTY_LICENSES.md) antes de cualquier uso comercial.
 - Desarrollado con la asistencia de [Claude Code](https://claude.com/claude-code).
