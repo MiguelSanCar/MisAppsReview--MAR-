@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-16",
+  "updatedAt": "2026-10-17",
   "title": "MAR · Mis Apps Review",
   "subtitle": "Registro personal de series, películas y anime",
   "phases": [
@@ -2305,8 +2305,74 @@
           ]
         }
       ]
+    },
+    {
+      "id": "f28",
+      "name": "Fase 28 — Anime desde la API oficial de MyAnimeList",
+      "release": "1.15.0",
+      "summary": "La API pública de Jikan cerró el 1 de octubre de 2026: el anime pasa a la API oficial de MyAnimeList",
+      "features": [
+        {
+          "id": "f28-mal",
+          "title": "Proveedor de anime",
+          "category": "Backend",
+          "tasks": [
+            {
+              "id": "28.1",
+              "title": "Diagnóstico: la API pública de Jikan cerró el 1/10/2026 (no responde desde ninguna red)",
+              "status": "hecho",
+              "eta": "2026-10-17"
+            },
+            {
+              "id": "28.2",
+              "title": "Proveedor de la API oficial de MyAnimeList (v2): búsqueda, ranking de lo que está en emisión y ficha, con Client ID",
+              "status": "hecho",
+              "eta": "2026-10-17"
+            },
+            {
+              "id": "28.3",
+              "title": "Migración 15: el anime guardado pasa a la fuente «mal» con los mismos ids (conserva progreso y listas)",
+              "status": "hecho",
+              "eta": "2026-10-17"
+            },
+            {
+              "id": "28.4",
+              "title": "El anime por estrenar solo admite «Por ver» (MyAnimeList sí da la fecha de estreno)",
+              "status": "hecho",
+              "eta": "2026-10-17"
+            }
+          ]
+        },
+        {
+          "id": "f28-cierre",
+          "title": "Cierre",
+          "category": "Infra",
+          "tasks": [
+            {
+              "id": "28.5",
+              "title": "Pruebas, documentación y versión 1.15.0",
+              "status": "hecho",
+              "eta": "2026-10-17"
+            },
+            {
+              "id": "28.6",
+              "title": "Crear el Client ID de MyAnimeList y probar la API real",
+              "status": "pendiente",
+              "eta": null,
+              "etaNote": "Depende del autor: dar de alta la aplicación en myanimelist.net/apiconfig y poner MAL_CLIENT_ID en .env. Unos 10 minutos."
+            },
+            {
+              "id": "28.7",
+              "title": "Publicar en Fly.io con el secreto MAL_CLIENT_ID",
+              "status": "pendiente",
+              "eta": null,
+              "etaNote": "Depende de la tarea 28.6 y de que el autor dé el visto bueno al despliegue. Unos 10 minutos."
+            }
+          ]
+        }
+      ]
     }
   ],
-  "release": "1.14.1",
+  "release": "1.15.0",
   "etaNote": "Cada tarea indica su fecha de entrega: la real si está completada o la estimada si está pendiente. Las que dependen de un recurso externo no tienen fecha y llevan una nota con el motivo y el esfuerzo estimado."
 }
